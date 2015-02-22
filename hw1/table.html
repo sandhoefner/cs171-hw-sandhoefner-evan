@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+  <body>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script>
+
+      d3.json("data/countries_2012.json", function(error, data){
+
+        var columns = ["name", "continent", "gdp", "life_expectancy",
+                       "population", "year"]
+
+        var table = d3.select("body").append("table"),
+          thead = table.append("thead")
+                       .attr("class", "thead");
+          tbody = table.append("tbody");
+
+        table.append("caption")
+          .html("World Countries Ranking");
+
+        thead.append("tr").selectAll("th")
+          .data(columns)
+        .enter()
+          .append("th")
+          .text(function(d) { return d; })
+          .on("click", function(header, i) {
+            tbody.selectAll("tr").sort(function(a, b) {
+              return d3.descending(a[header], b[header]);
+            });
+          });
+
+        var rows = tbody.selectAll("tr.row")
+          .data(data)
+          .enter()
+          .append("tr").attr("class", "row")
+          .style({'background-color': '#d3d3d3'});
+
+        function gdp(n) {
+          rounded = d3.round(n);
+          form = d3.format("$,");
+          return form(rounded);
+        }
+        var life = d3.format(".3rounded");
+        var popu = d3.format(",");
+
+        var cells = rows.selectAll("td")
+          .data(function(row) {
+              return d3.range(columns.length).map(function(column, i) {
+                  var index = [6,1,2,4,7,8];
+                  if (columns[i] == "gdp") {
+                    return gdp((row[Object.keys(row)[index[i]]]) / 1000000);
+                  } else if (columns[i] == "life_expectancy") {
+                    return life(row[Object.keys(row)[index[i]]]);
+                  } else if (columns[i] == "population") {
+                    return popu(row[Object.keys(row)[index[i]]]);
+                  } else {
+                    return row[Object.keys(row)[index[i]]];
+              }});
+          })
+          .enter()
+          .append("td")
+          .text(function(d) {return d})
+
+      });
+    </script> 
+  </body>
+</html>
