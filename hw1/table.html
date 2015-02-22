@@ -4,7 +4,8 @@
 <head>
   <style type="text/css">
     tr:hover td {background:#F3E88E}
-  </style></head>
+  </style>
+</head>
   <body>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     Time update: 1995 <input type="range" name="points" min="1995" max="2012"
@@ -21,15 +22,93 @@
          title="Oceania" onchange="">Oceania</input>
 
          <br>Aggregation:
-         <input type="radio" name="none" value="none" onclick="">None</input>
-         <input type="radio" name="cont" value="cont" onclick="">by Continent
-       </input>
+         <label><input type="radio" name="agg" value="none" onclick="">None</label>
+         <label><input type="radio" name="agg" value="cont" onclick="">by Country</label>
+       
     <script>
 
       d3.json("data/countries_2012.json", function(error, data){
 
+        d3.selectAll('input').on('change', function() {
+        var filters = [];
+        d3.selectAll("input").each(function(d) { 
+ 
+  if(d3.select(this).attr("type") == "checkbox" && d3.select(this).node().checked) {
+    
+    filters.push(d3.select(this).attr("name"));
+    
+  }
+})
+        if (filters.length == 0) {
+          update(data);
+        
+      } else {
+        var new_data = data.filter(function(d, i) {
+            console.log(d.continent);
+            return filters.indexOf(d.continent) >= 0;
+            }
+          )
+        console.log(new_data);
+        update(new_data);
+      }
+
+        function update(new_data) {
+
+          
+
+          var rows = tbody.selectAll("tr.row")
+            .data(new_data);
 
 
+          rows.enter().append('tr');
+
+          rows
+            .attr("class", "row")
+            .style('background-color', function(row, i) {
+            if (i % 2 == 0) {
+              return '#d3d3d3';
+            } else {
+              return '#ffffff';}});
+
+          rows.exit()
+            .remove();
+
+          var cells = rows.selectAll('td')
+            .data(function(row) {
+              return d3.range(columns.length).map(function(column, i) {
+                  var index = [6,1,2,4,7,8];
+                  if (columns[i] == "gdp") {
+                    return gdp((row[Object.keys(row)[index[i]]]) / 1000000);
+                  } else if (columns[i] == "life_expectancy") {
+                    return life(row[Object.keys(row)[index[i]]]);
+                  } else if (columns[i] == "population") {
+                    return popu(row[Object.keys(row)[index[i]]]);
+                  } else {
+                    return row[Object.keys(row)[index[i]]];
+              }});
+            })
+
+          cells.enter().append('td');
+
+          cells
+            .text(function(d) {return d})
+            .style('border', '1px solid black')
+            .style('text-align', function(cell, i) {
+              if (i%6==0) {
+                return 'center';
+              } else if (i%2==0){
+                return 'right';
+              } else if (i%3==0 || i%4==0 || i%5==0) {
+                return 'right';
+              } else {
+                return 'center';
+            }});
+
+          cells.exit()
+            .remove();
+        }
+      });
+        
         var columns = ["name", "continent", "gdp", "life_expectancy",
                        "population", "year"]
 
@@ -88,7 +167,8 @@
               return '#d3d3d3';
             } else {
               return '#ffffff';}})
-          }}});
+          }}
+        });
         
 
 
@@ -137,6 +217,7 @@
             } else {
               return 'center';
           }});
+          
           
       });
     </script> 
