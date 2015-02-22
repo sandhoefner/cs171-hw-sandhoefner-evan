@@ -33,8 +33,7 @@
                                      .style('border-spacing', '0px')
                                      .style('border', '1px solid black'),
           thead = table.append("thead")
-                       .attr("class", "thead")
-                       .style('cursor', 'pointer');
+                       .attr("class", "thead");
           tbody = table.append("tbody");
 
         table.append("caption")
@@ -42,7 +41,7 @@
           .style('border', '2px solid black')
           .style('border-bottom', '0')
 
-        var sortStatus = [0,0,0,0,0,0];
+        var sortStatus = [1,0,0,0,0,0];
 
         head = thead.append("tr").selectAll("th")
           .data(columns)
@@ -50,10 +49,15 @@
           .append("th")
           .text(function(d) { return d; })
           .style('border', '1px solid black')
+          .style('cursor', function(cell, i) {
+            if (i<5) {
+              return 'pointer';
+            }} )
           .on("click", function(header, i) {
-            if (sortStatus[i] == 0) {
+            if (i < 5) {
+            if ((sortStatus[i]==0 && i>1) || sortStatus[i]==1 && (i<2)) {
               sortStatus = [0,0,0,0,0,0];
-              sortStatus[i] = 1;
+              if (i > 1) {sortStatus[i] = 1;}
               tbody.selectAll("tr").sort(function(a, b) {
                 if (a[header] == b[header]) {
                   return d3.descending(a['name'],b['name']);
@@ -68,6 +72,7 @@
               return '#ffffff';}})
             } else {
             sortStatus = [0,0,0,0,0,0];
+            if (i < 2) {sortStatus[i] = 1;}
             tbody.selectAll("tr").sort(function(a, b) {
               if (a[header] == b[header]) {
                 return d3.ascending(a['name'],b['name']);
@@ -79,7 +84,7 @@
               return '#d3d3d3';
             } else {
               return '#ffffff';}})
-          }});
+          }}});
         
 
 
