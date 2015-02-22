@@ -60,15 +60,26 @@
                 } else {
                   return d3.descending(a[header], b[header]);
                 } 
-          })} else {
+          })
+              .style('background-color', function(row, i) {
+            if (i % 2 == 0) {
+              return '#d3d3d3';
+            } else {
+              return '#ffffff';}})
+            } else {
             sortStatus = [0,0,0,0,0,0];
             tbody.selectAll("tr").sort(function(a, b) {
               if (a[header] == b[header]) {
                 return d3.ascending(a['name'],b['name']);
               } else {
                 return d3.ascending(a[header], b[header]);
-              }}
-              )}});
+              }})
+            .style('background-color', function(row, i) {
+            if (i % 2 == 0) {
+              return '#d3d3d3';
+            } else {
+              return '#ffffff';}})
+          }});
         
 
 
