@@ -3,37 +3,77 @@
 <meta charset="utf-8">
   <body>
     <script src="http://d3js.org/d3.v3.min.js"></script>
+    Time update: 1995 <input type="range" name="points" min="1995" max="2012"
+    step="1" value="0" id="slider-time" oninput=";"> 2012<br>
+    Filter by: <input type="checkbox" name="Americas" value="Americas"
+         title="Americas" onchange="">Americas</input>
+         <input type="checkbox" name="Africa" value="Africa"
+         title="Africa" onchange="">Africa</input>
+         <input type="checkbox" name="Asia" value="Asia"
+         title="Asia" onchange="">Asia</input>
+         <input type="checkbox" name="Europe" value="Europe"
+         title="Europe" onchange="">Europe</input>
+         <input type="checkbox" name="Oceania" value="Oceania"
+         title="Oceania" onchange="">Oceania</input>
+
+         <br>Aggregation:
+         <input type="radio" name="none" value="none" onclick="">None</input>
+         <input type="radio" name="cont" value="cont" onclick="">by Continent
+       </input>
     <script>
 
       d3.json("data/countries_2012.json", function(error, data){
 
+
+
         var columns = ["name", "continent", "gdp", "life_expectancy",
                        "population", "year"]
 
-        var table = d3.select("body").append("table"),
+        var table = d3.select("body").append("table")
+                                     .style('border-spacing', '0px')
+                                     .style('border', '1px solid black'),
           thead = table.append("thead")
-                       .attr("class", "thead");
+                       .attr("class", "thead")
+                       .style('cursor', 'pointer');
           tbody = table.append("tbody");
 
         table.append("caption")
-          .html("World Countries Ranking");
+          .html("World Countries Ranking")
+          .style('border', '2px solid black')
+          .style('border-bottom', '0')
+
 
         thead.append("tr").selectAll("th")
           .data(columns)
         .enter()
           .append("th")
           .text(function(d) { return d; })
-          .on("click", function(header, i) {
+          .style('border', '1px solid black')
+        .on("click", function(header, i) {
             tbody.selectAll("tr").sort(function(a, b) {
               return d3.descending(a[header], b[header]);
-            });
-          });
+            })
+            .style('background-color', function(row, i) {
+            if (i % 2 == 0) {
+              return '#d3d3d3';
+            } else {
+              return '#ffffff';
+          }})
+            
+          }
+
+          );   
+        
+
 
         var rows = tbody.selectAll("tr.row")
           .data(data)
           .enter()
           .append("tr").attr("class", "row")
-          .style({'background-color': '#d3d3d3'});
+
+
+        var zebraRows = tbody.selectAll('tr:nth-child(odd)')
+          .style('background-color', '#d3d3d3');
 
         function gdp(n) {
           rounded = d3.round(n);
@@ -60,7 +100,18 @@
           .enter()
           .append("td")
           .text(function(d) {return d})
-
+          .style('border', '1px solid black')
+          .style('text-align', function(cell, i) {
+            if (i%6==0) {
+              return 'center';
+            } else if (i%2==0){
+              return 'right';
+            } else if (i%3==0 || i%4==0 || i%5==0) {
+              return 'right';
+            } else {
+              return 'center';
+          }});
+          
       });
     </script> 
   </body>
