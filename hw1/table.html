@@ -29,7 +29,7 @@
 
       d3.json("data/countries_2012.json", function(error, data){
 
-        d3.selectAll('input').on('change', function() {
+        d3.selectAll('.checkbox').on('change', function() {
         var filters = [];
         d3.selectAll("input").each(function(d) { 
  
