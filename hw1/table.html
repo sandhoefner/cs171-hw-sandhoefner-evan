@@ -8,73 +8,67 @@
 </head>
   <body>
     <script src="http://d3js.org/d3.v3.min.js"></script>
+
     Time update: 1995 <input type="range" name="points" min="1995" max="2012"
-    step="1" value="0" id="slider-time" oninput=";"> 2012<br>
-    Filter by: <input type="checkbox" name="Americas" value="Americas"
-         title="Americas" onchange="">Americas</input>
+                       step="1" value="0" id="slider-time" oninput=";"> 
+                 2012 <br>
+
+        Filter by:
+         <input type="checkbox" name="Americas" value="Americas"
+          class="checkbox" title="Americas" onchange="">Americas</input>
          <input type="checkbox" name="Africa" value="Africa"
-         title="Africa" onchange="">Africa</input>
+          class="checkbox" title="Africa" onchange="">Africa</input>
          <input type="checkbox" name="Asia" value="Asia"
-         title="Asia" onchange="">Asia</input>
+          class="checkbox" title="Asia" onchange="">Asia</input>
          <input type="checkbox" name="Europe" value="Europe"
-         title="Europe" onchange="">Europe</input>
+          class="checkbox" title="Europe" onchange="">Europe</input>
          <input type="checkbox" name="Oceania" value="Oceania"
-         title="Oceania" onchange="">Oceania</input>
+          class="checkbox" title="Oceania" onchange="">Oceania</input>
 
          <br>Aggregation:
-         <label><input type="radio" name="agg" value="none" onclick="">None</label>
-         <label><input type="radio" name="agg" value="cont" onclick="">by Country</label>
+         <label><input type="radio" name="agg" value="none" onclick="">
+          None</label>
+         <label><input type="radio" name="agg" value="cont" onclick="">
+          by Country</label>
        
     <script>
-
       d3.json("data/countries_2012.json", function(error, data){
-
         d3.selectAll('.checkbox').on('change', function() {
-        var filters = [];
-        d3.selectAll("input").each(function(d) { 
- 
-  if(d3.select(this).attr("type") == "checkbox" && d3.select(this).node().checked) {
-    
-    filters.push(d3.select(this).attr("name"));
-    
-  }
-})
+          var filters = [];
+          d3.selectAll("input").each(function(d) { 
+            if(d3.select(this).attr("type") == "checkbox" &&
+               d3.select(this).node().checked) {
+                 filters.push(d3.select(this).attr("name"));
+               }
+          })
+
         if (filters.length == 0) {
           update(data);
-        
-      } else {
-        var new_data = data.filter(function(d, i) {
+        } else {
+          var new_data = data.filter(function(d, i) {
             return filters.indexOf(d.continent) >= 0;
-            }
-          )
-        update(new_data);
-      }
+          })
+          update(new_data);
+        }
 
         function update(new_data) {
-
-          
-
           var rows = tbody.selectAll("tr.row")
             .data(new_data);
-
-
           rows.enter().append('tr');
-
-          rows
-            .attr("class", "row");
-            
-
+          rows.attr("class", "row");
           rows.exit()
             .remove();
 
           tbody.selectAll("tr").sort(function(a, b) {
-                return d3.ascending(a['name'],b['name']);
-              })
-          .style('background-color', function(row, i) {
-            if (i % 2 == 0) {
-              return '#d3d3d3';
-            } else {
-              return '#ffffff';}});
+            return d3.ascending(a['name'],b['name']);
+          })
+            .style('background-color', function(row, i) {
+              if (i % 2 == 0) {
+                return '#d3d3d3';
+              } else {
+                return '#ffffff';
+              }
+            });
 
           var cells = rows.selectAll('td')
             .data(function(row) {
@@ -88,8 +82,9 @@
                     return popu(row[Object.keys(row)[index[i]]]);
                   } else {
                     return row[Object.keys(row)[index[i]]];
-              }});
-            })
+                  }
+              });
+            });
 
           cells.enter().append('td');
 
@@ -99,13 +94,14 @@
             .style('text-align', function(cell, i) {
               if (i%6==0) {
                 return 'center';
-              } else if (i%2==0){
+              } else if (i%2==0) {
                 return 'right';
               } else if (i%3==0 || i%4==0 || i%5==0) {
                 return 'right';
               } else {
                 return 'center';
-            }});
+              }
+            });
 
           cells.exit()
             .remove();
@@ -118,14 +114,14 @@
         var table = d3.select("body").append("table")
                                      .style('border-spacing', '0px')
                                      .style('border', '1px solid black'),
-          thead = table.append("thead")
-                       .attr("class", "thead");
-          tbody = table.append("tbody");
+            thead = table.append("thead")
+                         .attr("class", "thead");
+            tbody = table.append("tbody");
 
         table.append("caption")
           .html("World Countries Ranking")
           .style('border', '2px solid black')
-          .style('border-bottom', '0')
+          .style('border-bottom', '0');
 
         var sortStatus = [1,0,0,0,0,0];
 
@@ -133,65 +129,68 @@
           .data(columns)
         .enter()
           .append("th")
-          .text(function(d) { return d; })
+          .text(function(d) {return d;})
           .style('border', '1px solid black')
           .style('cursor', function(cell, i) {
-            if (i<5) {
-              return 'pointer';
-            }} )
+            if (i<5) {return 'pointer';}
+          })
           .on("click", function(header, i) {
             if (i < 5) {
-            if ((sortStatus[i]==0 && i>1) || sortStatus[i]==1 && (i<2)) {
-              sortStatus = [0,0,0,0,0,0];
-              if (i > 1) {sortStatus[i] = 1;}
-              tbody.selectAll("tr").sort(function(a, b) {
-                if (a[header] == b[header]) {
-                  return d3.descending(a['name'],b['name']);
-                } else {
-                  return d3.descending(a[header], b[header]);
-                } 
-          })
-              .style('background-color', function(row, i) {
-            if (i % 2 == 0) {
-              return '#d3d3d3';
-            } else {
-              return '#ffffff';}})
-            } else {
-            sortStatus = [0,0,0,0,0,0];
-            if (i < 2) {sortStatus[i] = 1;}
-            tbody.selectAll("tr").sort(function(a, b) {
-              if (a[header] == b[header]) {
-                return d3.ascending(a['name'],b['name']);
+              if ((sortStatus[i]==0 && i>1) || sortStatus[i]==1 && (i<2)) {
+                sortStatus = [0,0,0,0,0,0];
+                if (i > 1) {sortStatus[i] = 1;}
+                tbody.selectAll("tr").sort(function(a, b) {
+                  if (a[header] == b[header]) {
+                    return d3.descending(a['name'],b['name']);
+                  } else {
+                    return d3.descending(a[header], b[header]);
+                  } 
+                })
+                .style('background-color', function(row, i) {
+                  if (i % 2 == 0) {
+                    return '#d3d3d3';
+                  } else {
+                    return '#ffffff';}
+                })
               } else {
-                return d3.ascending(a[header], b[header]);
-              }})
-            .style('background-color', function(row, i) {
-            if (i % 2 == 0) {
-              return '#d3d3d3';
-            } else {
-              return '#ffffff';}})
-          }}
-        });
+                sortStatus = [0,0,0,0,0,0];
+                if (i < 2) {sortStatus[i] = 1;}
+                tbody.selectAll("tr").sort(function(a, b) {
+                  if (a[header] == b[header]) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
+                    return d3.ascending(a[header], b[header]);
+                  }
+                })
+                .style('background-color', function(row, i) {
+                  if (i % 2 == 0) {
+                    return '#d3d3d3';
+                  } else {
+                    return '#ffffff';
+                  }
+                })
+              }
+            }
+          });
         
-
-
         var rows = tbody.selectAll("tr.row")
           .data(data)
           .enter()
           .append("tr").attr("class", "row");
 
-
         var zebraRows = tbody.selectAll('tr:nth-child(odd)')
           .style('background-color', '#d3d3d3');
 
         tbody.selectAll("tr").sort(function(a, b) {
-                return d3.ascending(a['name'],b['name']);
-              })
-        .style('background-color', function(row, i) {
+          return d3.ascending(a['name'],b['name']);
+        })
+          .style('background-color', function(row, i) {
             if (i % 2 == 0) {
               return '#d3d3d3';
             } else {
-              return '#ffffff';}});
+              return '#ffffff';
+            }
+          });
 
         function gdp(n) {
           rounded = d3.round(n);
@@ -213,7 +212,8 @@
                     return popu(row[Object.keys(row)[index[i]]]);
                   } else {
                     return row[Object.keys(row)[index[i]]];
-              }});
+                  }
+              });
           })
           .enter()
           .append("td")
@@ -228,9 +228,8 @@
               return 'right';
             } else {
               return 'center';
-          }});
-          
-          
+            }
+          });
       });
     </script> 
   </body>
