@@ -42,27 +42,33 @@
           .style('border', '2px solid black')
           .style('border-bottom', '0')
 
+        var sortStatus = [0,0,0,0,0,0];
 
-        thead.append("tr").selectAll("th")
+        head = thead.append("tr").selectAll("th")
           .data(columns)
         .enter()
           .append("th")
           .text(function(d) { return d; })
           .style('border', '1px solid black')
-        .on("click", function(header, i) {
+          .on("click", function(header, i) {
+            if (sortStatus[i] == 0) {
+              sortStatus = [0,0,0,0,0,0];
+              sortStatus[i] = 1;
+              tbody.selectAll("tr").sort(function(a, b) {
+                if (a[header] == b[header]) {
+                  return d3.descending(a['name'],b['name']);
+                } else {
+                  return d3.descending(a[header], b[header]);
+                } 
+          })} else {
+            sortStatus = [0,0,0,0,0,0];
             tbody.selectAll("tr").sort(function(a, b) {
-              return d3.descending(a[header], b[header]);
-            })
-            .style('background-color', function(row, i) {
-            if (i % 2 == 0) {
-              return '#d3d3d3';
-            } else {
-              return '#ffffff';
-          }})
-            
-          }
-
-          );   
+              if (a[header] == b[header]) {
+                return d3.ascending(a['name'],b['name']);
+              } else {
+                return d3.ascending(a[header], b[header]);
+              }}
+              )}});
         
 
 
