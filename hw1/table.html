@@ -61,15 +61,20 @@
           rows.enter().append('tr');
 
           rows
-            .attr("class", "row")
-            .style('background-color', function(row, i) {
+            .attr("class", "row");
+            
+
+          rows.exit()
+            .remove();
+
+          tbody.selectAll("tr").sort(function(a, b) {
+                return d3.ascending(a['name'],b['name']);
+              })
+          .style('background-color', function(row, i) {
             if (i % 2 == 0) {
               return '#d3d3d3';
             } else {
               return '#ffffff';}});
-
-          rows.exit()
-            .remove();
 
           var cells = rows.selectAll('td')
             .data(function(row) {
@@ -178,6 +183,15 @@
 
         var zebraRows = tbody.selectAll('tr:nth-child(odd)')
           .style('background-color', '#d3d3d3');
+
+        tbody.selectAll("tr").sort(function(a, b) {
+                return d3.ascending(a['name'],b['name']);
+              })
+        .style('background-color', function(row, i) {
+            if (i % 2 == 0) {
+              return '#d3d3d3';
+            } else {
+              return '#ffffff';}});
 
         function gdp(n) {
           rounded = d3.round(n);
