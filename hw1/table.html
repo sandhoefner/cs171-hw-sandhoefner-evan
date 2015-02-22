@@ -44,11 +44,9 @@
         
       } else {
         var new_data = data.filter(function(d, i) {
-            console.log(d.continent);
             return filters.indexOf(d.continent) >= 0;
             }
           )
-        console.log(new_data);
         update(new_data);
       }
 
