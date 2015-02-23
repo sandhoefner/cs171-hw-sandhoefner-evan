@@ -16,9 +16,9 @@ CS 171: Pset #1
 
 **5.1** SVG is better for visualizations involving a lot of geographic shapes or image-based free-form representation. HTML is better for more rigidly structured, mostly text-based visualizations such as tables.
 
-**7.1** Visualization is an ideal practice for both communication and exploration.
+**7.1** Visualization is an ideal practice for both communication and exploration. For example, visualization can powerfully represent the distrubtion of flood vulnerability across a geographic region via a heat-map style diagram.
 
-**7.2** n
+**7.2** One obvious solution is sorting. A static chart is only ever sorted by one index in one direction. An interactive chart can be sorted by any index, ascending or descending, which enables viewers to suss out greater meaning from the data. Filtering, aggregating, and changing years (subsections of data) are similar in principle. Visualization enables viewers to efficiently find data which would otherwise require painstaking manual searching across a huge static figure.
 
 **7.3** Visualization is often not appropriate when you are working with a well-defined question on a well-defined data set, or when decisions are needed as quickly as possible. In these circumstances, automation is a better bet. On a design level, visualizations can also only portray so much information before they become too complex to be easily interpreted.
 
