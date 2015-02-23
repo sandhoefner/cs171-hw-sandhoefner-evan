@@ -26,6 +26,6 @@ CS 171: Pset #1
 
 **7.5** In a relationship between two quantitative variables, one is measurably larger or smaller than the other (5 inches versus 3 inches). Categorical variables fall into distinct categories (mammals vs reptiles). Ordinal scale variables are sort of a middle ground (e.g. large, medium, small).
 
-**7.6** n
+**7.6** Many qualitative variables are associative. For example, the continent column in our table allows grouping because it contains a few qualitative (specifically, categorical) variables repeated various times. On a similar basis, you could group by ordinal variables. In order to group by quantitative variables, you could establish bins.
 
 **7.7** n
