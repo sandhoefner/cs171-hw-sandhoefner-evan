@@ -17,8 +17,8 @@
 
     Encode bars by: <label><input type="radio" name="enc" value="popu"
                             onclick="" checked="checked">Population</label>
-          <label><input type="radio" name="enc" value="gdp" onclick="">
-           GDP</label><br>
+                    <label><input type="radio" name="enc" value="gdp"
+                            onclick="">GDP</label><br>
 
     Filter by:
           <input type="checkbox" name="Americas" value="Americas"
@@ -60,7 +60,7 @@
                 .attr("height", height+margin.top+margin.bottom);
  
     var g = svg.append("g")
-                .attr("transform", "translate("+margin.left+","+margin.top+")");
+               .attr("transform","translate("+margin.left+","+margin.top+")");
  
     d3.json("data/countries_2012.json", function(data) {
  
@@ -71,67 +71,75 @@
         yScale.domain(data.map(function(d) { return d.name; }));
  
         var groups = g.append("g")
-                    .selectAll("text")
-                    .data(data)
-                  .enter()
-                    .append("g");
+                      .selectAll("text")
+                      .data(data)
+                      .enter()
+                      .append("g");
  
         var bars = groups
                     .append("rect")
-                    .attr("width", function(d) { return xScale(d.population); })
+                    .attr("width", function(d) {return xScale(d.population);})
                     .attr("height", 5)
                     .attr("x", xScale(min))
                     .attr("y", function(d, i) { return yScale(d.name) ; });
         var text = groups
                     .append("text")
                     .style('font-size', 'x-small')
-                    .attr("y", function(d, i) { return yScale(d.name) + 5  ; })
+                    .attr("y", function(d, i) { return yScale(d.name) + 5; })
                     .text(function(d) { return d.name; console.log(d.name); })
-                    .attr("x", function(d) { return -3-(this.getComputedTextLength()) ;  });
+                    .attr("x", function(d) {
+                        return -3 - (this.getComputedTextLength());
+                    });
 
-        d3.selectAll('.sort').on('change', function() {
+       /* d3.selectAll('.sort').on('change', function() {
             d3.selectAll(".sort").each(function(d) { 
-            if(d3.select(this).attr("class") == "sort" &&
-               d3.select(this).node().checked) {
-                 if (d3.select(this).attr("value") == "popu") {
-                    console.log('popu');
-                 } else if (d3.select(this).attr("value") == "gdp") {
-                    console.log('gdp');
-                 } else {
-                    // redraw SVG with new sort
-                    /*svg.select("g").select("g").selectAll("g").sort(function(a, b) { console.log(a['name']);
-                        return d3.descending(a['name'],b['name']);
-                    })*/
+                if(d3.select(this).attr("class") == "sort" &&
+                    d3.select(this).node().checked) {
+                      if (d3.select(this).attr("value") == "popu") {
+                        console.log('popu');
+                      } else if (d3.select(this).attr("value") == "gdp") {
+                          console.log('gdp');
+                      } else {
+                        // redraw SVG with new sort
+                  
+                        var new_dat=svg.select("g").select("g").selectAll("g")
+                                       .sort(function(a, b) { 
+                            return d3.descending(a['name'],b['name']);});
+                            console.log(new_dat);
 
-                var groups = g.append("g")
-                    .selectAll("text")
-                    .data(function() { 
-svg.select("g").select("g").selectAll("g").sort(function(a, b) { console.log(a['name']);
-                        return d3.descending(a['name'],b['name']);
-                    })})
-                  .enter()
-                    .append("g");
+                        var groups = g.append("g")
+                            .selectAll("text")
+                            .data(new_dat)
+                            .enter()
+                            .append("g");
+
+                        groups.exit()
+                            .remove(); 
  
-                var bars = groups
-                    .append("rect")
-                    .attr("width", function(d) { return xScale(d.population); })
-                    .attr("height", 5)
-                    .attr("x", xScale(min))
-                    .attr("y", function(d, i) { return yScale(d.name) ; });
-                var text = groups
-                    .append("text")
-                    .style('font-size', 'x-small')
-                    .attr("y", function(d, i) { return yScale(d.name) + 5  ; })
-                    .text(function(d) { return d.name; console.log(d.name); })
-                    .attr("x", function(d) { return -3-(this.getComputedTextLength()) ;  });
+                        var bars = groups
+                            .append("rect")
+                            .attr("width",function(d) {return
+                                                       xScale(d.population);})
+                            .attr("height", 5)
+                            .attr("x", xScale(min))
+                            .attr("y",function(d,i) {return yScale(d.name);});
 
+                        bars.exit()
+                            .remove();
 
-                }}})})
+                        var text = groups
+                            .append("text")
+                            .style('font-size', 'x-small')
+                            .attr("y",function(d,i){return yScale(d.name)+5;})
+                            .text(function(d) {return d.name;
+                                               console.log(d.name);})
+                            .attr("x", function(d) { return -3-
+                                (this.getComputedTextLength()) ;  });
+
+                        text.exit()
+                            .remove();
+             }}})}) */
     });
-
-
-            
-
   </script>
 </body>
 </html>
