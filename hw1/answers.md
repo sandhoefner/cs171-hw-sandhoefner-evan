@@ -24,7 +24,7 @@ CS 171: Pset #1
 
 **7.4** Data semantics give our data real-world meaning. Without real-world application, it doesn't matter how concise or effective or attractive a visualization is. Data semantics make the significance of our work clear, and help us interpret visualizations in a relevant way.   
 
-**7.5** n
+**7.5** In a relationship between two quantitative variables, one is measurably larger or smaller than the other (5 inches versus 3 inches). Categorical variables fall into distinct categories (mammals vs reptiles). Ordinal scale variables are sort of a middle ground (e.g. large, medium, small).
 
 **7.6** n
 
