@@ -40,11 +40,11 @@
 
     <br>Sort by:
           <label><input type="radio" name="sort" value="name" onclick=""
-           checked="checked">Name</label>
-          <label><input type="radio" name="sort" value="popu" onclick="">
-           Population</label>
-          <label><input type="radio" name="sort" value="gdp" onclick="">
-           GDP</label>
+           checked="checked" class="sort">Name</label>
+          <label><input type="radio" name="sort" value="popu" onclick=""
+           class="sort">Population</label>
+          <label><input type="radio" name="sort" value="gdp" onclick=""
+           class="sort">GDP</label>
 
   <script type="text/javascript">
  
@@ -85,12 +85,31 @@
         var text = groups
                     .append("text")
                     .style('font-size', 'x-small')
-                    .style('text-align', 'right')
                     .attr("y", function(d, i) { return yScale(d.name) + 5  ; })
                     .text(function(d) { return d.name; console.log(d.name); })
                     .attr("x", function(d) { return -3-(this.getComputedTextLength()) ;  });
 
-                });
+        d3.selectAll('.sort').on('change', function() {
+            d3.selectAll(".sort").each(function(d) { 
+            if(d3.select(this).attr("class") == "sort" &&
+               d3.select(this).node().checked) {
+                 if (d3.select(this).attr("value") == "popu") {
+                    console.log('popu');
+                 } else if (d3.select(this).attr("value") == "gdp") {
+                    console.log('gdp');
+                 } else {
+                    svg.select("g").select("g").selectAll("g").sort(function(a, b) { console.log(a['name']);
+                        return d3.descending(a['name'],b['name']);
+                    })
+
+                    text
+                    text.attr("y", function(d, i) { return yScale(d.name) + 5  ; });
+                 }
+
+               }
+          })
+        })
+    });
 
 
             
