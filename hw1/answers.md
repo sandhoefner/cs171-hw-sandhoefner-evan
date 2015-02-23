@@ -28,4 +28,4 @@ CS 171: Pset #1
 
 **7.6** Many qualitative variables are associative. For example, the continent column in our table allows grouping because it contains a few qualitative (specifically, categorical) variables repeated various times. On a similar basis, you could group by ordinal variables. In order to group by quantitative variables, you could establish bins.
 
-**7.7** n
+**7.7** Measures of distance (inches, feet, miles, etc.) are quantitative. Most number-based variables are quantitative - pounds, number of pebbles, etc.
