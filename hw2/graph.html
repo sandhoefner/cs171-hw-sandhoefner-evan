@@ -85,8 +85,11 @@ var node_scale = d3.scale.linear().domain([0, nb_cat]).range([5, 50])
 d3.json("data/countries_2012.json", function(json) {
 
   jsonPop = json.sort(function(a, b) {
+    if (a['population'] == b['population']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
             return d3.descending(a['population'],b['population']);
-          });
+          }});
 
   var node = svg.selectAll(".node")
               .data(jsonPop)
@@ -157,8 +160,11 @@ function pop_sort() {
 if(document.getElementById('constant').checked) {
 
 var json = jsonPop.sort(function(a, b) {
+  if (a['population'] == b['population']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
             return d3.descending(a['population'],b['population']);
-          });
+          }});
 
 
 
@@ -186,8 +192,11 @@ node
 function gdp_sort() {
   if(document.getElementById('constant').checked) {
   var json = jsonPop.sort(function(a, b) {
+    if (a['gdp'] == b['gdp']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
             return d3.descending(a['gdp'],b['gdp']);
-          });
+          }});
 
 
 
@@ -216,8 +225,11 @@ node
 function life_sort() {
 if(document.getElementById('constant').checked) {
 var json = jsonPop.sort(function(a, b) {
+  if (a['life_expectancy'] == b['life_expectancy']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
             return d3.descending(a['life_expectancy'],b['life_expectancy']);
-          });
+          }});
 
 
 
@@ -242,11 +254,16 @@ node
 }
 }
 
+
+
 function lat_sort() {
 if(document.getElementById('constant').checked) {
 var json = jsonPop.sort(function(a, b) {
+  if (Math.abs(a['latitude']) == Math.abs(b['latitude'])) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
             return d3.descending(Math.abs(a['latitude']),Math.abs(b['latitude']));
-          });
+          }});
 
 
 var json_names = json.map(function(d) {
