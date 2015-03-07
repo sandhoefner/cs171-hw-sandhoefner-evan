@@ -55,11 +55,11 @@
   </form>
   <form>
   Sort by:
-    <label><input type="radio" name="sort" value="population" checked > Population</label>
-    <label><input type="radio" name="sort" value="name" > Name</label>
-    <label><input type="radio" name="sort" value="gdp" > GDP</label>
-    <label><input type="radio" name="sort" value="life_expectancy" > Life expectancy</label>
-    <label><input type="radio" name="sort" value="latitude" > Distance from equator</label>
+    <label><input type="radio" id="pop" name="sort" value="population" checked > Population</label>
+    <label><input type="radio" id="name" name="sort" value="name" > Name</label>
+    <label><input type="radio" id="gdp" name="sort" value="gdp" > GDP</label>
+    <label><input type="radio" id="life" name="sort" value="life_expectancy" > Life expectancy</label>
+    <label><input type="radio" id="lat" name="sort" value="latitude" > Distance from equator</label>
   </form>
 <script>
 
@@ -112,29 +112,53 @@ d3.json("data/countries_2012.json", function(json) {
 // layout functions (changes info within groups based on layout)
 function constant_layout() {
 
-
-var node = svg.selectAll(".node");
+if(document.getElementById('gdp').checked) {
+  gdp_sort()
+} else if(document.getElementById('name').checked) {
+  name_sort()
+} else if(document.getElementById('life').checked) {
+  life_sort()
+} else if(document.getElementById('lat').checked) {
+  lat_sort()
+} else if(document.getElementById('pop').checked) {
+  pop_sort()
+}
+/*var node = svg.selectAll(".node");
 node
             .transition().duration(1000)
               .attr("class", "node")
                           .attr("transform", function(d, i) { 
-                            return "translate("+width/2+","+(8+i*14)+")"});
+                            return "translate("+width/2+","+(8+i*14)+")"});*/
   
                
 }
 
 function linScale_layout() {
-var node = svg.selectAll(".node");
+/*var node = svg.selectAll(".node");
 node
             .transition().duration(1000)
               .attr("class", "node")
                           .attr("transform", function(d, i) { 
-                            return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});
+                            return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});*/
+if(document.getElementById('gdp').checked) {
+  gdp_sort()
+} else if(document.getElementById('name').checked) {
+  name_sort()
+} else if(document.getElementById('life').checked) {
+  life_sort()
+} else if(document.getElementById('lat').checked) {
+  lat_sort()
+} else if(document.getElementById('pop').checked) {
+  pop_sort()
+}
 }
 
 function pop_sort() {
 if(document.getElementById('constant').checked) {
-
+  console.log('sort');
+var json = jsonPop.sort(function(a, b) {
+            return d3.descending(a['gdp'],b['gdp']);
+          });
 } else {
 var node = svg.selectAll(".node");
 node
