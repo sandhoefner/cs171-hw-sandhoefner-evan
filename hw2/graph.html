@@ -40,8 +40,18 @@
   </form>
   <form>
   Intervals:
-    <label><input type="radio" name="scale" value="constant" > Constant</label>
+    <label><input type="radio" name="scale" value="constant" checked > Constant</label>
     <label><input type="radio" name="scale" value="linScale" > Scaled</label>
+  </form>
+  <form>
+  Sort by:
+    <select>
+      <option value="population" selected>Population</option>
+      <option value="name">Name</option>
+      <option value="gdp">GDP</option>
+      <option value="life_expectancy">Life expectancy</option>
+      <option value="latitude">Distance from equator</option>
+    </select>
   </form>
 <script>
 
@@ -114,6 +124,26 @@ node
                             return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});
 }
 
+function pop_sort() {
+
+}
+
+function gdp_sort() {
+
+}
+
+function life_sort() {
+
+}
+
+function lat_sort() {
+
+}
+
+function name_sort() {
+
+}
+
 // update function - sorts data and calls appropriate layout function
 
 // graph-update function - transforms svg groups to update actual visual
@@ -121,6 +151,11 @@ node
 // listeners - tell us to update data appropriately
 d3.select("input[value=\"linScale\"]").on("click", linScale_layout);
 d3.select("input[value=\"constant\"]").on("click", constant_layout);
+d3.select("input[value=\"population\"]").on("click", pop_sort);
+d3.select("input[value=\"gdp\"]").on("click", gdp_sort);
+d3.select("input[value=\"life_expectancy\"]").on("click", life_sort);
+d3.select("input[value=\"latitude\"]").on("click", lat_sort);
+d3.select("input[value=\"name\"]").on("click", name_sort);
 
 </script>
 </body>
