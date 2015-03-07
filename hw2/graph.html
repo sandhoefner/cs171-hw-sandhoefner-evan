@@ -92,22 +92,13 @@ d3.json("data/countries_2012.json", function(json) {
 // layout functions (changes info within groups based on layout)
 function linScale_layout() {
 
-/*var groups = svg.selectAll("g");
-  groups.enter().append("g")          
-              .attr("class", "node")
-                          .attr("transform", function(d, i) { 
-                            return "translate("+width/2+","+(8+i*14+d.population)+")"});*/
-/*var node = svg.selectAll(".node")
 
-.append("g").attr("class", "node")
-                          .attr("transform", function(d, i) { 
-                            return "translate("+width/2+","+(8+i*14)+")"});*/
 var node = svg.selectAll(".node");
 node
             
               .attr("class", "node")
                           .attr("transform", function(d, i) { 
-                            return "translate("+width/2+","+(8+i*d.population)+")"});
+                            return "translate("+width/2+","+(8+d.population/10000)+")"});
   
                
 }
