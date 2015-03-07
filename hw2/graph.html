@@ -45,9 +45,9 @@
   </form>
   <form>
   Sort by:
-    <select>
-      <option value="population" selected>Population</option>
-      <option value="name">Name</option>
+    <select onchange="whichSort()">
+      <option name="sort" value="population" selected>Population</option>
+      <option name="sort" value="name">Name</option>
       <option value="gdp">GDP</option>
       <option value="life_expectancy">Life expectancy</option>
       <option value="latitude">Distance from equator</option>
@@ -129,6 +129,16 @@ function pop_sort() {
 }
 
 function gdp_sort() {
+  console.log('gdp');
+  var json = jsonPop.sort(function(a, b) {
+            return d3.descending(a['gdp'],b['gdp']);
+          });
+  var node = svg.selectAll(".node")
+              .data(json)
+            .enter()
+              .append("g").attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8+i*14)+")"});
 
 }
 
@@ -151,12 +161,9 @@ function name_sort() {
 // listeners - tell us to update data appropriately
 d3.select("input[value=\"linScale\"]").on("click", linScale_layout);
 d3.select("input[value=\"constant\"]").on("click", constant_layout);
-d3.select("input[value=\"population\"]").on("click", pop_sort);
-d3.select("input[value=\"gdp\"]").on("click", gdp_sort);
-d3.select("input[value=\"life_expectancy\"]").on("click", life_sort);
-d3.select("input[value=\"latitude\"]").on("click", lat_sort);
-d3.select("input[value=\"name\"]").on("click", name_sort);
+function whichSort() {
 
+}
 </script>
 </body>
 </html>
