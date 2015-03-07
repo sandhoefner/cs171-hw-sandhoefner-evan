@@ -61,17 +61,19 @@ var node_scale = d3.scale.linear().domain([0, nb_cat]).range([5, 50])
 // load data into graph.nodes and update graph for the first time
 d3.json("data/countries_2012.json", function(json) {
 
+  var jsonPop = json.sort(function(a, b) {
+            return d3.descending(a['population'],b['population']);
+          });
+
   var node = svg.selectAll(".node")
-              .data(json)
+              .data(jsonPop)
             .enter()
               .append("g").attr("class", "node")
                           .attr("transform", function(d, i) { 
                             return "translate("+width/2+","+(8+i*14)+")"});
   
                     var groups = svg.selectAll("g")
-                    .sort(function(a, b) {
-            return d3.descending(a['population'],b['population']);
-          })
+                    
     .append("text")
     .attr("dx", 6)
     .attr("dy", 4.5)
