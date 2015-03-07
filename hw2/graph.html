@@ -69,10 +69,14 @@ d3.json("data/countries_2012.json", function(json) {
                             return "translate("+width/2+","+(8+i*14)+")"});
   
                     var groups = svg.selectAll("g")
+                    .sort(function(a, b) {
+            return d3.descending(a['population'],b['population']);
+          })
     .append("text")
     .attr("dx", 6)
     .attr("dy", 4.5)
     .text(function(d, i) {return d.name}); 
+
 
   node.append("circle")
     .attr("r", 5);
