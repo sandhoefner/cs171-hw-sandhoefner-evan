@@ -39,7 +39,9 @@
     <label><input type="radio" name="size" value="size_cat" > Category</label>
   </form>
   <form>
-    <label><input type="radio" name="scale" value="linScale" > Linear Scale</label>
+  Intervals:
+    <label><input type="radio" name="scale" value="constant" > Constant</label>
+    <label><input type="radio" name="scale" value="linScale" > Scaled</label>
   </form>
 <script>
 
@@ -90,7 +92,7 @@ d3.json("data/countries_2012.json", function(json) {
 
 
 // layout functions (changes info within groups based on layout)
-function linScale_layout() {
+function constant_layout() {
 
 
 var node = svg.selectAll(".node");
@@ -98,9 +100,18 @@ node
             
               .attr("class", "node")
                           .attr("transform", function(d, i) { 
-                            return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});
+                            return "translate("+width/2+","+(8+i*14)+")"});
   
                
+}
+
+function linScale_layout() {
+var node = svg.selectAll(".node");
+node
+            
+              .attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});
 }
 
 // update function - sorts data and calls appropriate layout function
@@ -109,6 +120,7 @@ node
 
 // listeners - tell us to update data appropriately
 d3.select("input[value=\"linScale\"]").on("click", linScale_layout);
+d3.select("input[value=\"constant\"]").on("click", constant_layout);
 
 </script>
 </body>
