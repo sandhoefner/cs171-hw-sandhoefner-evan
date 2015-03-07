@@ -187,28 +187,25 @@ node
 
 function gdp_sort() {
   if(document.getElementById('constant').checked) {
-  var groups = svg.selectAll("g")
-  .remove();
   var json = jsonPop.sort(function(a, b) {
             return d3.descending(a['gdp'],b['gdp']);
           });
-  var node = svg.selectAll(".node")
-              .data(jsonPop)
-            .enter()
-              .append("g").attr("class", "node")
+
+var json_names = json.forEach(function(entry) {
+    return entry.name;
+});
+
+var json_names = json.map(function(d) {
+  return d.name});
+
+
+
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")  
                           .attr("transform", function(d, i) { 
-                            return "translate("+width/2+","+(8+i*14)+")"});
-  
-                    var groups = svg.selectAll("g")
-                    
-    .append("text")
-    .attr("dx", 6)
-    .attr("dy", 4.5)
-    .text(function(d, i) {return d.name}); 
-
-
-  node.append("circle")
-    .attr("r", 5);
+                            return "translate("+width/2+","+(8+json_names.indexOf(d.name)*14)+")"});
 } else {
 var node = svg.selectAll(".node");
 node
@@ -222,7 +219,25 @@ node
 
 function life_sort() {
 if(document.getElementById('constant').checked) {
+var json = jsonPop.sort(function(a, b) {
+            return d3.descending(a['life_expectancy'],b['life_expectancy']);
+          });
 
+var json_names = json.forEach(function(entry) {
+    return entry.name;
+});
+
+var json_names = json.map(function(d) {
+  return d.name});
+
+
+
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")  
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8+json_names.indexOf(d.name)*14)+")"});
 } else {
 var node = svg.selectAll(".node");
 node
@@ -235,7 +250,25 @@ node
 
 function lat_sort() {
 if(document.getElementById('constant').checked) {
+var json = jsonPop.sort(function(a, b) {
+            return d3.descending(Math.abs(a['latitude']),Math.abs(b['latitude']));
+          });
 
+var json_names = json.forEach(function(entry) {
+    return entry.name;
+});
+
+var json_names = json.map(function(d) {
+  return d.name});
+
+
+
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")  
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8+json_names.indexOf(d.name)*14)+")"});
 } else {
 var node = svg.selectAll(".node");
 node
@@ -247,7 +280,23 @@ node
 }
 
 function name_sort() {
-//scale would be silly
+var json = jsonPop.sort(function(a, b) {
+            return d3.ascending(a['name'],b['name']);
+          });
+
+
+
+var json_names = json.map(function(d) {
+  return d.name});
+
+
+
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")  
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8+json_names.indexOf(d.name)*14)+")"});
 
 }
 
