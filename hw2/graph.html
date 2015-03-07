@@ -97,7 +97,7 @@ function constant_layout() {
 
 var node = svg.selectAll(".node");
 node
-            
+            .transition().duration(1000)
               .attr("class", "node")
                           .attr("transform", function(d, i) { 
                             return "translate("+width/2+","+(8+i*14)+")"});
@@ -108,7 +108,7 @@ node
 function linScale_layout() {
 var node = svg.selectAll(".node");
 node
-            
+            .transition().duration(1000)
               .attr("class", "node")
                           .attr("transform", function(d, i) { 
                             return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});
