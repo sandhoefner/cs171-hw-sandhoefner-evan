@@ -38,6 +38,9 @@
     <label><input type="radio" name="size" value="nosize" checked> None</label>
     <label><input type="radio" name="size" value="size_cat" > Category</label>
   </form>
+  <form>
+    <label><input type="radio" name="scale" value="linScale" > Linear Scale</label>
+  </form>
 <script>
 
 // create svg canvas
@@ -61,7 +64,7 @@ var node_scale = d3.scale.linear().domain([0, nb_cat]).range([5, 50])
 // load data into graph.nodes and update graph for the first time
 d3.json("data/countries_2012.json", function(json) {
 
-  var jsonPop = json.sort(function(a, b) {
+  jsonPop = json.sort(function(a, b) {
             return d3.descending(a['population'],b['population']);
           });
 
@@ -87,13 +90,34 @@ d3.json("data/countries_2012.json", function(json) {
 
 
 // layout functions (changes info within groups based on layout)
+function linScale_layout() {
+
+/*var groups = svg.selectAll("g");
+  groups.enter().append("g")          
+              .attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8+i*14+d.population)+")"});*/
+/*var node = svg.selectAll(".node")
+
+.append("g").attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8+i*14)+")"});*/
+var node = svg.selectAll(".node");
+node
+            
+              .attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8+i*d.population)+")"});
+  
+               
+}
 
 // update function - sorts data and calls appropriate layout function
 
 // graph-update function - transforms svg groups to update actual visual
 
 // listeners - tell us to update data appropriately
-
+d3.select("input[value=\"linScale\"]").on("click", linScale_layout);
 
 </script>
 </body>
