@@ -98,7 +98,7 @@ node
             
               .attr("class", "node")
                           .attr("transform", function(d, i) { 
-                            return "translate("+width/2+","+(8+d.population/10000)+")"});
+                            return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});
   
                
 }
