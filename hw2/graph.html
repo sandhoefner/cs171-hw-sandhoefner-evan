@@ -155,15 +155,31 @@ if(document.getElementById('gdp').checked) {
 
 function pop_sort() {
 if(document.getElementById('constant').checked) {
-  console.log('sort');
+
 var json = jsonPop.sort(function(a, b) {
-            return d3.descending(a['gdp'],b['gdp']);
+            return d3.descending(a['population'],b['population']);
           });
+
+var json_names = json.forEach(function(entry) {
+    return entry.name;
+});
+
+var json_names = json.map(function(d) {
+  return d.name});
+
+
+
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")  
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8+json_names.indexOf(d.name)*14)+")"});
 } else {
 var node = svg.selectAll(".node");
 node
             .transition().duration(1000)
-              .attr("class", "node")
+              .attr("class", "node")  
                           .attr("transform", function(d, i) { 
                             return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});
 }
