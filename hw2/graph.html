@@ -40,18 +40,26 @@
   </form>
   <form>
   Intervals:
-    <label><input type="radio" name="scale" value="constant" checked > Constant</label>
+    <label><input type="radio" id="constant" name="scale" value="constant" checked > Constant</label>
     <label><input type="radio" name="scale" value="linScale" > Scaled</label>
   </form>
   <form>
   Sort by:
     <select onchange="whichSort()">
-      <option name="sort" value="population" selected>Population</option>
-      <option name="sort" value="name">Name</option>
-      <option value="gdp">GDP</option>
-      <option value="life_expectancy">Life expectancy</option>
-      <option value="latitude">Distance from equator</option>
+      <option name="sortt" value="population" selected>Population</option>
+      <option name="sortt" value="name">Name</option>
+      <option name="sortt" value="gdp">GDP</option>
+      <option name="sortt" value="life_expectancy">Life expectancy</option>
+      <option name="sortt" value="latitude">Distance from equator</option>
     </select>
+  </form>
+  <form>
+  Sort by:
+    <label><input type="radio" name="sort" value="population" checked > Population</label>
+    <label><input type="radio" name="sort" value="name" > Name</label>
+    <label><input type="radio" name="sort" value="gdp" > GDP</label>
+    <label><input type="radio" name="sort" value="life_expectancy" > Life expectancy</label>
+    <label><input type="radio" name="sort" value="latitude" > Distance from equator</label>
   </form>
 <script>
 
@@ -125,32 +133,81 @@ node
 }
 
 function pop_sort() {
+if(document.getElementById('constant').checked) {
 
+} else {
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8-(d.population-1205000000)/750000)+")"});
+}
 }
 
 function gdp_sort() {
-  console.log('gdp');
+  if(document.getElementById('constant').checked) {
+  var groups = svg.selectAll("g")
+  .remove();
   var json = jsonPop.sort(function(a, b) {
             return d3.descending(a['gdp'],b['gdp']);
           });
   var node = svg.selectAll(".node")
-              .data(json)
+              .data(jsonPop)
             .enter()
               .append("g").attr("class", "node")
                           .attr("transform", function(d, i) { 
                             return "translate("+width/2+","+(8+i*14)+")"});
+  
+                    var groups = svg.selectAll("g")
+                    
+    .append("text")
+    .attr("dx", 6)
+    .attr("dy", 4.5)
+    .text(function(d, i) {return d.name}); 
+
+
+  node.append("circle")
+    .attr("r", 5);
+} else {
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8-(d.gdp-16244600000000.0)/10000000000)+")"});
+  }
 
 }
 
 function life_sort() {
+if(document.getElementById('constant').checked) {
 
+} else {
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+width/2+","+(8-(d.life_expectancy-83.5)/0.021)+")"});
+}
 }
 
 function lat_sort() {
+if(document.getElementById('constant').checked) {
 
+} else {
+var node = svg.selectAll(".node");
+node
+            .transition().duration(1000)
+              .attr("class", "node")
+                          .attr("transform", function(d, i) { 
+    return "translate("+width/2+","+(8-(Math.abs(d.latitude)-60.1608)/0.037)+")"});
+}
 }
 
 function name_sort() {
+//scale would be silly
 
 }
 
@@ -161,8 +218,13 @@ function name_sort() {
 // listeners - tell us to update data appropriately
 d3.select("input[value=\"linScale\"]").on("click", linScale_layout);
 d3.select("input[value=\"constant\"]").on("click", constant_layout);
+d3.select("input[value=\"gdp\"]").on("click", gdp_sort);
+d3.select("input[value=\"life_expectancy\"]").on("click", life_sort);
+d3.select("input[value=\"latitude\"]").on("click", lat_sort);
+d3.select("input[value=\"name\"]").on("click", name_sort);
+d3.select("input[value=\"population\"]").on("click", pop_sort);
 function whichSort() {
-
+console.log('nope');
 }
 </script>
 </body>
