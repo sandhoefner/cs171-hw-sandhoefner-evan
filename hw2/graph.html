@@ -160,9 +160,7 @@ var json = jsonPop.sort(function(a, b) {
             return d3.descending(a['population'],b['population']);
           });
 
-var json_names = json.forEach(function(entry) {
-    return entry.name;
-});
+
 
 var json_names = json.map(function(d) {
   return d.name});
@@ -191,9 +189,7 @@ function gdp_sort() {
             return d3.descending(a['gdp'],b['gdp']);
           });
 
-var json_names = json.forEach(function(entry) {
-    return entry.name;
-});
+
 
 var json_names = json.map(function(d) {
   return d.name});
@@ -223,9 +219,7 @@ var json = jsonPop.sort(function(a, b) {
             return d3.descending(a['life_expectancy'],b['life_expectancy']);
           });
 
-var json_names = json.forEach(function(entry) {
-    return entry.name;
-});
+
 
 var json_names = json.map(function(d) {
   return d.name});
@@ -254,9 +248,6 @@ var json = jsonPop.sort(function(a, b) {
             return d3.descending(Math.abs(a['latitude']),Math.abs(b['latitude']));
           });
 
-var json_names = json.forEach(function(entry) {
-    return entry.name;
-});
 
 var json_names = json.map(function(d) {
   return d.name});
