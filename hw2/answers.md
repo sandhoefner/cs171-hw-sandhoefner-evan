@@ -18,6 +18,6 @@ correctness/completeness overall
 
 **1.2** The best scatterplot data are continuous quantitative variables, either interval or ratio. Ordinal variables also work, because they can be thought of as binned quantitative variables. The more bins, the better. Non-ordinal categorical variables should not be displayed on a scatterplot because there is no meaningful spectrum between the categories that could be plotted on an axis.
 
-**2.1**
+**2.1** D3 layouts are simpler to use, especially for non-straightforward shapes like circles. Our scatterplots and uniform/scaled vertical lists map closely to data qualities without much abstraction. Putting the nodes into a circle formation involves more abstraction, which is where things like arc and outerRadius and innerRadius and centroid come in handy.
 
 **3.1** We could only show the top one (or two, or three, or whatever) trade partner(s) for each node. This would cut down on the number of links inside the circle. We could also cut down on the number of nodes displayed. We can leave certain countries out altogether if we're definitely not interested in them (perhaps those which do very little international trade). Better yet, we can filter or aggregate, e.g. by continent.

@@ -380,6 +380,7 @@ node
               .attr("class", "node")  
                           .attr("transform", function(d, i) { 
     return "translate("+(8+d.gdp/13500000000)+","+(8-(d.population-1205000000)/2100000)+")"});
+
 }
 
 //}
@@ -399,7 +400,7 @@ var r = Math.min(height, width)/2;
           .outerRadius(r);
 
   var pie = d3.layout.pie()
-          .sort(function(a, b) { return a.cat - b.cat;}) // Sorting by categories
+          
           .value(function(d, i) { 
             return 1;  // We want an equal pie share/slice for each point
           });
@@ -417,8 +418,8 @@ var json = jsonPop.sort(function(a, b) {
     d.outerRadius = r;
 
     // Building the data object we are going to return
-    d.data.x = arc.centroid(d)[0]+width/2;
-    d.data.y = arc.centroid(d)[1]+height/2;
+    d.data.x = arc.centroid(d)[0]+400;
+    d.data.y = arc.centroid(d)[1]+400;
 
     return d.data;
   })
@@ -436,7 +437,7 @@ var r = Math.min(height, width)/2;
           .outerRadius(r);
 
   var pie = d3.layout.pie()
-          .sort(function(a, b) { return a.cat - b.cat;}) // Sorting by categories
+          
           .value(function(d, i) { 
             return 1;  // We want an equal pie share/slice for each point
           });
@@ -454,8 +455,8 @@ var json = jsonPop.sort(function(a, b) {
     d.outerRadius = r;
 
     // Building the data object we are going to return
-    d.data.x = arc.centroid(d)[0]+width/2;
-    d.data.y = arc.centroid(d)[1]+height/2;
+    d.data.x = arc.centroid(d)[0]+400;
+    d.data.y = arc.centroid(d)[1]+400;
 
     return d.data;
   })
