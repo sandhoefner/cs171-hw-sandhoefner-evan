@@ -91,6 +91,10 @@
   <!--<form>
     Transition time: <input type="text" name="speed">
   </form>-->
+  <form>
+  Links:
+    <label><input type="radio" name="g_links" id="g_links" value="g_links" > Yes</label>
+  </form>
 <script>
 
 // create svg canvas
@@ -141,6 +145,7 @@ d3.json("data/countries_2012.json", function(json) {
     .attr("r", 5);
 
 });
+
 
 
 // layout functions (changes info within groups based on layout)
@@ -534,7 +539,7 @@ function tick(d) {
   } else if (document.getElementById('wedges').checked) {
 
     node.transition().duration(0)
-      .attr("transform", function(d) { 
+      .attr("transform", function(d) {      
         if (d.continent == 'Americas') {
           return "translate("+(d.x-=7.79*1.5*k)+","+(d.y+=1.5*k)+")" ;
         } else if (d.continent == 'Africa') {
@@ -568,7 +573,6 @@ function tick(d) {
 
 //combine these
 function strips() {
-
 force.nodes(jsonPop)
       .start();
 }
@@ -587,6 +591,12 @@ force.nodes(jsonPop)
 function all() {
 force.nodes(jsonPop)
       .start();
+}
+
+
+
+function g_links() {
+  force.stop();
 }
 
 // update function - sorts data and calls appropriate layout function
@@ -616,6 +626,8 @@ d3.select("input[value=\"strips\"]").on("click", strips);
 d3.select("input[value=\"wedges\"]").on("click", wedges);
 d3.select("input[value=\"circles\"]").on("click", circles);
 d3.select("input[value=\"all\"]").on("click", all);
+
+d3.select("input[value=\"g_links\"]").on("click", g_links);
 
 function whichSort() {
 console.log('nope');
