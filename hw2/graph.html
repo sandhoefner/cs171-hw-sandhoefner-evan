@@ -17,6 +17,8 @@
     fill: black;
   }
 
+.tab { margin-left: 40px; } 
+
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -49,11 +51,7 @@
       <option name="sortt" value="latitude">Distance from equator</option>
     </select>
   </form>-->
-  <form>
-  Sort intervals:
-    <label><input type="radio" id="constant" name="scale" value="constant" checked > Uniform</label>
-    <label><input type="radio" name="scale" value="linScale" > Scaled</label>
-  </form>
+  
   <form>
   Sort by:
     <label><input type="radio" id="pop" name="sort" value="population" checked > Population</label>
@@ -61,6 +59,12 @@
     <label><input type="radio" id="gdp" name="sort" value="gdp" > GDP</label>
     <label><input type="radio" id="life" name="sort" value="life_expectancy" > Life expectancy</label>
     <label><input type="radio" id="lat" name="sort" value="latitude" > Distance from equator</label>
+  </form>
+  <form>
+  <div class="tab">Sort intervals:
+    <label><input type="radio" id="constant" name="scale" value="constant" checked > Uniform</label>
+    <label><input type="radio" name="scale" value="linScale" > Scaled</label>
+  </div>
   </form>
   <form>
   Scatter by:
@@ -76,6 +80,12 @@
   Circle by:
     <label><input type="radio" name="circle" id="circle_pop" value="circle_pop" > Population</label>
     <label><input type="radio" name="circle" id="circle_gdp" value="circle_gdp" > GDP</label>
+  </form>
+  <form>
+  Continent grouping:
+    <label><input type="radio" name="group" id="strips" value="strips" > Strips</label>
+    <label><input type="radio" name="group" id="wedges" value="wedges" > Wedges</label>
+    <label><input type="radio" name="group" id="circles" value="circles" > Circles</label>
   </form>
   <!--<form>
     Transition time: <input type="text" name="speed">
@@ -177,6 +187,7 @@ if(document.getElementById('gdp').checked) {
 }
 
 function pop_sort() {
+  force.stop();
 if(document.getElementById('constant').checked) {
 
 var json = jsonPop.sort(function(a, b) {
@@ -210,6 +221,7 @@ node
 }
 
 function gdp_sort() {
+  force.stop();
   if(document.getElementById('constant').checked) {
   var json = jsonPop.sort(function(a, b) {
     if (a['gdp'] == b['gdp']) {
@@ -243,6 +255,7 @@ node
 }
 
 function life_sort() {
+  force.stop();
 if(document.getElementById('constant').checked) {
 var json = jsonPop.sort(function(a, b) {
   if (a['life_expectancy'] == b['life_expectancy']) {
@@ -277,6 +290,7 @@ node
 
 
 function lat_sort() {
+  force.stop();
 if(document.getElementById('constant').checked) {
 var json = jsonPop.sort(function(a, b) {
   if (Math.abs(a['latitude']) == Math.abs(b['latitude'])) {
@@ -308,6 +322,7 @@ node
 }
 
 function name_sort() {
+  force.stop();
 var json = jsonPop.sort(function(a, b) {
             return d3.ascending(a['name'],b['name']);
           });
@@ -329,6 +344,7 @@ node
 }
 
 function scatter_lat_lon() {
+  force.stop();
   /*if(document.getElementById('constant').checked) {
 
   } else {*/
@@ -341,6 +357,7 @@ node
 }//}
 
 function scatter_pop_gdp() {
+  force.stop();
   /*if(document.getElementById('s_constant').checked) {
 
     var json_copy = jsonPop;
@@ -394,6 +411,7 @@ if(document.getElementById('lat_lon').checked) {
 }
 
 function circle_pop() {
+  force.stop();
 var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
@@ -431,6 +449,7 @@ var node = svg.selectAll(".node");
 }
 
 function circle_gdp() {
+  force.stop();
 var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
@@ -467,6 +486,41 @@ var node = svg.selectAll(".node");
       });
 }
 
+var force = d3.layout.force()
+    .size([500, 500])
+    .charge(-50)
+    .on("tick", tick)
+    .on("start", function(d) {})
+    .on("end", function(d) {})
+
+function tick(d) {
+  /*var k = 6 * e.alpha;
+  jsonPop.forEach(function(o, i) {
+    o.x += k;
+  });*/
+  var node = svg.selectAll(".node");
+  node.transition().duration(0)
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"; 
+      });}
+
+function strips() {
+
+force.nodes(jsonPop)
+      .start();
+}
+
+
+function wedges() {
+force.nodes(jsonPop)
+      .start();
+}
+
+function circles() {
+force.nodes(jsonPop)
+      .start();
+}
+
 // update function - sorts data and calls appropriate layout function
 
 // graph-update function - transforms svg groups to update actual visual
@@ -474,17 +528,26 @@ var node = svg.selectAll(".node");
 // listeners - tell us to update data appropriately
 d3.select("input[value=\"linScale\"]").on("click", linScale_layout);
 d3.select("input[value=\"constant\"]").on("click", constant_layout);
+
 d3.select("input[value=\"gdp\"]").on("click", gdp_sort);
 d3.select("input[value=\"life_expectancy\"]").on("click", life_sort);
 d3.select("input[value=\"latitude\"]").on("click", lat_sort);
 d3.select("input[value=\"name\"]").on("click", name_sort);
 d3.select("input[value=\"population\"]").on("click", pop_sort);
+
 d3.select("input[value=\"lat_lon\"]").on("click", scatter_lat_lon);
 d3.select("input[value=\"pop_gdp\"]").on("click", scatter_pop_gdp);
+
 d3.select("input[value=\"scatScale\"]").on("click", scatter);
 d3.select("input[value=\"scatCon\"]").on("click", scatter);
+
 d3.select("input[value=\"circle_pop\"]").on("click", circle_pop);
 d3.select("input[value=\"circle_gdp\"]").on("click", circle_gdp);
+
+d3.select("input[value=\"strips\"]").on("click", strips);
+d3.select("input[value=\"wedges\"]").on("click", wedges);
+d3.select("input[value=\"circles\"]").on("click", circles);
+
 function whichSort() {
 console.log('nope');
 }
