@@ -72,6 +72,14 @@
     <label><input type="radio" name="s_scale" value="scatScale" checked> Scaled</label>
     <label><input type="radio" id="s_constant" name="s_scale" value="scatCon"  > Constant</label>
   </form>-->
+  <form>
+  Circle by:
+    <label><input type="radio" name="circle" id="circle_pop" value="circle_pop" > Population</label>
+    <label><input type="radio" name="circle" id="circle_gdp" value="circle_gdp" > GDP</label>
+  </form>
+  <!--<form>
+    Transition time: <input type="text" name="speed">
+  </form>-->
 <script>
 
 // create svg canvas
@@ -384,6 +392,39 @@ if(document.getElementById('lat_lon').checked) {
 }
 }
 
+function circle_pop() {
+var r = Math.min(height, width)/2;
+
+  var arc = d3.svg.arc()
+          .outerRadius(r);
+
+  var pie = d3.layout.pie()
+          .sort(function(a, b) { return a.cat - b.cat;}) // Sorting by categories
+          .value(function(d, i) { 
+            return 1;  // We want an equal pie share/slice for each point
+          });
+
+  graph.nodes = pie(jsonPop).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+    d.data.x = arc.centroid(d)[0]+width/2;
+    d.data.y = arc.centroid(d)[1]+height/2;
+
+    return d.data;
+  })
+var node = svg.selectAll(".node");
+  node.transition().duration(1000)
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"; 
+      });
+}
+
+function circle_gdp() {
+
+}
 
 // update function - sorts data and calls appropriate layout function
 
@@ -401,6 +442,8 @@ d3.select("input[value=\"lat_lon\"]").on("click", scatter_lat_lon);
 d3.select("input[value=\"pop_gdp\"]").on("click", scatter_pop_gdp);
 d3.select("input[value=\"scatScale\"]").on("click", scatter);
 d3.select("input[value=\"scatCon\"]").on("click", scatter);
+d3.select("input[value=\"circle_pop\"]").on("click", circle_pop);
+d3.select("input[value=\"circle_gdp\"]").on("click", circle_gdp);
 function whichSort() {
 console.log('nope');
 }
