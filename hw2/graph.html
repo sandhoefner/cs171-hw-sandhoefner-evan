@@ -404,7 +404,14 @@ var r = Math.min(height, width)/2;
             return 1;  // We want an equal pie share/slice for each point
           });
 
-  graph.nodes = pie(jsonPop).map(function(d, i) {
+var json = jsonPop.sort(function(a, b) {
+  if (a['population'] == b['population']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
+            return d3.descending(a['population'],b['population']);
+          }});
+
+  graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
@@ -423,7 +430,40 @@ var node = svg.selectAll(".node");
 }
 
 function circle_gdp() {
+var r = Math.min(height, width)/2;
 
+  var arc = d3.svg.arc()
+          .outerRadius(r);
+
+  var pie = d3.layout.pie()
+          .sort(function(a, b) { return a.cat - b.cat;}) // Sorting by categories
+          .value(function(d, i) { 
+            return 1;  // We want an equal pie share/slice for each point
+          });
+
+var json = jsonPop.sort(function(a, b) {
+  if (a['population'] == b['population']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
+            return d3.descending(a['gdp'],b['gdp']);
+          }});
+
+  graph.nodes = pie(json).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+    d.data.x = arc.centroid(d)[0]+width/2;
+    d.data.y = arc.centroid(d)[1]+height/2;
+
+    return d.data;
+  })
+var node = svg.selectAll(".node");
+  node.transition().duration(1000)
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"; 
+      });
 }
 
 // update function - sorts data and calls appropriate layout function
