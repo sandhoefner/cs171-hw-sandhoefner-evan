@@ -22,6 +22,7 @@
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="jsonNodes.js"></script>
   <!--<form>
   Layout:
     <label><input type="radio" name="layout" value="force" checked> Force</label>
@@ -468,7 +469,7 @@ var r = Math.min(height, width)/2;
           });
 
 var json = jsonPop.sort(function(a, b) {
-  if (a['population'] == b['population']) {
+  if (a['gdp'] == b['gdp']) {
                     return d3.ascending(a['name'],b['name']);
                   } else {
             return d3.descending(a['gdp'],b['gdp']);
@@ -593,10 +594,101 @@ force.nodes(jsonPop)
       .start();
 }
 
+var jsonLinks = [];
+
+jsonNodes.forEach(function(d, i) {
+  d.years.forEach(function(e, j) {
+    if(e.year == 2012) {
+      e.top_partners.forEach(function(f, k) {
+        jsonLinks.push({"source": d, "target": f})
+})
+}
+  })
+})
+
 
 
 function g_links() {
   force.stop();
+  var r = Math.min(height, width)/2;
+
+  var arc = d3.svg.arc()
+          .outerRadius(r);
+
+  var pie = d3.layout.pie()
+          
+          .value(function(d, i) { 
+            return 1;  // We want an equal pie share/slice for each point
+          });
+
+json = jsonPop.sort(function(a, b) {
+  if (a['gdp'] == b['gdp']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
+            return d3.descending(a['gdp'],b['gdp']);
+          }});
+
+  graph.nodes = pie(json).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+    d.data.x = arc.centroid(d)[0]+400;
+    d.data.y = arc.centroid(d)[1]+400;
+
+    return d.data;
+  })
+
+var node = svg.selectAll(".node");
+  node.transition().duration(1000)
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"; 
+      });
+
+
+  var link = svg.selectAll(".link")
+              .data(jsonLinks);
+
+link.enter().append("line")
+    .attr("class", "link");
+
+var find_x = function(needle) {
+  var x_ret;
+json.forEach(function(e, j) {
+  if (e.name == needle) {
+    console.log(e.x);
+    x_ret = e.x;
+}
+else if (needle == undefined) {
+return 400;
+  }
+else {
+  return needle;}
+return x_ret;
+})
+};
+
+var find_y = function(needle) {
+json.forEach(function(d, i) {
+  if (d.name == needle) {
+
+    return d.y;
+}
+})
+};
+
+link.transition().duration(1000)
+      .attr("x1", function(d) { 
+        var ret;
+          json.forEach(function(e, j) {
+            if (e.name == d.source.name) {
+              ret = e.x;
+            }}); 
+          return ret;})
+      .attr("y1", function(d, i) { return 200; })
+      .attr("x2", function(d, i) { return 400; })
+      .attr("y2", function(d, i) { return 300; });
 }
 
 // update function - sorts data and calls appropriate layout function
