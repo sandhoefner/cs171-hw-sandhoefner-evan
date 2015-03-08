@@ -82,7 +82,8 @@
     <label><input type="radio" name="circle" id="circle_gdp" value="circle_gdp" > GDP</label>
   </form>
   <form>
-  Continent grouping:
+  Cluster:
+  <label><input type="radio" name="group" id="all" value="all" > All</label>
     <label><input type="radio" name="group" id="strips" value="strips" > Strips</label>
     <label><input type="radio" name="group" id="wedges" value="wedges" > Wedges</label>
     <label><input type="radio" name="group" id="circles" value="circles" > Circles</label>
@@ -489,21 +490,65 @@ var node = svg.selectAll(".node");
 var force = d3.layout.force()
     .size([500, 500])
     .charge(-50)
-    .on("tick", tick)
+    //.friction()
+    //.gravity()
+    .on("tick", tick
+        ) 
     .on("start", function(d) {})
-    .on("end", function(d) {})
+    .on("end", function(d) {});
+
+
+
 
 function tick(d) {
-  /*var k = 6 * e.alpha;
-  jsonPop.forEach(function(o, i) {
-    o.x += k;
-  });*/
+  var k =  d.alpha;
+  
+  var node = svg.selectAll(".node");
+
+  if (document.getElementById('all').checked) {
+    var node = svg.selectAll(".node");
+    node.transition().duration(0)
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"});
+
+  } else if(document.getElementById('strips').checked) {
+    node.transition().duration(0)
+      .attr("transform", function(d) { 
+        if (d.continent == 'Americas') {
+          return "translate("+(d.x-=5*k)+","+(d.y)+")" ;
+        } else if (d.continent == 'Africa') {
+          return "translate("+(d.x+=10*k)+","+(d.y)+")"; 
+
+        } else if (d.continent == 'Europe') {
+          return "translate("+(d.x+=25*k)+","+(d.y)+")";
+
+        } else if (d.continent == 'Asia') {
+          return "translate("+(d.x+=40*k)+","+(d.y)+")";
+
+        } else if (d.continent == 'Oceania') {
+          return "translate("+(d.x+=55*k)+","+(d.y)+")"; 
+        }
+    });
+
+  } else if (document.getElementById('wedges').checked) {
+console.log('s');
+  } else if (document.getElementById('circles').checked) {
+console.log('s');
+}
+}
+
+    //working tick
+    /*
+function tick(d) {
   var node = svg.selectAll(".node");
   node.transition().duration(0)
       .attr("transform", function(d) { 
         return "translate("+d.x+","+d.y+")"; 
-      });}
+      });
+    */
 
+
+//combine these
 function strips() {
 
 force.nodes(jsonPop)
@@ -517,6 +562,11 @@ force.nodes(jsonPop)
 }
 
 function circles() {
+force.nodes(jsonPop)
+      .start();
+}
+
+function all() {
 force.nodes(jsonPop)
       .start();
 }
@@ -547,6 +597,7 @@ d3.select("input[value=\"circle_gdp\"]").on("click", circle_gdp);
 d3.select("input[value=\"strips\"]").on("click", strips);
 d3.select("input[value=\"wedges\"]").on("click", wedges);
 d3.select("input[value=\"circles\"]").on("click", circles);
+d3.select("input[value=\"all\"]").on("click", all);
 
 function whichSort() {
 console.log('nope');
