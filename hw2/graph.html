@@ -488,7 +488,7 @@ var node = svg.selectAll(".node");
 }
 
 var force = d3.layout.force()
-    .size([500, 500])
+    .size([750,750])
     .charge(-50)
     //.friction()
     //.gravity()
@@ -506,14 +506,13 @@ function tick(d) {
   var node = svg.selectAll(".node");
 
   if (document.getElementById('all').checked) {
-force.size([500,500]);
+
     var node = svg.selectAll(".node");
     node.transition().duration(0)
       .attr("transform", function(d) { 
         return "translate("+d.x+","+d.y+")"});
 
   } else if(document.getElementById('strips').checked) {
-    force.size([500,500]);
     node.transition().duration(0)
       .attr("transform", function(d) { 
         if (d.continent == 'Americas') {
@@ -533,22 +532,22 @@ force.size([500,500]);
     });
 
   } else if (document.getElementById('wedges').checked) {
-    force.size([750,750]);
+
     node.transition().duration(0)
       .attr("transform", function(d) { 
         if (d.continent == 'Americas') {
-          return "translate("+(d.x-=7.5*1.5*k)+","+(d.y+=1.5*k)+")" ;
+          return "translate("+(d.x-=7.79*1.5*k)+","+(d.y+=1.5*k)+")" ;
         } else if (d.continent == 'Africa') {
-          return "translate("+(d.x-=4.75*1.5*k)+","+(d.y-=8.9*1.5*k)+")"; 
+          return "translate("+(d.x-=4.67*1.5*k)+","+(d.y-=9.09*1.5*k)+")"; 
 
         } else if (d.continent == 'Europe') {
-          return "translate("+(d.x+=7.5*1.5*k)+","+(d.y+=1.5*k)+")";
+          return "translate("+(d.x+=7.79*1.5*k)+","+(d.y+=1.5*k)+")";
 
         } else if (d.continent == 'Asia') {
           return "translate("+(d.x+=1.5*k)+","+(d.y+=5.5*1.5*k)+")";
 
         } else if (d.continent == 'Oceania') {
-          return "translate("+(d.x+=4.75*1.5*k)+","+(d.y-=8.9*1.5*k)+")"; 
+          return "translate("+(d.x+=4.67*1.5*k)+","+(d.y-=9.09*1.5*k)+")"; 
         }
     });
   } else if (document.getElementById('circles').checked) {
