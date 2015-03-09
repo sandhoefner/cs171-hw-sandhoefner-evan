@@ -133,6 +133,7 @@ d3.json("data/countries_2012.json", function(json) {
                           .attr("transform", function(d, i) { 
                             return "translate("+300+","+(8+i*14)+")"});
 
+
   
                     var groups = svg.selectAll("g")
                     
@@ -143,7 +144,20 @@ d3.json("data/countries_2012.json", function(json) {
 
 
   node.append("circle")
-    .attr("r", 5);
+    .attr("r", 5)
+    .attr("fill", function(d) {
+                              if (d.continent == "Africa") {
+                                  return 'orange';
+                              } else if (d.continent == "Asia") {
+                                  return 'blue';
+                                } else if (d.continent == "Americas") {
+                                return 'yellow';
+                                } else if (d.continent == "Oceania") {
+                                return 'green';
+                                } else {
+                                  return 'red';
+                                }
+                          });
 
 });
 
