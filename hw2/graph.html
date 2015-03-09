@@ -144,7 +144,19 @@ d3.json("data/countries_2012.json", function(json) {
 
 
   node.append("circle")
-    .attr("r", 5)
+    .attr("r", function(d) {
+                              if (d.gdp > 500000000000) {
+                                  return 9;
+                              } else if (d.gdp > 195000000000) {
+                                  return 8;
+                                } else if (d.gdp > 45000000000) {
+                                return 7;
+                                } else if (d.gdp > 15700000000) {
+                                return 6;
+                                } else {
+                                  return 5;
+                                }
+                          })
     .attr("fill", function(d) {
                               if (d.continent == "Africa") {
                                   return 'orange';
