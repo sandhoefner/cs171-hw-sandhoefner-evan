@@ -194,6 +194,8 @@ if(document.getElementById('gdp').checked) {
 }
 
 function pop_sort() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
 if(document.getElementById('constant').checked) {
 
@@ -228,6 +230,8 @@ node
 }
 
 function gdp_sort() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
   if(document.getElementById('constant').checked) {
   var json = jsonPop.sort(function(a, b) {
@@ -262,6 +266,8 @@ node
 }
 
 function life_sort() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
 if(document.getElementById('constant').checked) {
 var json = jsonPop.sort(function(a, b) {
@@ -297,6 +303,8 @@ node
 
 
 function lat_sort() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
 if(document.getElementById('constant').checked) {
 var json = jsonPop.sort(function(a, b) {
@@ -329,6 +337,8 @@ node
 }
 
 function name_sort() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
 var json = jsonPop.sort(function(a, b) {
             return d3.ascending(a['name'],b['name']);
@@ -351,6 +361,8 @@ node
 }
 
 function scatter_lat_lon() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
   /*if(document.getElementById('constant').checked) {
 
@@ -364,6 +376,8 @@ node
 }//}
 
 function scatter_pop_gdp() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
   /*if(document.getElementById('s_constant').checked) {
 
@@ -410,6 +424,8 @@ node
 //}
 
 function scatter() {
+  var link = svg.selectAll(".link")
+    .remove();
 if(document.getElementById('lat_lon').checked) {
   scatter_lat_lon()
 } else if(document.getElementById('pop_gdp').checked) {
@@ -418,6 +434,8 @@ if(document.getElementById('lat_lon').checked) {
 }
 
 function circle_pop() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
 var r = Math.min(height, width)/2;
 
@@ -456,6 +474,8 @@ var node = svg.selectAll(".node");
 }
 
 function circle_gdp() {
+  var link = svg.selectAll(".link")
+    .remove();
   force.stop();
 var r = Math.min(height, width)/2;
 
@@ -574,22 +594,29 @@ function tick(d) {
 
 //combine these
 function strips() {
+  var link = svg.selectAll(".link")
+    .remove();
 force.nodes(jsonPop)
       .start();
 }
 
 
 function wedges() {
+  var link = svg.selectAll(".link")
+    .remove();
 force.nodes(jsonPop)
       .start();
 }
 
 function circles() {
-force.nodes(jsonPop)
-      .start();
+  var link = svg.selectAll(".link")
+    .remove();
+circle_gdp();
 }
 
 function all() {
+  var link = svg.selectAll(".link")
+    .remove();
 force.nodes(jsonPop)
       .start();
 }
@@ -653,30 +680,7 @@ var node = svg.selectAll(".node");
 link.enter().append("line")
     .attr("class", "link");
 
-var find_x = function(needle) {
-  var x_ret;
-json.forEach(function(e, j) {
-  if (e.name == needle) {
-    console.log(e.x);
-    x_ret = e.x;
-}
-else if (needle == undefined) {
-return 400;
-  }
-else {
-  return needle;}
-return x_ret;
-})
-};
 
-var find_y = function(needle) {
-json.forEach(function(d, i) {
-  if (d.name == needle) {
-
-    return d.y;
-}
-})
-};
 
 link.transition().duration(1000)
       .attr("x1", function(d) { 
@@ -686,9 +690,31 @@ link.transition().duration(1000)
               ret = e.x;
             }}); 
           return ret;})
-      .attr("y1", function(d, i) { return 200; })
-      .attr("x2", function(d, i) { return 400; })
-      .attr("y2", function(d, i) { return 300; });
+      .attr("y1", function(d, i) { 
+        var ret;
+          json.forEach(function(e, j) {
+            if (e.name == d.source.name) {
+              ret = e.y;
+            }}); 
+          return ret;})
+      .attr("x2", function(d, i) { 
+        var ret;
+       
+          jsonNodes.forEach(function(e, j) {
+            
+            if (e.country_id == d.target.country_id) {
+              ret = e.y;
+            }}); 
+          return ret;})
+      .attr("y2", function(d, i) { 
+        var ret;
+       
+          jsonNodes.forEach(function(e, j) {
+            
+            if (e.country_id == d.target.country_id) {
+              ret = e.y;
+            }}); 
+          return ret;});
 }
 
 // update function - sorts data and calls appropriate layout function
