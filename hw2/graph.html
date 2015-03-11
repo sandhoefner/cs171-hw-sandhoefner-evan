@@ -2,13 +2,9 @@
 <meta charset="utf-8">
 <title>Homework 2 Graph</title>
 <style>
-  .link {
-    stroke: gray;
-    stroke-width: .8px;
-  }
+  
 
   .node {
-    fill: white;
     stroke: #000;
     stroke-width: .9px;
   }
@@ -18,6 +14,44 @@
   }
 
 .tab { margin-left: 40px; } 
+
+
+
+
+.link {
+  stroke: steelblue;
+  stroke-opacity: .4;
+  fill: none;
+  pointer-events: none;
+}
+
+.node:hover,
+.node--source,
+.node--target {
+  font-weight: 700;
+}
+
+.node--source {
+  fill: #2ca02c;
+}
+
+.node--target {
+  fill: #d62728;
+}
+
+.link--source,
+.link--target {
+  stroke-opacity: 1;
+  stroke-width: 2px;
+}
+
+.link--source {
+  stroke: #d62728;
+}
+
+.link--target {
+  stroke: #2ca02c;
+}
 
 </style>
 <body>
@@ -144,7 +178,7 @@ d3.json("data/countries_2012.json", function(json) {
 
 
   node.append("circle")
-    .attr("r", function(d) {
+    .attr("r", /*function(d) {
                               if (d.gdp > 500000000000) {
                                   return 9;
                               } else if (d.gdp > 195000000000) {
@@ -154,10 +188,10 @@ d3.json("data/countries_2012.json", function(json) {
                                 } else if (d.gdp > 15700000000) {
                                 return 6;
                                 } else {
-                                  return 5;
+                                  return */5/*;
                                 }
-                          })
-    .attr("fill", function(d) {
+                          }*/)
+   .attr("fill", function(d) {
                               if (d.continent == "Africa") {
                                   return 'orange';
                               } else if (d.continent == "Asia") {
@@ -169,7 +203,9 @@ d3.json("data/countries_2012.json", function(json) {
                                 } else {
                                   return 'red';
                                 }
-                          });
+                          })
+    .on("mouseover", mouseovered)
+      .on("mouseout", mouseouted);
 
 });
 
@@ -657,11 +693,59 @@ jsonNodes.forEach(function(d, i) {
 })
 }
   })
-})
+});
+
+/*var json = jsonPop.sort(function(a, b) {
+  if (a['gdp'] == b['gdp']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
+            return d3.descending(a['gdp'],b['gdp']);
+          }});*/
+
+function id_of_d(d) {
+  var ret;
+       
+          jsonNodes.forEach(function(e, j) {
+            
+            if (e.name == d.name) {
+              
+              ret = e.country_id;
 
 
+            }}); 
+          return ret;
+}
+
+
+function mouseovered(d) {
+  var node = svg.selectAll(".node");
+  node
+      .each(function(n) { n.target = n.source = false; });
+var link = svg.selectAll(".link");
+  link
+      .classed("link--target", function(l) { if (l.target.country_id === id_of_d(d)) return l.source.source = true; })
+      .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
+    .filter(function(l) { return l.target === d || l.source === d; })
+      .each(function() { this.parentNode.appendChild(this); });
+
+  node
+      .classed("node--target", function(n) { return n.target; })
+      .classed("node--source", function(n) { return n.source; });
+}
+
+function mouseouted(d) {
+  var link = svg.selectAll(".link");
+  link
+      .classed("link--target", false)
+      .classed("link--source", false);
+var node = svg.selectAll(".node");
+  node
+      .classed("node--target", false)
+      .classed("node--source", false);
+}
 
 function g_links() {
+  // is this just one year as requested?
   force.stop();
   var r = Math.min(height, width)/2;
 
@@ -748,6 +832,8 @@ link.transition().duration(1000)
             }}})}); 
           return ret;});
 }
+
+
 
 // update function - sorts data and calls appropriate layout function
 
