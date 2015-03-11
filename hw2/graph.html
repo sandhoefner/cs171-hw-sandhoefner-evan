@@ -727,19 +727,25 @@ link.transition().duration(1000)
         var ret;
        
           jsonNodes.forEach(function(e, j) {
-            
+            json.forEach(function(f, k) {
             if (e.country_id == d.target.country_id) {
-              ret = e.y;
-            }}); 
+              if (e.name == f.name) {
+              ret = f.x;
+
+
+            }}})}); 
           return ret;})
       .attr("y2", function(d, i) { 
         var ret;
        
           jsonNodes.forEach(function(e, j) {
-            
+            json.forEach(function(f, k) {
             if (e.country_id == d.target.country_id) {
-              ret = e.y;
-            }}); 
+              if (e.name == f.name) {
+              ret = f.y;
+
+
+            }}})}); 
           return ret;});
 }
 
