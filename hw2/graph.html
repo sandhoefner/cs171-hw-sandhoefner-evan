@@ -737,13 +737,15 @@ var json = jsonPop.sort(function(a, b) {
             return d3.descending(a['gdp'],b['gdp']);
           }});
 
-  graph.nodes = pie(json).map(function(d, i) {
+  graph.nodes = pie(json).map(function(d) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
 
     // Building the data object we are going to return
+    
     d.data.x = arc.centroid(d)[0]+400;
+  
     d.data.y = arc.centroid(d)[1]+400;
 
     return d.data;
@@ -860,6 +862,8 @@ function circles() {
     tradeFlows = false;
 
   force.stop();
+
+
 var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
@@ -871,20 +875,22 @@ var r = Math.min(height, width)/2;
             return 1;  // We want an equal pie share/slice for each point
           });
 
-var json = jsonPop.sort(function(a, b) {
-  if (a['gdp'] == b['gdp']) {
+var africa = jsonPop.sort(function(a, b) {
+  if (a['continent'] == 'Africa') {
                     return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['gdp'],b['gdp']);
-          }});
+              }    });
 
-  graph.nodes = pie(json).map(function(d, i) {
+  graph.africa = pie(africa).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
 
     // Building the data object we are going to return
+    if (d.data.continent == "Africa") {
+    d.data.x = arc.centroid(d)[0]+200;
+  } else {
     d.data.x = arc.centroid(d)[0]+400;
+  }
     d.data.y = arc.centroid(d)[1]+400;
 
     return d.data;
@@ -895,23 +901,7 @@ var k = 1;
   node.transition().duration(1000)
       
       .attr("transform", function(d) { 
-
-
-
-        if (d.continent == 'Americas') {
-          return "translate("+(d.x-=7.79*1.5*k)+","+(d.y+=1.5*k)+")" ;
-        } else if (d.continent == 'Africa') {
-          return "translate("+(d.x-=4.67*1.5*k)+","+(d.y-=9.09*1.5*k)+")"; 
-
-        } else if (d.continent == 'Europe') {
-          return "translate("+(d.x+=7.79*1.5*k)+","+(d.y+=1.5*k)+")";
-
-        } else if (d.continent == 'Asia') {
-          return "translate("+(d.x+=1.5*k)+","+(d.y+=5.5*1.5*k)+")";
-
-        } else if (d.continent == 'Oceania') {
-          return "translate("+(d.x+=4.67*1.5*k)+","+(d.y-=9.09*1.5*k)+")"; 
-        }
+           return "translate("+d.x+","+d.y+")"; 
       });
 }
 
