@@ -879,14 +879,37 @@ function mouseovered(d) {
       .each(function(n) { n.target = n.source = false; });
 var link = svg.selectAll(".link");
   link
-      .classed("link--target", function(l) { if (l.target.country_id == id_of_d(d)) { return l.source.source = true;} })
+      .classed("link--target", function(l) {
+            if (l.target.country_id == id_of_d(d)) { 
+              return l.source.source = true;
+            }
+       })
       .classed("link--source", function(l) { if (l.source == d) return l.target.target = true; })
     .filter(function(l) { return l.target.country_id == id_of_d(d) || l.source.country_id == id_of_d(d); })
       .each(function() { this.parentNode.appendChild(this); });
-
+console.log(jsonLinks);
   node
-      .classed("node--target", function(n) { return n.target; })
-      .classed("node--source", function(n) { return n.source; });
+  //return true if n is one of d's targets
+      .classed("node--target", function(n) {
+        var id_source = id_of_d(d);
+        var id_target = id_of_d(n);
+        var ret = false;
+        console.log(jsonNodes);
+        jsonNodes.forEach(function(x) {
+          if (x.country_id == id_source) {
+            var partners = x.years[17].top_partners;
+            partners.forEach(function(y) {
+                if (y.country_id == id_target) {
+                  console.log('true');
+                  ret = true;
+                }})
+            }
+            
+          });
+       
+            console.log(ret);return ret;
+        })
+      .classed("node--source", function(n) { if (n.x == d.x) {return true;} else {return false;} });
 }
 
 function mouseouted(d) {
