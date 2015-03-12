@@ -133,6 +133,13 @@
   Links:
     <label><input type="radio" name="g_links" id="g_links" value="g_links" > Yes</label>
   </form>
+  <form>
+  Color-code by:
+  <label><input type="radio" name="color" id="color_cont" value="color_cont" checked> Continent</label>
+    <label><input type="radio" name="color" id="color_gdp" value="color_gdp" > GDP quintile</label>
+    <label><input type="radio" name="color" id="color_pop" value="color_pop" > Population quintile</label>
+    <label><input type="radio" name="color" id="color_life" value="color_life" > Life expectancy quintile</label>
+  </form>
 <script>
 
 // create svg canvas
@@ -186,6 +193,7 @@ d3.json("data/countries_2012.json", function(json) {
 
 
   node.append("circle")
+    .attr("class", "circle")
     .attr("r", /*function(d) {
                               if (d.gdp > 500000000000) {
                                   return 9;
@@ -878,7 +886,7 @@ var link = svg.selectAll(".link");
 
   node
       .classed("node--target", function(n) { return n.target; })
-      .classed("node--source", function(n) { ;return n.source; });
+      .classed("node--source", function(n) { return n.source; });
 }
 
 function mouseouted(d) {
@@ -1037,6 +1045,7 @@ var node = svg.selectAll(".node")
 
 
   node.append("circle")
+    .attr("class", "circle")
     .attr("r", /*function(d) {
                               if (d.gdp > 500000000000) {
                                   return 9;
@@ -1070,7 +1079,77 @@ var node = svg.selectAll(".node")
 }, 1000);
 }
 
+function color_gdp() {
+var circ = svg.selectAll(".circle")
 
+   .attr("fill", function(d) {
+                              if (d.gdp > 500000000000) {
+                                  return 'red';
+                              } else if (d.gdp > 195000000000) {
+                                  return 'orange';
+                                } else if (d.gdp > 45000000000) {
+                                return 'yellow';
+                                } else if (d.gdp > 15700000000) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+}
+
+function color_cont() {
+var circ = svg.selectAll(".circle")
+
+   .attr("fill", function(d) {
+                              if (d.continent == "Africa") {
+                                  return 'orange';
+                              } else if (d.continent == "Asia") {
+                                  return 'blue';
+                                } else if (d.continent == "Americas") {
+                                return 'yellow';
+                                } else if (d.continent == "Oceania") {
+                                return 'green';
+                                } else {
+                                  return 'red';
+                                }
+                          });
+  }
+
+function color_life() {
+var circ = svg.selectAll(".circle")
+
+   .attr("fill", function(d) {
+                              if (d.life_expectancy > 80) {
+                                  return 'red';
+                              } else if (d.life_expectancy > 75.04) {
+                                  return 'orange';
+                                } else if (d.life_expectancy > 72) {
+                                return 'yellow';
+                                } else if (d.life_expectancy > 64) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+}
+
+function color_pop() {
+var circ = svg.selectAll(".circle")
+
+   .attr("fill", function(d) {
+                              if (d.population > 45000000) {
+                                  return 'red';
+                              } else if (d.population > 14400000) {
+                                  return 'orange';
+                                } else if (d.population > 7950000) {
+                                return 'yellow';
+                                } else if (d.population > 3674000) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+}
 
 // update function - sorts data and calls appropriate layout function
 
@@ -1104,6 +1183,11 @@ d3.select("input[value=\"circles\"]").on("click", circles);
 d3.select("input[value=\"all\"]").on("click", all);
 
 d3.select("input[value=\"g_links\"]").on("click", g_links);
+
+d3.select("input[value=\"color_gdp\"]").on("click", color_gdp);
+d3.select("input[value=\"color_cont\"]").on("click", color_cont);
+d3.select("input[value=\"color_pop\"]").on("click", color_pop);
+d3.select("input[value=\"color_life\"]").on("click", color_life);
 
 function whichSort() {
 console.log('nope');
