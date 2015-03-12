@@ -20,7 +20,7 @@
 
 .link {
   stroke: steelblue;
-  stroke-opacity: .4;
+  stroke-opacity: .1;
   fill: none;
   pointer-events: none;
 }
@@ -114,7 +114,10 @@
   <form>
   Circle by:
     <label><input type="radio" name="circle" id="circle_pop" value="circle_pop" > Population</label>
+    <label><input type="radio" name="circle" id="circle_name" value="circle_name" > Name</label>
     <label><input type="radio" name="circle" id="circle_gdp" value="circle_gdp" > GDP</label>
+    <label><input type="radio" name="circle" id="circle_life" value="circle_life" > Life expectancy</label>
+    <label><input type="radio" name="circle" id="circle_dist" value="circle_dist" > Distance from equator</label>
   </form>
   <form>
   Cluster:
@@ -165,6 +168,7 @@ d3.json("data/countries_2012.json", function(json) {
               .data(jsonPop)
             .enter()
               .append("g").attr("class", "node")
+
                           .attr("transform", function(d, i) { 
                             return "translate("+300+","+(8+i*14)+")"});
 
@@ -173,9 +177,12 @@ d3.json("data/countries_2012.json", function(json) {
                     var groups = svg.selectAll("g")
                     
     .append("text")
+    
     .attr("dx", 6)
     .attr("dy", 4.5)
-    .text(function(d, i) {return d.name}); 
+    .text(function(d, i) {return d.name});
+
+
 
 
   node.append("circle")
@@ -505,11 +512,137 @@ var link = svg.selectAll(".link")
     .remove();
     circle_gdp();
 
-  } else {
-circle_gdp();
-  }
+  } else if(document.getElementById('circle_name').checked) {
+circle_name();
+  } else if(document.getElementById('circle_dist').checked) {
+circle_dist();
+    } else if(document.getElementById('circle_life').checked) {
+circle_life();
+    }
 }
 
+function circle_sort(cat) {
+
+
+var json = jsonPop.sort(function(a, b) {
+  if (a[cat] == b[cat]) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
+            return d3.descending(a[cat],b[cat]);
+          }});
+return json;
+}
+
+
+
+function circle_name() {
+  var link = svg.selectAll(".link")
+    .remove();
+  force.stop();
+var r = Math.min(height, width)/2;
+
+  var arc = d3.svg.arc()
+          .outerRadius(r);
+
+  var pie = d3.layout.pie()
+          
+          .value(function(d, i) { 
+            return 1;  // We want an equal pie share/slice for each point
+          });
+
+  var json = jsonPop.sort(function(a, b) {
+                    return d3.descending(a['name'],b['name']);
+                  });
+
+  graph.nodes = pie(json).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+    d.data.x = arc.centroid(d)[0]+400;
+    d.data.y = arc.centroid(d)[1]+400;
+
+    return d.data;
+  })
+var node = svg.selectAll(".node");
+  node.transition().duration(1000)
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"; 
+      });
+}
+
+function circle_life() {
+  var link = svg.selectAll(".link")
+    .remove();
+  force.stop();
+var r = Math.min(height, width)/2;
+
+  var arc = d3.svg.arc()
+          .outerRadius(r);
+
+  var pie = d3.layout.pie()
+          
+          .value(function(d, i) { 
+            return 1;  // We want an equal pie share/slice for each point
+          });
+json = circle_sort('life_expectancy');
+  graph.nodes = pie(json).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+    d.data.x = arc.centroid(d)[0]+400;
+    d.data.y = arc.centroid(d)[1]+400;
+
+    return d.data;
+  })
+var node = svg.selectAll(".node");
+  node.transition().duration(1000)
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"; 
+      });
+}
+
+function circle_dist() {
+var link = svg.selectAll(".link")
+    .remove();
+  force.stop();
+var r = Math.min(height, width)/2;
+
+  var arc = d3.svg.arc()
+          .outerRadius(r);
+
+  var pie = d3.layout.pie()
+          
+          .value(function(d, i) { 
+            return 1;  // We want an equal pie share/slice for each point
+          });
+
+var json = jsonPop.sort(function(a, b) {
+  if (Math.abs(a['latitude']) == Math.abs(b['latitude'])) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
+            return d3.descending(Math.abs(a['latitude']),Math.abs(b['latitude']));
+          }});
+  graph.nodes = pie(json).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+    d.data.x = arc.centroid(d)[0]+400;
+    d.data.y = arc.centroid(d)[1]+400;
+
+    return d.data;
+  })
+var node = svg.selectAll(".node");
+  node.transition().duration(1000)
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"; 
+      });
+}
 
 function circle_pop() {
   var link = svg.selectAll(".link")
@@ -847,10 +980,10 @@ link.transition().duration(1000)
 
             }}})}); 
           return ret;});
-}, 1000);
 
 
-setTimeout(function() {
+
+
 var node = svg.selectAll(".node")
     .remove();
 
@@ -933,8 +1066,8 @@ var node = svg.selectAll(".node")
     .on("mouseover", mouseovered)
       .on("mouseout", mouseouted);
 
-}, 5000);
 
+}, 1000);
 }
 
 
@@ -961,6 +1094,9 @@ d3.select("input[value=\"scatCon\"]").on("click", scatter);
 
 d3.select("input[value=\"circle_pop\"]").on("click", whichCircle);
 d3.select("input[value=\"circle_gdp\"]").on("click", whichCircle);
+d3.select("input[value=\"circle_life\"]").on("click", whichCircle);
+d3.select("input[value=\"circle_name\"]").on("click", whichCircle);
+d3.select("input[value=\"circle_dist\"]").on("click", whichCircle);
 
 d3.select("input[value=\"strips\"]").on("click", strips);
 d3.select("input[value=\"wedges\"]").on("click", wedges);
