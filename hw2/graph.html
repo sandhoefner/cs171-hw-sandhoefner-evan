@@ -159,6 +159,8 @@ var nb_nodes = 120, nb_cat = 10;
 
 var node_scale = d3.scale.linear().domain([0, nb_cat]).range([5, 50])
 
+var tradeFlows = false;
+
 // create global variables for status of layout and status of sort
 
 // load data into graph.nodes and update graph for the first time
@@ -237,7 +239,7 @@ if(document.getElementById('gdp').checked) {
 } else if(document.getElementById('life').checked) {
   life_sort()
 } else if(document.getElementById('lat').checked) {
-  lat_sort()
+  lat_sort()      
 } else if(document.getElementById('pop').checked) {
   pop_sort()
 }
@@ -274,6 +276,7 @@ if(document.getElementById('gdp').checked) {
 function pop_sort() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
 if(document.getElementById('constant').checked) {
 
@@ -310,6 +313,7 @@ node
 function gdp_sort() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
   if(document.getElementById('constant').checked) {
   var json = jsonPop.sort(function(a, b) {
@@ -346,6 +350,7 @@ node
 function life_sort() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
 if(document.getElementById('constant').checked) {
 var json = jsonPop.sort(function(a, b) {
@@ -383,6 +388,7 @@ node
 function lat_sort() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
 if(document.getElementById('constant').checked) {
 var json = jsonPop.sort(function(a, b) {
@@ -417,6 +423,7 @@ node
 function name_sort() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
 var json = jsonPop.sort(function(a, b) {
             return d3.ascending(a['name'],b['name']);
@@ -441,6 +448,7 @@ node
 function scatter_lat_lon() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
   /*if(document.getElementById('constant').checked) {
 
@@ -456,6 +464,7 @@ node
 function scatter_pop_gdp() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
   /*if(document.getElementById('s_constant').checked) {
 
@@ -504,6 +513,7 @@ node
 function scatter() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
 if(document.getElementById('lat_lon').checked) {
   scatter_lat_lon()
 } else if(document.getElementById('pop_gdp').checked) {
@@ -518,6 +528,7 @@ function whichCircle() {
   } else if (document.getElementById('circle_gdp').checked) {
 var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
     circle_gdp();
 
   } else if(document.getElementById('circle_name').checked) {
@@ -546,6 +557,7 @@ return json;
 function circle_name() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
 var r = Math.min(height, width)/2;
 
@@ -583,6 +595,7 @@ var node = svg.selectAll(".node");
 function circle_life() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
 var r = Math.min(height, width)/2;
 
@@ -616,6 +629,7 @@ var node = svg.selectAll(".node");
 function circle_dist() {
 var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
 var r = Math.min(height, width)/2;
 
@@ -655,6 +669,7 @@ var node = svg.selectAll(".node");
 function circle_pop() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
   force.stop();
 var r = Math.min(height, width)/2;
 
@@ -724,8 +739,15 @@ var json = jsonPop.sort(function(a, b) {
 
     return d.data;
   })
+
+/*if (tradeFlows) {
+var circ = svg.selectAll(".circle")
+  .attr("fill", "black")
+}*/
+
 var node = svg.selectAll(".node");
   node.transition().duration(1000)
+      
       .attr("transform", function(d) { 
         return "translate("+d.x+","+d.y+")"; 
       });
@@ -814,6 +836,7 @@ function tick(d) {
 function strips() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
 force.nodes(jsonPop)
       .start();
 }
@@ -822,6 +845,7 @@ force.nodes(jsonPop)
 function wedges() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
 force.nodes(jsonPop)
       .start();
 }
@@ -829,12 +853,14 @@ force.nodes(jsonPop)
 function circles() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
 circle_gdp();
 }
 
 function all() {
   var link = svg.selectAll(".link")
     .remove();
+    tradeFlows = false;
 force.nodes(jsonPop)
       .start();
 }
@@ -874,26 +900,18 @@ function id_of_d(d) {
 
 
 function mouseovered(d) {
+  if (tradeFlows == true) {
   var node = svg.selectAll(".node");
   node
       .each(function(n) { n.target = n.source = false; });
 var link = svg.selectAll(".link");
+
   link
       .classed("link--target", function(l) {
-
             var ret;
           if (id_of_d(d) == id_of_d(l.source)) {
-            
-            /*var partners = x.years[17].top_partners;
-            partners.forEach(function(y) {
-                if (y.country_id == id_target) {
-               
-                  ret = true;
-                }})*/ ret = true;
+            ret = true;
             }
-            
-          
-       
             return ret;
        })
       .classed("link--source", function(l) { if (l.source == d) return true; })
@@ -912,19 +930,18 @@ var link = svg.selectAll(".link");
             var partners = x.years[17].top_partners;
             partners.forEach(function(y) {
                 if (y.country_id == id_target) {
-               
                   ret = true;
                 }})
             }
-            
           });
-       
             return ret;
         })
       .classed("node--source", function(n) { if (n.x == d.x) {return true;} else {return false;} });
 }
+}
 
 function mouseouted(d) {
+
   var link = svg.selectAll(".link");
   link
       .classed("link--target", false)
@@ -936,6 +953,7 @@ var node = svg.selectAll(".node");
 }
 
 function g_links() {
+  tradeFlows = true;
  circle_gdp();
   //force.stop();
   setTimeout(function() {
@@ -1119,21 +1137,19 @@ var node = svg.selectAll(".node")
                                   return */5/*;
                                 }
                           }*/)
-   .attr("fill", function(d) {
-                              if (d.continent == "Africa") {
-                                  return 'orange';
-                              } else if (d.continent == "Asia") {
-                                  return 'blue';
-                                } else if (d.continent == "Americas") {
-                                return 'yellow';
-                                } else if (d.continent == "Oceania") {
-                                return 'green';
-                                } else {
-                                  return 'red';
-                                }
-                          })
+   
     .on("mouseover", mouseovered)
       .on("mouseout", mouseouted);
+
+if(document.getElementById('color_gdp').checked) {
+color_gdp();
+} else if(document.getElementById('color_life').checked) {
+color_life();
+  } else if(document.getElementById('color_pop').checked) {
+color_pop();
+  }else {
+color_cont();
+  }
 
 
 }, 1000);
