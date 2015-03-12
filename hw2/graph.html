@@ -42,12 +42,12 @@
 }
 
 .node--target {
-  fill: #d62728;
+  fill: black;
 }
 
 .link--source,
 .link--target {
-  stroke-opacity: 1;
+  stroke-opacity: .7;
   stroke-width: 2px;
 }
 
@@ -1146,6 +1146,8 @@ var node = svg.selectAll(".node")
     .append("text")
     .attr("dx", 6)
     .attr("dy", 4.5)
+    .on("mouseover", mouseovered)
+      .on("mouseout", mouseouted)
     .text(function(d, i) {return d.name}); 
 
 
