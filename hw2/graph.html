@@ -134,6 +134,7 @@
 
 // create svg canvas
 var margin = {top: 50, bottom: 10, left: 300, right: 40};
+
 var width = 1650 - margin.left - margin.right;
 var height = 1750 - margin.top - margin.bottom;
 
@@ -745,8 +746,10 @@ var node = svg.selectAll(".node");
 }
 
 function g_links() {
-  // is this just one year as requested?
+ 
   force.stop();
+  var node = svg.selectAll(".node")
+    .remove();
   var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
@@ -831,6 +834,57 @@ link.transition().duration(1000)
 
             }}})}); 
           return ret;});
+
+
+var node = svg.selectAll(".node")
+              .data(jsonPop)
+            .enter()
+              .append("g").attr("class", "node")
+                          .attr("transform", function(d, i) { 
+                            return "translate("+300+","+(8+i*14)+")"});
+
+
+  
+                    var groups = svg.selectAll("g")
+                    
+    .append("text")
+    .attr("dx", 6)
+    .attr("dy", 4.5)
+    .text(function(d, i) {return d.name}); 
+
+
+  node.append("circle")
+    .attr("r", /*function(d) {
+                              if (d.gdp > 500000000000) {
+                                  return 9;
+                              } else if (d.gdp > 195000000000) {
+                                  return 8;
+                                } else if (d.gdp > 45000000000) {
+                                return 7;
+                                } else if (d.gdp > 15700000000) {
+                                return 6;
+                                } else {
+                                  return */5/*;
+                                }
+                          }*/)
+   .attr("fill", function(d) {
+                              if (d.continent == "Africa") {
+                                  return 'orange';
+                              } else if (d.continent == "Asia") {
+                                  return 'blue';
+                                } else if (d.continent == "Americas") {
+                                return 'yellow';
+                                } else if (d.continent == "Oceania") {
+                                return 'green';
+                                } else {
+                                  return 'red';
+                                }
+                          })
+    .on("mouseover", mouseovered)
+      .on("mouseout", mouseouted);
+
+
+      
 }
 
 
