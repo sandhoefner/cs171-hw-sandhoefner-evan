@@ -880,34 +880,46 @@ function mouseovered(d) {
 var link = svg.selectAll(".link");
   link
       .classed("link--target", function(l) {
-            if (l.target.country_id == id_of_d(d)) { 
-              return l.source.source = true;
+
+            var ret;
+          if (id_of_d(d) == id_of_d(l.source)) {
+            
+            /*var partners = x.years[17].top_partners;
+            partners.forEach(function(y) {
+                if (y.country_id == id_target) {
+               
+                  ret = true;
+                }})*/ ret = true;
             }
+            
+          
+       
+            return ret;
        })
-      .classed("link--source", function(l) { if (l.source == d) return l.target.target = true; })
+      .classed("link--source", function(l) { if (l.source == d) return true; })
     .filter(function(l) { return l.target.country_id == id_of_d(d) || l.source.country_id == id_of_d(d); })
       .each(function() { this.parentNode.appendChild(this); });
-console.log(jsonLinks);
+
   node
   //return true if n is one of d's targets
       .classed("node--target", function(n) {
         var id_source = id_of_d(d);
         var id_target = id_of_d(n);
         var ret = false;
-        console.log(jsonNodes);
+    
         jsonNodes.forEach(function(x) {
           if (x.country_id == id_source) {
             var partners = x.years[17].top_partners;
             partners.forEach(function(y) {
                 if (y.country_id == id_target) {
-                  console.log('true');
+               
                   ret = true;
                 }})
             }
             
           });
        
-            console.log(ret);return ret;
+            return ret;
         })
       .classed("node--source", function(n) { if (n.x == d.x) {return true;} else {return false;} });
 }
@@ -989,7 +1001,6 @@ link.transition().duration(1000)
           return ret;})
       .attr("x2", function(d, i) { 
         var ret;
-       
           jsonNodes.forEach(function(e, j) {
             json.forEach(function(f, k) {
             if (e.country_id == d.target.country_id) {
@@ -1011,6 +1022,32 @@ link.transition().duration(1000)
 
             }}})}); 
           return ret;});
+
+/*node
+  //return true if n is one of d's targets
+      .classed("node--target", function(n) {
+        var id_source = id_of_d(d);
+        var id_target = id_of_d(n);
+        var ret = false;
+        console.log(jsonNodes);
+        jsonNodes.forEach(function(x) {
+          if (x.country_id == id_source) {
+            var partners = x.years[17].top_partners;
+            partners.forEach(function(y) {
+                if (y.country_id == id_target) {
+                  console.log('true');
+                  ret = true;
+                }})
+            }
+            
+          });
+       
+            console.log(ret);return ret;
+        })*/
+
+
+
+
 
 
 
