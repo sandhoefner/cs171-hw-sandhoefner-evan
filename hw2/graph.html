@@ -947,20 +947,21 @@ var link = svg.selectAll(".link");
       .classed("node--target--false", function(n) {
         var id_source = id_of_d(d);
         var id_target = id_of_d(n);
-        var ret = false;
+        var ret = true;
     
         jsonNodes.forEach(function(x) {
           if (x.country_id == id_source) {
             var partners = x.years[17].top_partners;
             partners.forEach(function(y) {
                 if (y.country_id == id_target) {
-                  ret = true;
+                  ret = false;
                 }})
             }
           });
-            return ret;
+        if (n.x !== d.x) {
+            return ret;}
         })
-      .classed("node--source--false", function(n) { if (n.x == d.x) {return true;} else {return false;} });
+      .classed("node--source--false", function(n) { if (n.x == d.x) {return false;}  });
 }
 }
 
