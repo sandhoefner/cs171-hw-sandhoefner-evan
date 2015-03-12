@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Homework 2 Studio Design</title>
+<style>
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<select id="country">
+  <option value="Angola" >Angola</option>
+<option value="Albania">Albania</option>
+<option value="United Arab Emirates">United Arab Emirates</option>
+<option value="Argentina">Argentina</option>
+<option value="Australia">Australia</option>
+<option value="Austria">Austria</option>
+<option value="Azerbaijan">Azerbaijan</option>
+<option value="Belgium">Belgium</option>
+<option value="Bangladesh">Bangladesh</option>
+<option value="Bulgaria">Bulgaria</option>
+<option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+<option value="Belarus">Belarus</option>
+<option value="Bolivia">Bolivia</option>
+<option value="Brazil">Brazil</option>
+<option value="Canada">Canada</option>
+<option value="Switzerland">Switzerland</option>
+<option value="Chile">Chile</option>
+<option value="China">China</option>
+<option value="Cote d'Ivoire">Cote d'Ivoire</option>
+<option value="Cameroon">Cameroon</option>
+<option value="Congo">Congo</option>
+<option value="Colombia">Colombia</option>
+<option value="Costa Rica">Costa Rica</option>
+<option value="Cuba">Cuba</option>
+<option value="Czech Republic">Czech Republic</option>
+<option value="Germany">Germany</option>
+<option value="Denmark">Denmark</option>
+<option value="Dominican Republic">Dominican Republic</option>
+<option value="Algeria">Algeria</option>
+<option value="Ecuador">Ecuador</option>
+<option value="Egypt">Egypt</option>
+<option value="Spain">Spain</option>
+<option value="Estonia">Estonia</option>
+<option value="Ethiopia">Ethiopia</option>
+<option value="Finland">Finland</option>
+<option value="France">France</option>
+<option value="Gabon">Gabon</option>
+<option value="United Kingdom">United Kingdom</option>
+<option value="Georgia">Georgia</option>
+<option value="Ghana">Ghana</option>
+<option value="Guinea">Guinea</option>
+<option value="Greece">Greece</option>
+<option value="Guatemala">Guatemala</option>
+<option value="Hong Kong">Hong Kong</option>
+<option value="Honduras">Honduras</option>
+<option value="Croatia">Croatia</option>
+<option value="Hungary">Hungary</option>
+<option value="Indonesia">Indonesia</option>
+<option value="India">India</option>
+<option value="Iran">Iran</option>
+<option value="Israel">Israel</option>
+<option value="Italy">Italy</option>
+<option value="Jordan">Jordan</option>
+<option value="Japan">Japan</option>
+<option value="Kazakhstan">Kazakhstan</option>
+<option value="Kenya">Kenya</option>
+<option value="Kyrgyzstan">Kyrgyzstan</option>
+<option value="Cambodia">Cambodia</option>
+<option value="Korea, Rep.">Korea, Rep.</option>
+<option value="Kuwait">Kuwait</option>
+<option value="Lao PDR">Lao PDR</option>
+<option value="Lebanon">Lebanon</option>
+<option value="Liberia">Liberia</option>
+<option value="Sri Lanka">Sri Lanka</option>
+<option value="Lithuania">Lithuania</option>
+<option value="Latvia">Latvia</option>
+<option value="Morocco">Morocco</option>
+<option value="Moldova">Moldova</option>
+<option value="Madagascar">Madagascar</option>
+<option value="Mexico">Mexico</option>
+<option value="Macedonia">Macedonia</option>
+<option value="Mali">Mali</option>
+<option value="Mongolia">Mongolia</option>
+<option value="Mozambique">Mozambique</option>
+<option value="Mauritania">Mauritania</option>
+<option value="Mauritius">Mauritius</option>
+<option value="Malawi">Malawi</option>
+<option value="Malaysia">Malaysia</option>
+<option value="Nigeria">Nigeria</option>
+<option value="Nicaragua">Nicaragua</option>
+<option value="Netherlands">Netherlands</option>
+<option value="Norway">Norway</option>
+<option value="New Zealand">New Zealand</option>
+<option value="Oman">Oman</option>
+<option value="Pakistan">Pakistan</option>
+<option value="Panama">Panama</option>
+<option value="Peru">Peru</option>
+<option value="Philippines">Philippines</option>
+<option value="Papua New Guinea">Papua New Guinea</option>
+<option value="Poland">Poland</option>
+<option value="Portugal">Portugal</option>
+<option value="Paraguay">Paraguay</option>
+<option value="Russia">Russia</option>
+<option value="Saudi Arabia">Saudi Arabia</option>
+<option value="Senegal">Senegal</option>
+<option value="Singapore">Singapore</option>
+<option value="El Salvador">El Salvador</option>
+<option value="Slovak Republic">Slovak Republic</option>
+<option value="Slovenia">Slovenia</option>
+<option value="Sweden">Sweden</option>
+<option value="Syrian Arab Republic">Syrian Arab Republic</option>
+<option value="Thailand">Thailand</option>
+<option value="Tajikstan">Tajikstan</option>
+<option value="Turkmenistan">Turkmenistan</option>
+<option value="Trinidad and Tobago">Trinidad and Tobago</option>
+<option value="Tunisia">Tunisia</option>
+<option value="Turkey">Turkey</option>
+<option value="Tanzania">Tanzania</option>
+<option value="Uganda">Uganda</option>
+<option value="Ukraine">Ukraine</option>
+<option value="Uruguay">Uruguay</option>
+<option value="United States" selected>United States</option>
+<option value="Uzbekistan">Uzbekistan</option>
+<option value="Venezuela">Venezuela</option>
+<option value="Viet Nam">Viet Nam</option>
+<option value="Yemen">Yemen</option>
+<option value="South Africa">South Africa</option>
+<option value="Zambia">Zambia</option>
+<option value="Zimbabwe">Zimbabwe</option>
+</select>
+
+<script>
+var margin = {top: 50, bottom: 10, left: 300, right: 40};
+
+var width = 1650 - margin.left - margin.right;
+var height = 1750 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+
+            
+
+
+d3.selectAll("#country")
+.on("change", function() {
+  d3.selectAll("option").each(function(d) {
+    if(d3.select(this).property('selected')) {
+    sel_country = this.value;
+    //console.log(sel_country);
+  }
+  })})
+
+
+
+
+
+</script>
+</body>
+</html>
