@@ -886,18 +886,35 @@ var africa = jsonPop.sort(function(a, b) {
     d.outerRadius = r;
 
     // Building the data object we are going to return
-    if (d.data.continent == "Africa") {
+  
     d.data.x = arc.centroid(d)[0]+200;
-  } else {
-    d.data.x = arc.centroid(d)[0]+400;
-  }
+ 
     d.data.y = arc.centroid(d)[1]+400;
 
     return d.data;
   })
 
+  var europe = jsonPop.sort(function(a, b) {
+  if (a['continent'] == 'Europe') {
+                    return d3.ascending(a['name'],b['name']);
+               }    });
+
+  graph.europe = pie(europe).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+  
+    d.data.x = arc.centroid(d)[0]+200;
+ 
+    d.data.y = arc.centroid(d)[1]+200;
+
+    return d.data;
+  })
+
 var node = svg.selectAll(".node");
-var k = 1;
+
   node.transition().duration(1000)
       
       .attr("transform", function(d) { 
