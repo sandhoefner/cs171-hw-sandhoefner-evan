@@ -31,6 +31,12 @@
   font-weight: 700;
 }
 
+
+.node--source--false,
+.node--target--false {
+  opacity: .1;
+}
+
 .node--source {
   fill: #2ca02c;
 }
@@ -915,6 +921,7 @@ var link = svg.selectAll(".link");
             return ret;
        })
       .classed("link--source", function(l) { if (l.source == d) return true; })
+
     .filter(function(l) { return l.target.country_id == id_of_d(d) || l.source.country_id == id_of_d(d); })
       .each(function() { this.parentNode.appendChild(this); });
 
@@ -936,7 +943,24 @@ var link = svg.selectAll(".link");
           });
             return ret;
         })
-      .classed("node--source", function(n) { if (n.x == d.x) {return true;} else {return false;} });
+      .classed("node--source", function(n) { if (n.x == d.x) {return true;} else {return false;} })
+      .classed("node--target--false", function(n) {
+        var id_source = id_of_d(d);
+        var id_target = id_of_d(n);
+        var ret = false;
+    
+        jsonNodes.forEach(function(x) {
+          if (x.country_id == id_source) {
+            var partners = x.years[17].top_partners;
+            partners.forEach(function(y) {
+                if (y.country_id == id_target) {
+                  ret = true;
+                }})
+            }
+          });
+            return ret;
+        })
+      .classed("node--source--false", function(n) { if (n.x == d.x) {return true;} else {return false;} });
 }
 }
 
@@ -949,7 +973,9 @@ function mouseouted(d) {
 var node = svg.selectAll(".node");
   node
       .classed("node--target", false)
-      .classed("node--source", false);
+      .classed("node--source", false)
+      .classed("node--target--false", false)
+      .classed("node--source--false", false);
 }
 
 function g_links() {
