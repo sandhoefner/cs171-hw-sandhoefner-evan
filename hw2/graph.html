@@ -496,6 +496,21 @@ if(document.getElementById('lat_lon').checked) {
 }
 }
 
+function whichCircle() {
+  if(document.getElementById('circle_pop').checked) {
+
+    circle_pop();
+  } else if (document.getElementById('circle_gdp').checked) {
+var link = svg.selectAll(".link")
+    .remove();
+    circle_gdp();
+
+  } else {
+circle_gdp();
+  }
+}
+
+
 function circle_pop() {
   var link = svg.selectAll(".link")
     .remove();
@@ -537,8 +552,7 @@ var node = svg.selectAll(".node");
 }
 
 function circle_gdp() {
-  var link = svg.selectAll(".link")
-    .remove();
+
   force.stop();
 var r = Math.min(height, width)/2;
 
@@ -724,14 +738,14 @@ function mouseovered(d) {
       .each(function(n) { n.target = n.source = false; });
 var link = svg.selectAll(".link");
   link
-      .classed("link--target", function(l) { if (l.target.country_id === id_of_d(d)) return l.source.source = true; })
-      .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
-    .filter(function(l) { return l.target === d || l.source === d; })
+      .classed("link--target", function(l) { if (l.target.country_id == id_of_d(d)) { return l.source.source = true;} })
+      .classed("link--source", function(l) { if (l.source == d) return l.target.target = true; })
+    .filter(function(l) { return l.target.country_id == id_of_d(d) || l.source.country_id == id_of_d(d); })
       .each(function() { this.parentNode.appendChild(this); });
 
   node
       .classed("node--target", function(n) { return n.target; })
-      .classed("node--source", function(n) { return n.source; });
+      .classed("node--source", function(n) { ;return n.source; });
 }
 
 function mouseouted(d) {
@@ -746,10 +760,9 @@ var node = svg.selectAll(".node");
 }
 
 function g_links() {
- 
-  force.stop();
-  var node = svg.selectAll(".node")
-    .remove();
+ circle_gdp();
+  //force.stop();
+  setTimeout(function() {
   var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
@@ -834,14 +847,51 @@ link.transition().duration(1000)
 
             }}})}); 
           return ret;});
+}, 1000);
 
 
+setTimeout(function() {
 var node = svg.selectAll(".node")
-              .data(jsonPop)
+    .remove();
+
+var r = Math.min(height, width)/2;
+
+  var arc = d3.svg.arc()
+          .outerRadius(r);
+
+  var pie = d3.layout.pie()
+          
+          .value(function(d, i) { 
+            return 1;  // We want an equal pie share/slice for each point
+          });
+
+var json = jsonPop.sort(function(a, b) {
+  if (a['gdp'] == b['gdp']) {
+                    return d3.ascending(a['name'],b['name']);
+                  } else {
+            return d3.descending(a['gdp'],b['gdp']);
+          }});
+
+  graph.nodes = pie(json).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+    d.data.x = arc.centroid(d)[0]+400;
+    d.data.y = arc.centroid(d)[1]+400;
+
+    return d.data;
+  })
+var node = svg.selectAll(".node")
+.data(jsonPop)
             .enter()
               .append("g").attr("class", "node")
-                          .attr("transform", function(d, i) { 
-                            return "translate("+300+","+(8+i*14)+")"});
+      .attr("transform", function(d) { 
+        return "translate("+d.x+","+d.y+")"; 
+      });
+
+
 
 
   
@@ -883,8 +933,8 @@ var node = svg.selectAll(".node")
     .on("mouseover", mouseovered)
       .on("mouseout", mouseouted);
 
+}, 5000);
 
-      
 }
 
 
@@ -909,8 +959,8 @@ d3.select("input[value=\"pop_gdp\"]").on("click", scatter_pop_gdp);
 d3.select("input[value=\"scatScale\"]").on("click", scatter);
 d3.select("input[value=\"scatCon\"]").on("click", scatter);
 
-d3.select("input[value=\"circle_pop\"]").on("click", circle_pop);
-d3.select("input[value=\"circle_gdp\"]").on("click", circle_gdp);
+d3.select("input[value=\"circle_pop\"]").on("click", whichCircle);
+d3.select("input[value=\"circle_gdp\"]").on("click", whichCircle);
 
 d3.select("input[value=\"strips\"]").on("click", strips);
 d3.select("input[value=\"wedges\"]").on("click", wedges);
