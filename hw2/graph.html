@@ -971,7 +971,7 @@ function mouseovered(d) {
       .each(function(n) { n.target = n.source = false; });
 var link = svg.selectAll(".link");
 
-  links
+  link
       .classed("link--target", function(l) {
             var ret;
           if (id_of_d(d) == id_of_d(l.source)) {
@@ -1089,7 +1089,7 @@ link.enter().append("line")
 
 
 
-link.transition().duration(1000)
+link.transition()
       .attr("x1", function(d) { 
         var ret;
           json.forEach(function(e, j) {
