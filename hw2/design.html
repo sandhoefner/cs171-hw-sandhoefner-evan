@@ -150,7 +150,7 @@ Show top trade partners for:
 </select><br>
 Time update: 1995 <input id="range" type="range" name="points" min="1995" max="2012"
                        step="1" value="0" id="slider-time" oninput="paint_year(this.value)"> 
-                 2012 (Currently showing _)<br>
+                 2012 (Currently showing <span id="cur">2012</span>)<br>
     <form>
   Color-code by:
   <label><input type="radio" name="color" id="color_pretty" value="color_pretty" checked> Pretty</label>
@@ -163,6 +163,7 @@ Time update: 1995 <input id="range" type="range" name="points" min="1995" max="2
 <script src="json.js"></script>
 <script>
 document.getElementById("range").value = "2012";
+
 //set up svg
 
 var margin = {top: 50, bottom: 10, left: 300, right: 40};
@@ -434,6 +435,7 @@ function mouseout(d) {
 
 function paint_year(time) {
   year = time;
+  document.getElementById("cur").innerHTML = year;
 d3.selectAll("option").each(function(d) {
     if(d3.select(this).property('selected')) {
     var sel_country = this.value;
