@@ -313,13 +313,13 @@ function paint(state) {
         var bars = groups
                     .append("rect")
                     .attr("width", function(d) {return xScale(d);})
-                    .attr("height", 5)
+                    .attr("height", 30)
                     .attr("x", xScale(min))
                     .attr("y", function(d, i) { return yScale(d) ; });
         var text = groups
                     .append("text")
-                    .style('font-size', 'x-small')
-                    .attr("y", function(d, i) { return yScale(d) + 5; })
+                    .style('font-size', 'large')
+                    .attr("y", function(d, i) { return yScale(d) + 19; })
                     .text(function(d) { return labels[partners.indexOf(d)]; })
                     .attr("x", function(d) {
                         return -3 - (this.getComputedTextLength());
