@@ -718,7 +718,7 @@ var node = svg.selectAll(".node");
 }
 
 //var foci = [593.8959292684508, 73.52660320433347, 709.8289493994789, 663.9329812909405]
-
+var foci_gen = [0,1,2,3];
 function circle_gdp() {
 
   force.stop();
@@ -750,12 +750,12 @@ var json = jsonPop.sort(function(a, b) {
     d.data.x = arc.centroid(d)[0]+400;
   
     d.data.y = arc.centroid(d)[1]+400;
-    /*
-    var foci = [0,1,2,3];
-    if (i==0) foci[1] = d.data.y;
-    if (i==23) foci[2] = d.data.x;
-    if (i==47) {foci[3] = d.data.y; foci[0] = d.data.x;}
-    console.log(foci);  */
+    
+    
+    /*if (i==0) foci_gen[1] = arc.centroid(d)[1];
+    if (i==23) foci_gen[2] = arc.centroid(d)[0];
+    if (i==47) {foci_gen[3] = arc.centroid(d)[1]; foci_gen[0] = arc.centroid(d)[0];}
+    console.log(foci_gen); */ 
 
     return d.data;
   })
@@ -816,7 +816,7 @@ function tick(d) {
 
     node.transition().duration(0)
       .attr("transform", function(d) {      
-        if (d.continent == 'Americas') {
+        if (d.continent == 'Americas') {  
           return "translate("+(d.x-=7.79*1.5*k)+","+(d.y+=1.5*k)+")" ;
         } else if (d.continent == 'Africa') {
           return "translate("+(d.x-=4.67*1.5*k)+","+(d.y-=9.09*1.5*k)+")"; 
@@ -920,34 +920,77 @@ var asia =[];
       if (d.continent == "Oceania") oceania.push(d);
   })
 
+var c = .8;
+
   graph.europe = pie(europe).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
-var c = 30;
+//var c = 30;
+
     // Building the data object we are going to return
-  if (d.data.continent == "Europe") {
+  
     d.data.x = 400+arc.centroid(d)[0]+foci[2]*c;
  
     d.data.y = 400+arc.centroid(d)[1]+c;
-  } else if (d.data.continent == "Asia") {
-d.data.x = 400+arc.centroid(d)[0]+c;
+ 
+  })
+
+graph.asia = pie(asia).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+  
+    d.data.x = 400+arc.centroid(d)[0]+c;
  
     d.data.y = 400+arc.centroid(d)[1]+foci[1]*c;
-  } else if (d.data.continent == "Americas") {
-d.data.x = 400+arc.centroid(d)[0]-foci[2]*c;
+ 
+  })
+
+graph.americas = pie(americas).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+  
+    d.data.x = 400+arc.centroid(d)[0]-foci[2]*c;
  
     d.data.y = 400+arc.centroid(d)[1]+c;
-    } else if (d.data.continent == "Africa") {
-d.data.x = 400+arc.centroid(d)[0]-foci[0]*c;
  
-    d.data.y = 400+arc.centroid(d)[1]-foci[3]*c;
-    } else if (d.data.continent == "Oceania") {
-d.data.x = 400+arc.centroid(d)[0]+foci[0]*c;
- 
-    d.data.y = 400+arc.centroid(d)[1]-foci[3]*c;
-}
   })
+
+graph.africa = pie(africa).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+  
+    d.data.x = 400+arc.centroid(d)[0]-foci[0]*c;
+ 
+    d.data.y = 400+arc.centroid(d)[1]-foci[3]*c;
+ 
+  })
+
+graph.oceania = pie(oceania).map(function(d, i) {
+    // Needed to caclulate the centroid
+    d.innerRadius = 0;
+    d.outerRadius = r;
+
+    // Building the data object we are going to return
+  
+    d.data.x = 400+arc.centroid(d)[0]+foci[0]*c;
+ 
+    d.data.y = 400+arc.centroid(d)[1]-foci[3]*c;
+ 
+  })
+
+
+
+  
 
 var node = svg.selectAll(".node");
 
@@ -958,7 +1001,11 @@ var node = svg.selectAll(".node");
       });
 }
 
-var foci = [4.67,5.5,7.79,9.09];
+
+
+
+// numbers come from foci_gen (above)
+var foci = [193.8959292684508, 263.93298129094046, 309.82894939947886, 326.47339679566653]
 
 function all() {
   var link = svg.selectAll(".link")
