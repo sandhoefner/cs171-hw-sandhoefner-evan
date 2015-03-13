@@ -147,17 +147,33 @@ var g = svg.append("g")
 
 var year = 2012;
 
+function name_of_id(id) {
+  var ret;
+  jsonNodes.forEach(function(d) {
+    if (d.country_id == id) {
+      ret = d.name;
+      
+    }
+  })
+  return ret;
+}
+
 function paint(state) {
   partners = [];
+  labels=[];
   jsonNodes.forEach(function(d) {
       if (d.name == state) {
           d.years[year-1995].top_partners.forEach(function(e) {
             partners.push(e.total_export);
+            labels.push(name_of_id(e.country_id));
           })
       }
   })
 
   var rect = svg.selectAll("rect")
+    .remove();
+
+    var text = svg.selectAll("text")
     .remove();
 
 
@@ -183,7 +199,7 @@ function paint(state) {
                     .append("text")
                     .style('font-size', 'x-small')
                     .attr("y", function(d, i) { return yScale(d) + 5; })
-                    .text(function(d) { return 'label'; })
+                    .text(function(d) { return labels[partners.indexOf(d)]; })
                     .attr("x", function(d) {
                         return -3 - (this.getComputedTextLength());
                     });
