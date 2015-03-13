@@ -915,25 +915,25 @@ var africa = jsonPop.sort(function(a, b) {
 var c = 30;
     // Building the data object we are going to return
   if (d.data.continent == "Europe") {
-    d.data.x = 400+arc.centroid(d)[0]+7.79*c;
+    d.data.x = 400+arc.centroid(d)[0]+foci[2]*c;
  
     d.data.y = 400+arc.centroid(d)[1]+c;
   } else if (d.data.continent == "Asia") {
 d.data.x = 400+arc.centroid(d)[0]+c;
  
-    d.data.y = 400+arc.centroid(d)[1]+5.5*c;
+    d.data.y = 400+arc.centroid(d)[1]+foci[1]*c;
   } else if (d.data.continent == "Americas") {
-d.data.x = 400+arc.centroid(d)[0]-7.79*c;
+d.data.x = 400+arc.centroid(d)[0]-foci[2]*c;
  
     d.data.y = 400+arc.centroid(d)[1]+c;
     } else if (d.data.continent == "Africa") {
-d.data.x = 400+arc.centroid(d)[0]-4.67*c;
+d.data.x = 400+arc.centroid(d)[0]-foci[0]*c;
  
-    d.data.y = 400+arc.centroid(d)[1]-9.09*c;
+    d.data.y = 400+arc.centroid(d)[1]-foci[3]*c;
     } else if (d.data.continent == "Oceania") {
-d.data.x = 400+arc.centroid(d)[0]+4.67*c;
+d.data.x = 400+arc.centroid(d)[0]+foci[0]*c;
  
-    d.data.y = 400+arc.centroid(d)[1]-9.09*c;
+    d.data.y = 400+arc.centroid(d)[1]-foci[3]*c;
 }
   })
 
@@ -945,6 +945,8 @@ var node = svg.selectAll(".node");
            return "translate("+d.x+","+d.y+")"; 
       });
 }
+
+var foci = [4.67,5.5,7.79,9.09];
 
 function all() {
   var link = svg.selectAll(".link")
