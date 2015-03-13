@@ -149,7 +149,7 @@ Show top trade partners for:
 <option value="Zimbabwe">Zimbabwe</option>
 </select><br>
 Time update: 1995 <input type="range" name="points" min="1995" max="2012"
-                       step="1" value="0" id="slider-time" oninput=";"> 
+                       step="1" value="0" id="slider-time" oninput="paint_year(this.value)"> 
                  2012 <br>
     <form>
   Color-code by:
@@ -159,6 +159,7 @@ Time update: 1995 <input type="range" name="points" min="1995" max="2012"
     <label><input type="radio" name="color" id="color_pop" value="color_pop" > Population quintile</label>
     <label><input type="radio" name="color" id="color_life" value="color_life" > Life expectancy quintile</label>
   </form>
+
 <script src="json.js"></script>
 <script>
 //set up svg
@@ -179,6 +180,30 @@ var g = svg.append("g")
 var year = 2012;
 
 function color_gdp() {
+  if (first == false) {
+var rect = svg.selectAll("rect")
+.transition(1000)
+   .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
+    
+                              var d;
+                              json.forEach(function(j) {
+                                  if (j.name == name) {
+                                    d = j;
+                                  }
+                              })
+                              if (d.gdp > 500000000000) {
+                                  return 'red';
+                              } else if (d.gdp > 195000000000) {
+                                  return 'orange';
+                                } else if (d.gdp > 45000000000) {
+                                return 'yellow';
+                                } else if (d.gdp > 15700000000) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+ } else {
 var rect = svg.selectAll("rect")
 
    .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
@@ -201,11 +226,14 @@ var rect = svg.selectAll("rect")
                                   return 'blue';
                                 }
                           });
+
+ }
 }
 
 function color_cont() {
+  if (first == false) {
 var rect = svg.selectAll("rect")
-
+.transition(1000)
    .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
    
                               var d;
@@ -226,11 +254,36 @@ var rect = svg.selectAll("rect")
                                   return 'red';
                                 }
                           });
+ } else {
+var rect = svg.selectAll("rect")
+
+.attr("fill", function(e) {var name = labels[partners.indexOf(e)];
+   
+                              var d;
+                              json.forEach(function(j) {
+                                  if (j.name == name) {
+                                    d = j;
+                                  }
+                              })
+                              if (d.continent == "Africa") {
+                                  return 'orange';
+                              } else if (d.continent == "Asia") {
+                                  return 'blue';
+                                } else if (d.continent == "Americas") {
+                                return 'yellow';
+                                } else if (d.continent == "Oceania") {
+                                return 'green';
+                                } else {
+                                  return 'red';
+                                }
+                          });
+ }
   }
 
 function color_life() {
+  if (first == false) {
 var rect = svg.selectAll("rect")
-
+.transition(1000)
    .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
     
                               var d;
@@ -251,11 +304,37 @@ var rect = svg.selectAll("rect")
                                   return 'blue';
                                 }
                           });
+
+  } else {
+var rect = svg.selectAll("rect")
+.attr("fill", function(e) {var name = labels[partners.indexOf(e)];
+    
+                              var d;
+                              json.forEach(function(j) {
+                                  if (j.name == name) {
+                                    d = j;
+                                  }
+                              })
+                              if (d.life_expectancy > 80) {
+                                  return 'red';
+                              } else if (d.life_expectancy > 75.04) {
+                                  return 'orange';
+                                } else if (d.life_expectancy > 72) {
+                                return 'yellow';
+                                } else if (d.life_expectancy > 64) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+
+  }
 }
 
 function color_pop() {
+  if (first == false) {
 var rect = svg.selectAll("rect")
-
+.transition(1000)
    .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
    
                               var d;
@@ -276,11 +355,51 @@ var rect = svg.selectAll("rect")
                                   return 'blue';
                                 }
                           });
+ } else {
+
+var rect = svg.selectAll("rect")
+.attr("fill", function(e) {var name = labels[partners.indexOf(e)];
+   
+                              var d;
+                              json.forEach(function(j) {
+                                  if (j.name == name) {
+                                    d = j;
+                                  }
+                              })
+                              if (d.population > 45000000) {
+                                  return 'red';
+                              } else if (d.population > 14400000) {
+                                  return 'orange';
+                                } else if (d.population > 7950000) {
+                                return 'yellow';
+                                } else if (d.population > 3674000) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+ }
 }
 
 colors = ["#003D99", "#0047B2", "#0052CC", "#005CE6", "#0066FF", "#1975FF", "#3385FF", "#4D94FF", "#66A3FF", "#80B2FF",];
 
 function color_pretty() {
+if (first == false) {
+var rect = svg.selectAll("rect")
+  .transition(1000)
+   .attr("fill", function(e) {
+                            return colors[partners.indexOf(e)];
+                          });
+ } else {
+var rect = svg.selectAll("rect")
+
+   .attr("fill", function(e) {
+                            return colors[partners.indexOf(e)];
+                          });
+ }
+}
+
+function color_first() {
 var rect = svg.selectAll("rect")
 
    .attr("fill", function(e) {
@@ -311,8 +430,20 @@ function mouseout(d) {
     .classed("text--bar", false);
 }
 
+function paint_year(time) {
+  year = time;
+d3.selectAll("option").each(function(d) {
+    if(d3.select(this).property('selected')) {
+    var sel_country = this.value;
+    first = true;
+    paint(sel_country);
+    first = false;
+}})}
+
+
 
 function paint(state) {
+  first = true;
   partners = [];
   labels=[];
   jsonNodes.forEach(function(d) {
@@ -329,6 +460,7 @@ function paint(state) {
 
     var text = svg.selectAll("text")
     .remove();
+
 
 
   var max = d3.max(partners );
@@ -360,6 +492,9 @@ function paint(state) {
                         return -12 - (this.getComputedTextLength());
                     });
 
+
+                  
+                        
                     if(document.getElementById('color_gdp').checked) {
 color_gdp();
 } else if(document.getElementById('color_life').checked) {
@@ -369,12 +504,15 @@ color_pop();
   }else if(document.getElementById('color_cont').checked) {
 color_cont();
   } else {
-color_pretty();
+color_first();
   }
+
+
+
 }
-
+var first = true;
 paint("United States");
-
+first = false;
 
 
 //listeners
@@ -382,23 +520,36 @@ d3.selectAll("#country")
 .on("change", function() {
   d3.selectAll("option").each(function(d) {
     if(d3.select(this).property('selected')) {
-    sel_country = this.value;
+    var sel_country = this.value;
     paint(sel_country);
   }
   })})
 
-var slider = d3.selectAll("#slider-time")
+/*var slider = d3.selectAll("#slider-time")
 .on("change", function() {
   console.log(this);
-})
+})*/
 
+whichColor = function() {
+  first = false;
+  if(document.getElementById('color_gdp').checked) {
+    color_gdp();      
+  } else if(document.getElementById('color_cont').checked) {
+    color_cont();
+  } else if(document.getElementById('color_pop').checked) {
+    color_pop();
+  } else if(document.getElementById('color_life').checked) {
+    color_life();
+  } else {
+    color_pretty();
+  }
+}
 
-
-d3.select("input[value=\"color_gdp\"]").on("click", color_gdp);
-d3.select("input[value=\"color_cont\"]").on("click", color_cont);
-d3.select("input[value=\"color_pop\"]").on("click", color_pop);
-d3.select("input[value=\"color_life\"]").on("click", color_life);
-d3.select("input[value=\"color_pretty\"]").on("click", color_pretty);
+d3.select("input[value=\"color_gdp\"]").on("click", whichColor);
+d3.select("input[value=\"color_cont\"]").on("click", whichColor);
+d3.select("input[value=\"color_pop\"]").on("click", whichColor);
+d3.select("input[value=\"color_life\"]").on("click", whichColor);
+d3.select("input[value=\"color_pretty\"]").on("click", whichColor);
 
 </script>
 </body>
