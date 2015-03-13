@@ -133,7 +133,8 @@ Time update: 1995 <input type="range" name="points" min="1995" max="2012"
                  2012 <br>
     <form>
   Color-code by:
-  <label><input type="radio" name="color" id="color_cont" value="color_cont" checked> Continent</label>
+  <label><input type="radio" name="color" id="color_pretty" value="color_pretty" checked> Pretty</label>
+  <label><input type="radio" name="color" id="color_cont" value="color_cont" > Continent</label>
     <label><input type="radio" name="color" id="color_gdp" value="color_gdp" > GDP quintile</label>
     <label><input type="radio" name="color" id="color_pop" value="color_pop" > Population quintile</label>
     <label><input type="radio" name="color" id="color_life" value="color_life" > Life expectancy quintile</label>
@@ -161,7 +162,7 @@ function color_gdp() {
 var rect = svg.selectAll("rect")
 
    .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
-    console.log(name);
+    
                               var d;
                               json.forEach(function(j) {
                                   if (j.name == name) {
@@ -186,7 +187,7 @@ function color_cont() {
 var rect = svg.selectAll("rect")
 
    .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
-    console.log(name);
+   
                               var d;
                               json.forEach(function(j) {
                                   if (j.name == name) {
@@ -206,12 +207,12 @@ var rect = svg.selectAll("rect")
                                 }
                           });
   }
-console.log(json);
+
 function color_life() {
 var rect = svg.selectAll("rect")
 
    .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
-    console.log(name);
+    
                               var d;
                               json.forEach(function(j) {
                                   if (j.name == name) {
@@ -236,7 +237,7 @@ function color_pop() {
 var rect = svg.selectAll("rect")
 
    .attr("fill", function(e) {var name = labels[partners.indexOf(e)];
-    console.log(name);
+   
                               var d;
                               json.forEach(function(j) {
                                   if (j.name == name) {
@@ -254,6 +255,16 @@ var rect = svg.selectAll("rect")
                                 } else {
                                   return 'blue';
                                 }
+                          });
+}
+
+colors = ["#003D99", "#0047B2", "#0052CC", "#005CE6", "#0066FF", "#1975FF", "#3385FF", "#4D94FF", "#66A3FF", "#80B2FF",];
+
+function color_pretty() {
+var rect = svg.selectAll("rect")
+
+   .attr("fill", function(e) {
+                            return colors[partners.indexOf(e)];
                           });
 }
 
@@ -309,7 +320,7 @@ function paint(state) {
                     .append("text")
                     .style('font-size', 'x-small')
                     .attr("y", function(d, i) { return yScale(d) + 5; })
-                    .text(function(d) { console.log(d);return labels[partners.indexOf(d)]; })
+                    .text(function(d) { return labels[partners.indexOf(d)]; })
                     .attr("x", function(d) {
                         return -3 - (this.getComputedTextLength());
                     });
@@ -320,8 +331,10 @@ color_gdp();
 color_life();
   } else if(document.getElementById('color_pop').checked) {
 color_pop();
-  }else {
+  }else if(document.getElementById('color_cont').checked) {
 color_cont();
+  } else {
+color_pretty();
   }
 }
 
@@ -350,6 +363,7 @@ d3.select("input[value=\"color_gdp\"]").on("click", color_gdp);
 d3.select("input[value=\"color_cont\"]").on("click", color_cont);
 d3.select("input[value=\"color_pop\"]").on("click", color_pop);
 d3.select("input[value=\"color_life\"]").on("click", color_life);
+d3.select("input[value=\"color_pretty\"]").on("click", color_pretty);
 
 </script>
 </body>
