@@ -971,7 +971,7 @@ function mouseovered(d) {
       .each(function(n) { n.target = n.source = false; });
 var link = svg.selectAll(".link");
 
-  link
+  links
       .classed("link--target", function(l) {
             var ret;
           if (id_of_d(d) == id_of_d(l.source)) {
