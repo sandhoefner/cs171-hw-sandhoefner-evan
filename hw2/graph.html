@@ -912,18 +912,29 @@ var africa = jsonPop.sort(function(a, b) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
-
+var c = 30;
     // Building the data object we are going to return
   if (d.data.continent == "Europe") {
-    d.data.x = arc.centroid(d)[0]+200;
+    d.data.x = 400+arc.centroid(d)[0]+7.79*c;
  
-    d.data.y = arc.centroid(d)[1]+200;
-  } else {
-d.data.x = arc.centroid(d)[0]+200;
+    d.data.y = 400+arc.centroid(d)[1]+c;
+  } else if (d.data.continent == "Asia") {
+d.data.x = 400+arc.centroid(d)[0]+c;
  
-    d.data.y = arc.centroid(d)[1]+400;
-  }
-
+    d.data.y = 400+arc.centroid(d)[1]+5.5*c;
+  } else if (d.data.continent == "Americas") {
+d.data.x = 400+arc.centroid(d)[0]-7.79*c;
+ 
+    d.data.y = 400+arc.centroid(d)[1]+c;
+    } else if (d.data.continent == "Africa") {
+d.data.x = 400+arc.centroid(d)[0]-4.67*c;
+ 
+    d.data.y = 400+arc.centroid(d)[1]-9.09*c;
+    } else if (d.data.continent == "Oceania") {
+d.data.x = 400+arc.centroid(d)[0]+4.67*c;
+ 
+    d.data.y = 400+arc.centroid(d)[1]-9.09*c;
+}
   })
 
 var node = svg.selectAll(".node");
