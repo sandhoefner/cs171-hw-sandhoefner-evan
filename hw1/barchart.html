@@ -72,7 +72,7 @@
         var min = 0;
 
         xScale.domain([min, max]);
-        yScale.domain(data.map(function(d) { return d.name; }));
+        yScale.domain(data.map(function(d) { console.log(d.name);return d.name; }));
  
         var groups = g.append("g")
                       .selectAll("text")
