@@ -217,6 +217,7 @@ d3.json("data/countries_2012.json", function(json) {
                                   return */5/*;
                                 }
                           }*/)
+
    .attr("fill", function(d) {
                               if (d.continent == "Africa") {
                                   return 'orange';
@@ -827,6 +828,8 @@ function tick(d) {
 }
 }
 
+
+
     //working tick
     /*
 function tick(d) {
@@ -857,6 +860,10 @@ force.nodes(jsonPop)
 }
 
 function circles() {
+
+  //xy array for foci
+  //can't loop through partial array
+  //need five separate continent arrays
   var link = svg.selectAll(".link")
     .remove();
     tradeFlows = false;
@@ -864,7 +871,7 @@ function circles() {
   force.stop();
 
 
-var r = Math.min(height, width)/2;
+var r = 200;
 
   var arc = d3.svg.arc()
           .outerRadius(r);
@@ -888,7 +895,9 @@ var africa = jsonPop.sort(function(a, b) {
     // Building the data object we are going to return
   
     d.data.x = arc.centroid(d)[0]+200;
- 
+    //(200, 400) is center of circle
+    //arc.centroid(d) is difference between center and point on perimeter
+    //new arc for subcircles
     d.data.y = arc.centroid(d)[1]+400;
 
     return d.data;
@@ -905,12 +914,16 @@ var africa = jsonPop.sort(function(a, b) {
     d.outerRadius = r;
 
     // Building the data object we are going to return
-  
+  if (d.data.continent == "Europe") {
     d.data.x = arc.centroid(d)[0]+200;
  
     d.data.y = arc.centroid(d)[1]+200;
+  } else {
+d.data.x = arc.centroid(d)[0]+200;
+ 
+    d.data.y = arc.centroid(d)[1]+400;
+  }
 
-    return d.data;
   })
 
 var node = svg.selectAll(".node");
@@ -1231,20 +1244,6 @@ var node = svg.selectAll(".node")
       .on("mouseout", mouseouted);
 
 if(document.getElementById('color_gdp').checked) {
-color_gdp();
-} else if(document.getElementById('color_life').checked) {
-color_life();
-  } else if(document.getElementById('color_pop').checked) {
-color_pop();
-  }else {
-color_cont();
-  }
-
-
-}, 1000);
-}
-
-function color_gdp() {
 var circ = svg.selectAll(".circle")
 
    .attr("fill", function(d) {
@@ -1260,9 +1259,39 @@ var circ = svg.selectAll(".circle")
                                   return 'blue';
                                 }
                           });
-}
+} else if(document.getElementById('color_life').checked) {
+var circ = svg.selectAll(".circle")
 
-function color_cont() {
+   .attr("fill", function(d) {
+                              if (d.life_expectancy > 80) {
+                                  return 'red';
+                              } else if (d.life_expectancy > 75.04) {
+                                  return 'orange';
+                                } else if (d.life_expectancy > 72) {
+                                return 'yellow';
+                                } else if (d.life_expectancy > 64) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+  } else if(document.getElementById('color_pop').checked) {
+var circ = svg.selectAll(".circle")
+
+   .attr("fill", function(d) {
+                              if (d.population > 45000000) {
+                                  return 'red';
+                              } else if (d.population > 14400000) {
+                                  return 'orange';
+                                } else if (d.population > 7950000) {
+                                return 'yellow';
+                                } else if (d.population > 3674000) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+  }else {
 var circ = svg.selectAll(".circle")
 
    .attr("fill", function(d) {
@@ -1280,9 +1309,49 @@ var circ = svg.selectAll(".circle")
                           });
   }
 
+
+}, 1000);
+}
+
+function color_gdp() {
+var circ = svg.selectAll(".circle")
+.transition(1000)
+   .attr("fill", function(d) {
+                              if (d.gdp > 500000000000) {
+                                  return 'red';
+                              } else if (d.gdp > 195000000000) {
+                                  return 'orange';
+                                } else if (d.gdp > 45000000000) {
+                                return 'yellow';
+                                } else if (d.gdp > 15700000000) {
+                                return 'green';
+                                } else {
+                                  return 'blue';
+                                }
+                          });
+}
+
+function color_cont() {
+var circ = svg.selectAll(".circle")
+.transition(1000)
+   .attr("fill", function(d) {
+                              if (d.continent == "Africa") {
+                                  return 'orange';
+                              } else if (d.continent == "Asia") {
+                                  return 'blue';
+                                } else if (d.continent == "Americas") {
+                                return 'yellow';
+                                } else if (d.continent == "Oceania") {
+                                return 'green';
+                                } else {
+                                  return 'red';
+                                }
+                          });
+  }
+
 function color_life() {
 var circ = svg.selectAll(".circle")
-
+.transition(1000)
    .attr("fill", function(d) {
                               if (d.life_expectancy > 80) {
                                   return 'red';
@@ -1300,7 +1369,7 @@ var circ = svg.selectAll(".circle")
 
 function color_pop() {
 var circ = svg.selectAll(".circle")
-
+.transition(1000)
    .attr("fill", function(d) {
                               if (d.population > 45000000) {
                                   return 'red';
