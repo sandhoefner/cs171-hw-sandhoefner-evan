@@ -148,9 +148,9 @@ Show top trade partners for:
 <option value="Zambia">Zambia</option>
 <option value="Zimbabwe">Zimbabwe</option>
 </select><br>
-Time update: 1995 <input type="range" name="points" min="1995" max="2012"
+Time update: 1995 <input id="range" type="range" name="points" min="1995" max="2012"
                        step="1" value="0" id="slider-time" oninput="paint_year(this.value)"> 
-                 2012 <br>
+                 2012 (Currently showing _)<br>
     <form>
   Color-code by:
   <label><input type="radio" name="color" id="color_pretty" value="color_pretty" checked> Pretty</label>
@@ -162,7 +162,9 @@ Time update: 1995 <input type="range" name="points" min="1995" max="2012"
 
 <script src="json.js"></script>
 <script>
+document.getElementById("range").value = "2012";
 //set up svg
+
 var margin = {top: 50, bottom: 10, left: 300, right: 40};
 var width = 1000 - margin.left - margin.right;
 var height = 700 - margin.top - margin.bottom;
