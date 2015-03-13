@@ -717,6 +717,8 @@ var node = svg.selectAll(".node");
       });
 }
 
+//var foci = [593.8959292684508, 73.52660320433347, 709.8289493994789, 663.9329812909405]
+
 function circle_gdp() {
 
   force.stop();
@@ -738,7 +740,7 @@ var json = jsonPop.sort(function(a, b) {
             return d3.descending(a['gdp'],b['gdp']);
           }});
 
-  graph.nodes = pie(json).map(function(d) {
+  graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
@@ -748,6 +750,12 @@ var json = jsonPop.sort(function(a, b) {
     d.data.x = arc.centroid(d)[0]+400;
   
     d.data.y = arc.centroid(d)[1]+400;
+    /*
+    var foci = [0,1,2,3];
+    if (i==0) foci[1] = d.data.y;
+    if (i==23) foci[2] = d.data.x;
+    if (i==47) {foci[3] = d.data.y; foci[0] = d.data.x;}
+    console.log(foci);  */
 
     return d.data;
   })
@@ -882,31 +890,35 @@ var r = 200;
             return 1;  // We want an equal pie share/slice for each point
           });
 
-var africa = jsonPop.sort(function(a, b) {
-  if (a['continent'] == 'Africa') {
-                    return d3.ascending(a['name'],b['name']);
-              }    });
+  var europe =[];
 
-  graph.africa = pie(africa).map(function(d, i) {
-    // Needed to caclulate the centroid
-    d.innerRadius = 0;
-    d.outerRadius = r;
-
-    // Building the data object we are going to return
-  
-    d.data.x = arc.centroid(d)[0]+200;
-    //(200, 400) is center of circle
-    //arc.centroid(d) is difference between center and point on perimeter
-    //new arc for subcircles
-    d.data.y = arc.centroid(d)[1]+400;
-
-    return d.data;
+  jsonPop.forEach(function(d) {
+      if (d.continent == "Europe") europe.push(d);
   })
 
-  var europe = jsonPop.sort(function(a, b) {
-  if (a['continent'] == 'Europe') {
-                    return d3.ascending(a['name'],b['name']);
-               }    });
+var asia =[];
+
+  jsonPop.forEach(function(d) {
+      if (d.continent == "Asia") asia.push(d);
+  })
+
+  var africa =[];
+
+  jsonPop.forEach(function(d) {
+      if (d.continent == "Africa") africa.push(d);
+  })
+
+  var americas =[];
+
+  jsonPop.forEach(function(d) {
+      if (d.continent == "Americas") americas.push(d);
+  })
+
+  var oceania =[];
+
+  jsonPop.forEach(function(d) {
+      if (d.continent == "Oceania") oceania.push(d);
+  })
 
   graph.europe = pie(europe).map(function(d, i) {
     // Needed to caclulate the centroid
