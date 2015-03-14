@@ -2,8 +2,6 @@
 <meta charset="utf-8">
 <title>Homework 2 Graph</title>
 <style>
-  
-
   .node {
     stroke: #000;
     stroke-width: .9px;
@@ -13,54 +11,47 @@
     fill: black;
   }
 
-.tab { margin-left: 40px; } 
+  .tab { margin-left: 40px; } 
 
+  .link {
+    stroke: steelblue;
+    stroke-opacity: .1;
+    fill: none;
+    pointer-events: none;
+  }
 
+  .node:hover,
+  .node--source,
+  .node--target {
+    font-weight: 700;
+  }
 
+  .node--source--false,
+  .node--target--false {
+    opacity: .1;
+  }
 
-.link {
-  stroke: steelblue;
-  stroke-opacity: .1;
-  fill: none;
-  pointer-events: none;
-}
+  .node--target {
+    fill: black;
+  }
 
-.node:hover,
-.node--source,
-.node--target {
-  font-weight: 700;
-}
+  .node--source {
+    fill: red;
+  }
 
+  .link--source,
+  .link--target {
+    stroke-opacity: .7;
+    stroke-width: 2px;
+  }
 
-.node--source--false,
-.node--target--false {
-  opacity: .1;
-}
+  .link--source {
+    stroke: #d62728;
+  }
 
-
-
-.node--target {
-  fill: black;
-}
-
-.node--source {
-  fill: red;
-}
-
-.link--source,
-.link--target {
-  stroke-opacity: .7;
-  stroke-width: 2px;
-}
-
-.link--source {
-  stroke: #d62728;
-}
-
-.link--target {
-  stroke: #2ca02c;
-}
-
+  .link--target {
+    stroke: #2ca02c;
+  }
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -83,26 +74,25 @@
     <label><input type="radio" name="size" value="nosize" checked> None</label>
     <label><input type="radio" name="size" value="size_cat" > Category</label>
   </form>-->
+  <form>
+  Sort by:
+    <select id="whichSort">
+      <option name="sortt" id="pop" value="population" selected>Population</option>
+      <option name="sortt" id='name' value="name">Name</option>
+      <option name="sortt" id='gdp' value="gdp">GDP</option>
+      <option name="sortt" id='life' value="life_expectancy">Life expectancy</option>
+      <option name="sortt" id='lat' value="latitude">Distance from equator</option>
+    </select>
+  </form>
   
   <!--<form>
-  Sort by:
-    <select onchange="whichSort()">
-      <option name="sortt" value="population" selected>Population</option>
-      <option name="sortt" value="name">Name</option>
-      <option name="sortt" value="gdp">GDP</option>
-      <option name="sortt" value="life_expectancy">Life expectancy</option>
-      <option name="sortt" value="latitude">Distance from equator</option>
-    </select>
-  </form>-->
-  
-  <form>
   Sort by:
     <label><input type="radio" id="pop" name="sort" value="population" checked > Population</label>
     <label><input type="radio" id="name" name="sort" value="name" > Name</label>
     <label><input type="radio" id="gdp" name="sort" value="gdp" > GDP</label>
     <label><input type="radio" id="life" name="sort" value="life_expectancy" > Life expectancy</label>
     <label><input type="radio" id="lat" name="sort" value="latitude" > Distance from equator</label>
-  </form>
+  </form>-->
   <form>
   <div class="tab">Sort intervals:
     <label><input type="radio" id="constant" name="scale" value="constant" checked > Uniform</label>
@@ -241,7 +231,7 @@ d3.json("data/countries_2012.json", function(json) {
 // layout functions (changes info within groups based on layout)
 function constant_layout() {
 
-if(document.getElementById('gdp').checked) {
+/*if(document.getElementById('gdp').checked) {
   gdp_sort()
 } else if(document.getElementById('name').checked) {
   name_sort()
@@ -250,6 +240,17 @@ if(document.getElementById('gdp').checked) {
 } else if(document.getElementById('lat').checked) {
   lat_sort()      
 } else if(document.getElementById('pop').checked) {
+  pop_sort()
+}*/
+if(which == 'gdp') {
+  gdp_sort()
+} else if(which == 'name') {
+  name_sort()
+} else if(which == 'life_expectancy') {
+  life_sort()
+} else if(which == 'latitude') {
+  lat_sort()      
+} else if(which == 'population') {
   pop_sort()
 }
 /*var node = svg.selectAll(".node");
@@ -261,7 +262,7 @@ node
   
                
 }
-
+var which = 'population';
 function linScale_layout() {
 /*var node = svg.selectAll(".node");
 node
@@ -269,7 +270,7 @@ node
               .attr("class", "node")
                           .attr("transform", function(d, i) { 
                             return "translate("+297+","+(8-(d.population-1205000000)/750000)+")"});*/
-if(document.getElementById('gdp').checked) {
+/*if(document.getElementById('gdp').checked) {
   gdp_sort()
 } else if(document.getElementById('name').checked) {
   name_sort()
@@ -278,6 +279,17 @@ if(document.getElementById('gdp').checked) {
 } else if(document.getElementById('lat').checked) {
   lat_sort()
 } else if(document.getElementById('pop').checked) {
+  pop_sort()
+}*/
+if(which == 'gdp') {
+  gdp_sort()
+} else if(which == 'name') {
+  name_sort()
+} else if(which == 'life_expectancy') {
+  life_sort()
+} else if(which == 'latitude') {
+  lat_sort()      
+} else if(which == 'population') {
   pop_sort()
 }
 }
@@ -1495,9 +1507,25 @@ d3.select("input[value=\"color_cont\"]").on("click", color_cont);
 d3.select("input[value=\"color_pop\"]").on("click", color_pop);
 d3.select("input[value=\"color_life\"]").on("click", color_life);
 
-function whichSort() {
-console.log('nope');
+d3.selectAll("#whichSort")
+.on("change", function() {
+  d3.selectAll("option").each(function(d) {
+    if(d3.select(this).property('selected')) {
+     which = this.value;
+    if(which == 'gdp') {
+  gdp_sort()
+} else if(which == 'name') {
+  name_sort()
+} else if(which == 'life_expectancy') {
+  life_sort()
+} else if(which == 'latitude') {
+  lat_sort()      
+} else if(which == 'population') {
+  pop_sort()
 }
+  }
+  })})
+
 </script>
 </body>
 </html>
