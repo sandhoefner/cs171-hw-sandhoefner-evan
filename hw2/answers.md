@@ -4,10 +4,6 @@ CS 171: Pset #2
 ---------------
 ### Spring 2015
 
-notes to self: turn off word wrap (better way?)
-examples in 1.2
-correctness/completeness overall
-
 **0.1** The X and Y coordinates of a given node in this graph are basically arbitrary. The graph will look different each time it's generated. The links between nodes are more meaningful than the positions of nodes. This style of graph is well-suited to data representing relationships, such as characters in an opera, international trade partners, etc.
 
 **0.2** Shapes (other than circles), textures, orientations (for non-circle shapes), hues (within colors), thickness of node borders and of links, length of links, animations (e.g. key country nodes blinking).
