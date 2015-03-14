@@ -512,11 +512,136 @@ color_cont();
   } else {
 color_first();
   }
-
-
-
-
 }
+
+/*first = true;
+  partners = [];
+  labels=[];
+  jsonNodes.forEach(function(d) {
+    
+          d.years[year-1995].top_partners.forEach(function(e) {
+            partners.push(e.total_export);
+            labels.push(name_of_id(e.country_id));
+          })
+
+  })
+
+  
+
+  var max = d3.max(partners );
+        var min = 0;
+
+        xScale.domain([min, max]);
+        yScale.domain(partners.map(function(d) { return d; }));
+ 
+        var groups = g.append("g")
+                      .selectAll("text")
+                      .data(partners)
+                      .enter()
+                      .append("g");
+ 
+        var bars = groups
+                    .append("rect")
+                    .attr("width", function(d) {return xScale(d);})
+                    .attr("height", 30)
+                    //.transition(1000)
+                    .attr("x", xScale(min))
+                    .attr("y", function(d, i) { if (d.name == "United States") {return yScale(d)} else {return 800} });
+        var text = groups
+                    .append("text")
+                    .style('font-size', 'large')
+
+                    .attr("y", function(d, i) { if (d.name == "United States") {return yScale(d) + 19;} else {return 800} })
+                    .on("mouseover", mouseovered)
+      .on("mouseout", mouseout) 
+                    .text(function(d) { return labels[partners.indexOf(d)]; })
+                    .attr("x", function(d) {
+                        return -12 - (this.getComputedTextLength());
+                    });
+
+
+                  
+                        
+                    if(document.getElementById('color_gdp').checked) {
+color_gdp();
+} else if(document.getElementById('color_life').checked) {
+color_life();
+  } else if(document.getElementById('color_pop').checked) {
+color_pop();
+  }else if(document.getElementById('color_cont').checked) {
+color_cont();
+  } else {
+color_first();
+  }
+
+function paint(state) {
+  first = true;
+  partners = [];
+  labels=[];
+  jsonNodes.forEach(function(d) {
+      if (d.name == state) {
+          d.years[year-1995].top_partners.forEach(function(e) {
+            partners.push(e.total_export);
+            labels.push(name_of_id(e.country_id));
+          })
+      }
+  })
+
+  var rect = svg.selectAll("rect");
+console.log(rect);
+  
+
+    var text = svg.selectAll("text");
+//console.log(text);
+
+
+  var max = d3.max(partners );
+        var min = 0;
+
+        xScale.domain([min, max]);
+        yScale.domain(partners.map(function(d) { return d; }));
+ 
+        var groups = g.append("g")
+                      .selectAll("text")
+                      .data(partners)
+                      .enter()
+                      .append("g");
+ 
+        var bars = groups
+                    .append("rect")
+                    .attr("width", function(d) {return xScale(d);})
+                    .attr("height", 30)
+                    //.transition(1000)
+                    .attr("x", xScale(min))
+                    .attr("y", function(d, i) { return yScale(d) ; });
+        var text = groups
+                    .append("text")
+                    .style('font-size', 'large')
+
+                    .attr("y", function(d, i) { return yScale(d) + 19; })
+                    .on("mouseover", mouseovered)
+      .on("mouseout", mouseout) 
+                    .text(function(d) { return labels[partners.indexOf(d)]; })
+                    .attr("x", function(d) {
+                        return -12 - (this.getComputedTextLength());
+                    });
+
+
+                  
+                        
+                    if(document.getElementById('color_gdp').checked) {
+color_gdp();
+} else if(document.getElementById('color_life').checked) {
+color_life();
+  } else if(document.getElementById('color_pop').checked) {
+color_pop();
+  }else if(document.getElementById('color_cont').checked) {
+color_cont();
+  } else {
+color_first();
+  }
+}*/
+
 var first = true;
 paint("United States");
 first = false;
