@@ -813,22 +813,22 @@ function tick(d) {
     });
 
   } else if (document.getElementById('wedges').checked) {
-
+var c = .04;
     node.transition().duration(0)
       .attr("transform", function(d) {      
         if (d.continent == 'Americas') {  
-          return "translate("+(d.x-=7.79*1.5*k)+","+(d.y+=1.5*k)+")" ;
+          return "translate("+(d.x-=foci[2]*c*k)+","+(d.y+=c*k)+")" ;
         } else if (d.continent == 'Africa') {
-          return "translate("+(d.x-=4.67*1.5*k)+","+(d.y-=9.09*1.5*k)+")"; 
+          return "translate("+(d.x-=foci[0]*c*k)+","+(d.y-=foci[3]*c*k)+")"; 
 
         } else if (d.continent == 'Europe') {
-          return "translate("+(d.x+=7.79*1.5*k)+","+(d.y+=1.5*k)+")";
+          return "translate("+(d.x+=foci[2]*c*k)+","+(d.y+=c*k)+")";
 
         } else if (d.continent == 'Asia') {
-          return "translate("+(d.x+=1.5*k)+","+(d.y+=5.5*1.5*k)+")";
+          return "translate("+(d.x+=c*k)+","+(d.y+=foci[1]*c*k)+")";
 
         } else if (d.continent == 'Oceania') {
-          return "translate("+(d.x+=4.67*1.5*k)+","+(d.y-=9.09*1.5*k)+")"; 
+          return "translate("+(d.x+=foci[0]*c*k)+","+(d.y-=foci[3]*c*k)+")"; 
         }
     });
   } else if (document.getElementById('circles').checked) {
