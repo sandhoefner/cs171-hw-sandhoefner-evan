@@ -84,7 +84,6 @@
       <option name="sortt" id='lat' value="latitude">Distance from equator</option>
     </select>
   </form>
-  
   <!--<form>
   Sort by:
     <label><input type="radio" id="pop" name="sort" value="population" checked > Population</label>
@@ -94,10 +93,10 @@
     <label><input type="radio" id="lat" name="sort" value="latitude" > Distance from equator</label>
   </form>-->
   <form>
-  <div class="tab">Sort intervals:
-    <label><input type="radio" id="constant" name="scale" value="constant" checked > Uniform</label>
-    <label><input type="radio" name="scale" value="linScale" > Scaled</label>
-  </div>
+    <div class="tab">Sort intervals:
+      <label><input type="radio" id="constant" name="scale" value="constant" checked > Uniform</label>
+      <label><input type="radio" name="scale" value="linScale" > Scaled</label>
+    </div>
   </form>
   <form>
   Scatter by:
@@ -119,7 +118,7 @@
   </form>
   <form>
   Cluster:
-  <label><input type="radio" name="group" id="all" value="all" > Crowd</label>
+    <label><input type="radio" name="group" id="all" value="all" > Crowd</label>
     <label><input type="radio" name="group" id="strips" value="strips" > Strips</label>
     <label><input type="radio" name="group" id="wedges" value="wedges" > Wedges</label>
     <label><input type="radio" name="group" id="circles" value="circles" > Circles</label>
@@ -133,7 +132,7 @@
   </form>
   <form>
   Color-code by:
-  <label><input type="radio" name="color" id="color_cont" value="color_cont" checked> Continent</label>
+    <label><input type="radio" name="color" id="color_cont" value="color_cont" checked> Continent</label>
     <label><input type="radio" name="color" id="color_gdp" value="color_gdp" > GDP quintile</label>
     <label><input type="radio" name="color" id="color_pop" value="color_pop" > Population quintile</label>
     <label><input type="radio" name="color" id="color_life" value="color_life" > Life expectancy quintile</label>
@@ -142,7 +141,6 @@
 
 // create svg canvas
 var margin = {top: 50, bottom: 10, left: 300, right: 40};
-
 var width = 1650 - margin.left - margin.right;
 var height = 1750 - margin.top - margin.bottom;
 
@@ -153,339 +151,304 @@ var svg = d3.select("body").append("svg")
 // create graph node-link structure
 var graph = {nodes: [], links: []};
 
-var nb_nodes = 120, nb_cat = 10;
-
-var node_scale = d3.scale.linear().domain([0, nb_cat]).range([5, 50])
-
 var tradeFlows = false;
 
-// create global variables for status of layout and status of sort
-
-// load data into graph.nodes and update graph for the first time
+// load data and update graph for the first time
 d3.json("data/countries_2012.json", function(json) {
 
   jsonPop = json.sort(function(a, b) {
     if (a['population'] == b['population']) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['population'],b['population']);
-          }});
+      return d3.ascending(a['name'],b['name']);
+    } else {
+      return d3.descending(a['population'],b['population']);
+    }});
 
   var node = svg.selectAll(".node")
-              .data(jsonPop)
-            .enter()
-              .append("g").attr("class", "node")
+    .data(jsonPop)
+    .enter()
+    .append("g").attr("class", "node")
+    .attr("transform", function(d, i) { 
+      return "translate("+300+","+(8+i*14)+")"});
 
-                          .attr("transform", function(d, i) { 
-                            return "translate("+300+","+(8+i*14)+")"});
-
-
-  
-                    var groups = svg.selectAll("g")
-                    
+  var groups = svg.selectAll("g")          
     .append("text")
-    
     .attr("dx", 6)
     .attr("dy", 4.5)
     .text(function(d, i) {return d.name});
 
-
-
-
   node.append("circle")
     .attr("class", "circle")
     .attr("r", /*function(d) {
-                              if (d.gdp > 500000000000) {
-                                  return 9;
-                              } else if (d.gdp > 195000000000) {
-                                  return 8;
-                                } else if (d.gdp > 45000000000) {
-                                return 7;
-                                } else if (d.gdp > 15700000000) {
-                                return 6;
-                                } else {
-                                  return */5/*;
-                                }
-                          }*/)
+      if (d.gdp > 500000000000) {
+        return 9;
+      } else if (d.gdp > 195000000000) {
+        return 8;
+      } else if (d.gdp > 45000000000) {
+        return 7;
+      } else if (d.gdp > 15700000000) {
+        return 6;
+      } else {
+        return */5/*;
+      }
+    }*/)
 
-   .attr("fill", function(d) {
-                              if (d.continent == "Africa") {
-                                  return 'orange';
-                              } else if (d.continent == "Asia") {
-                                  return 'blue';
-                                } else if (d.continent == "Americas") {
-                                return 'yellow';
-                                } else if (d.continent == "Oceania") {
-                                return 'green';
-                                } else {
-                                  return 'red';
-                                }
-                          })
-    .on("mouseover", mouseovered)
-      .on("mouseout", mouseouted);
+  .attr("fill", function(d) {
+    if (d.continent == "Africa") {
+      return 'orange';
+    } else if (d.continent == "Asia") {
+      return 'blue';
+    } else if (d.continent == "Americas") {
+      return 'yellow';
+    } else if (d.continent == "Oceania") {
+      return 'green';
+    } else {
+      return 'red';
+    }
+  })
+
+  .on("mouseover", mouseovered)
+  .on("mouseout", mouseouted);
 
 });
 
-
-
 // layout functions (changes info within groups based on layout)
 function constant_layout() {
+  /*if(document.getElementById('gdp').checked) {
+    gdp_sort()
+  } else if(document.getElementById('name').checked) {
+    name_sort()
+  } else if(document.getElementById('life').checked) {
+    life_sort()
+  } else if(document.getElementById('lat').checked) {
+    lat_sort()      
+  } else if(document.getElementById('pop').checked) {
+    pop_sort()
+  }*/
 
-/*if(document.getElementById('gdp').checked) {
-  gdp_sort()
-} else if(document.getElementById('name').checked) {
-  name_sort()
-} else if(document.getElementById('life').checked) {
-  life_sort()
-} else if(document.getElementById('lat').checked) {
-  lat_sort()      
-} else if(document.getElementById('pop').checked) {
-  pop_sort()
-}*/
-if(which == 'gdp') {
-  gdp_sort()
-} else if(which == 'name') {
-  name_sort()
-} else if(which == 'life_expectancy') {
-  life_sort()
-} else if(which == 'latitude') {
-  lat_sort()      
-} else if(which == 'population') {
-  pop_sort()
+  if (which == 'gdp') {
+    gdp_sort()
+  } else if(which == 'name') {
+    name_sort()
+  } else if(which == 'life_expectancy') {
+    life_sort()
+  } else if(which == 'latitude') {
+    lat_sort()      
+  } else if(which == 'population') {
+    pop_sort()
+  }
+
+  /*var node = svg.selectAll(".node");
+
+  node
+    .transition().duration(1000)
+    .attr("class", "node")
+    .attr("transform", function(d, i) { 
+      return "translate("+297+","+(8+i*14)+")"});*/             
 }
-/*var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8+i*14)+")"});*/
-  
-               
-}
+
 var which = 'population';
+
 function linScale_layout() {
-/*var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8-(d.population-1205000000)/750000)+")"});*/
-/*if(document.getElementById('gdp').checked) {
-  gdp_sort()
-} else if(document.getElementById('name').checked) {
-  name_sort()
-} else if(document.getElementById('life').checked) {
-  life_sort()
-} else if(document.getElementById('lat').checked) {
-  lat_sort()
-} else if(document.getElementById('pop').checked) {
-  pop_sort()
-}*/
-if(which == 'gdp') {
-  gdp_sort()
-} else if(which == 'name') {
-  name_sort()
-} else if(which == 'life_expectancy') {
-  life_sort()
-} else if(which == 'latitude') {
-  lat_sort()      
-} else if(which == 'population') {
-  pop_sort()
-}
+  /*var node = svg.selectAll(".node");
+  
+  node
+    .transition().duration(1000)
+    .attr("class", "node")
+    .attr("transform", function(d, i) { 
+      return "translate("+297+","+(8-(d.population-1205000000)/750000)+")"});*/
+
+  /*if(document.getElementById('gdp').checked) {
+    gdp_sort()
+  } else if(document.getElementById('name').checked) {
+    name_sort()
+  } else if(document.getElementById('life').checked) {
+    life_sort()
+  } else if(document.getElementById('lat').checked) {
+    lat_sort()
+  } else if(document.getElementById('pop').checked) {
+    pop_sort()
+  }*/
+
+  if (which == 'gdp') {
+    gdp_sort()
+  } else if(which == 'name') {
+    name_sort()
+  } else if(which == 'life_expectancy') {
+    life_sort()
+  } else if(which == 'latitude') {
+    lat_sort()      
+  } else if(which == 'population') {
+    pop_sort()
+  }
 }
 
 function pop_sort() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
-if(document.getElementById('constant').checked) {
+  if(document.getElementById('constant').checked) {
+    var json = jsonPop.sort(function(a, b) {
+      if (a['population'] == b['population']) {
+        return d3.ascending(a['name'],b['name']);
+      } else {
+        return d3.descending(a['population'],b['population']);
+    }});
 
-var json = jsonPop.sort(function(a, b) {
-  if (a['population'] == b['population']) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['population'],b['population']);
-          }});
+  var json_names = json.map(function(d) {return d.name});
 
+  var node = svg.selectAll(".node");
+  node
+    .transition().duration(1000)
+    .attr("class", "node")  
+    .attr("transform", function(d, i) { 
+      return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
 
-
-var json_names = json.map(function(d) {
-  return d.name});
-
-
-
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")  
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
-} else {
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")  
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8-(d.population-1205000000)/750000)+")"});
-}
+  } else {
+    var node = svg.selectAll(".node");
+    node
+      .transition().duration(1000)
+      .attr("class", "node")  
+      .attr("transform", function(d, i) { 
+        return "translate("+297+","+(8-(d.population-1205000000)/750000)+")"});
+  }
 }
 
 function gdp_sort() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
   if(document.getElementById('constant').checked) {
-  var json = jsonPop.sort(function(a, b) {
-    if (a['gdp'] == b['gdp']) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['gdp'],b['gdp']);
-          }});
+    var json = jsonPop.sort(function(a, b) {
+      if (a['gdp'] == b['gdp']) {
+        return d3.ascending(a['name'],b['name']);
+      } else {
+        return d3.descending(a['gdp'],b['gdp']);
+    }});
 
+  var json_names = json.map(function(d) {return d.name});
 
-
-var json_names = json.map(function(d) {
-  return d.name});
-
-
-
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")  
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
-} else {
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8-(d.gdp-16244600000000.0)/10000000000)+")"});
+  var node = svg.selectAll(".node");
+  node
+    .transition().duration(1000)
+    .attr("class", "node")  
+    .attr("transform", function(d, i) { 
+      return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
+ 
+  } else {
+    var node = svg.selectAll(".node");
+    node
+      .transition().duration(1000)
+      .attr("class", "node")
+      .attr("transform", function(d, i) { 
+        return "translate("+297+","+(8-(d.gdp-16244600000000.0)/10000000000)+")"});
   }
-
 }
 
 function life_sort() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
-if(document.getElementById('constant').checked) {
-var json = jsonPop.sort(function(a, b) {
-  if (a['life_expectancy'] == b['life_expectancy']) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['life_expectancy'],b['life_expectancy']);
-          }});
+  if(document.getElementById('constant').checked) {
+    var json = jsonPop.sort(function(a, b) {
+      if (a['life_expectancy'] == b['life_expectancy']) {
+        return d3.ascending(a['name'],b['name']);
+      } else {
+        return d3.descending(a['life_expectancy'],b['life_expectancy']);
+    }});
 
+  var json_names = json.map(function(d) {return d.name});
 
+  var node = svg.selectAll(".node");
+  node
+    .transition().duration(1000)
+    .attr("class", "node")  
+    .attr("transform", function(d, i) { 
+      return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
 
-var json_names = json.map(function(d) {
-  return d.name});
-
-
-
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")  
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
-} else {
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8-(d.life_expectancy-83.5)/0.021)+")"});
+  } else {
+    var node = svg.selectAll(".node");
+    node
+      .transition().duration(1000)
+      .attr("class", "node")
+      .attr("transform", function(d, i) { 
+        return "translate("+297+","+(8-(d.life_expectancy-83.5)/0.021)+")"});
+  }
 }
-}
-
-
 
 function lat_sort() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
-if(document.getElementById('constant').checked) {
-var json = jsonPop.sort(function(a, b) {
-  if (Math.abs(a['latitude']) == Math.abs(b['latitude'])) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(Math.abs(a['latitude']),Math.abs(b['latitude']));
-          }});
+  if(document.getElementById('constant').checked) {
+    var json = jsonPop.sort(function(a, b) {
+      if (Math.abs(a['latitude']) == Math.abs(b['latitude'])) {
+        return d3.ascending(a['name'],b['name']);
+      } else {
+        return d3.descending(Math.abs(a['latitude']),Math.abs(b['latitude']));
+      }});
 
+  var json_names = json.map(function(d) {return d.name});
 
-var json_names = json.map(function(d) {
-  return d.name});
-
-
-
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")  
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
-} else {
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")
-                          .attr("transform", function(d, i) { 
-    return "translate("+297+","+(8-(Math.abs(d.latitude)-60.1608)/0.037)+")"});
-}
+  var node = svg.selectAll(".node");
+  node
+    .transition().duration(1000)
+    .attr("class", "node")  
+    .attr("transform", function(d, i) { 
+      return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
+ 
+  } else {
+    var node = svg.selectAll(".node");
+    node
+      .transition().duration(1000)
+      .attr("class", "node")
+      .attr("transform", function(d, i) { 
+        return "translate("+297+","+(8-(Math.abs(d.latitude)-60.1608)/0.037)+")"});
+  }
 }
 
 function name_sort() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
-var json = jsonPop.sort(function(a, b) {
-            return d3.ascending(a['name'],b['name']);
-          });
+  var json = jsonPop.sort(function(a, b) {
+    return d3.ascending(a['name'],b['name']);
+  });
 
-
-
-var json_names = json.map(function(d) {
-  return d.name});
-
-
+var json_names = json.map(function(d) {return d.name});
 
 var node = svg.selectAll(".node");
 node
-            .transition().duration(1000)
-              .attr("class", "node")  
-                          .attr("transform", function(d, i) { 
-                            return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
-
+  .transition().duration(1000)
+  .attr("class", "node")  
+  .attr("transform", function(d, i) { 
+    return "translate("+297+","+(8+json_names.indexOf(d.name)*14)+")"});
 }
 
 function scatter_lat_lon() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
   /*if(document.getElementById('constant').checked) {
 
   } else {*/
-var node = svg.selectAll(".node");
-node
-            .transition().duration(1000)
-              .attr("class", "node")  
-                          .attr("transform", function(d, i) { 
-                            return "translate("+(d.longitude*4.3+450)+","+(-4.3*d.latitude+290)+")"});
+  var node = svg.selectAll(".node");
+  node
+    .transition().duration(1000)
+    .attr("class", "node")  
+    .attr("transform", function(d, i) { 
+      return "translate("+(d.longitude*4.3+450)+","+(-4.3*d.latitude+290)+")"});
 }//}
 
 function scatter_pop_gdp() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
   /*if(document.getElementById('s_constant').checked) {
 
@@ -522,78 +485,67 @@ node
   } else {*/
 var node = svg.selectAll(".node");
 node
-            .transition().duration(1000)
-              .attr("class", "node")  
-                          .attr("transform", function(d, i) { 
+  .transition().duration(1000)
+  .attr("class", "node")  
+  .attr("transform", function(d, i) { 
     return "translate("+(8+d.gdp/13500000000)+","+(8-(d.population-1205000000)/2100000)+")"});
-
 }
-
 //}
 
 function scatter() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
-if(document.getElementById('lat_lon').checked) {
-  scatter_lat_lon()
-} else if(document.getElementById('pop_gdp').checked) {
-  scatter_pop_gdp()
-}
+  tradeFlows = false;
+  if(document.getElementById('lat_lon').checked) {
+    scatter_lat_lon()
+  } else if(document.getElementById('pop_gdp').checked) {
+    scatter_pop_gdp()
+  }
 }
 
 function whichCircle() {
   if(document.getElementById('circle_pop').checked) {
-
     circle_pop();
   } else if (document.getElementById('circle_gdp').checked) {
-var link = svg.selectAll(".link")
-    .remove();
+    var link = svg.selectAll(".link")
+      .remove();
     tradeFlows = false;
     circle_gdp();
-
   } else if(document.getElementById('circle_name').checked) {
-circle_name();
+    circle_name();
   } else if(document.getElementById('circle_dist').checked) {
-circle_dist();
-    } else if(document.getElementById('circle_life').checked) {
-circle_life();
-    }
+    circle_dist();
+  } else if(document.getElementById('circle_life').checked) {
+    circle_life();
+  }
 }
 
 function circle_sort(cat) {
-
-
-var json = jsonPop.sort(function(a, b) {
-  if (a[cat] == b[cat]) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a[cat],b[cat]);
-          }});
-return json;
+  var json = jsonPop.sort(function(a, b) {
+   if (a[cat] == b[cat]) {
+    return d3.ascending(a['name'],b['name']);
+  } else {
+    return d3.descending(a[cat],b[cat]);
+  }});
+  return json;
 }
-
-
 
 function circle_name() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
-var r = Math.min(height, width)/2;
-
+  var r = Math.min(height, width)/2;
   var arc = d3.svg.arc()
           .outerRadius(r);
-
   var pie = d3.layout.pie()
-          
-          .value(function(d, i) { 
-            return 1;  // We want an equal pie share/slice for each point
-          });
+    .value(function(d, i) { 
+      return 1;  // We want an equal pie share/slice for each point
+    });
 
   var json = jsonPop.sort(function(a, b) {
-                    return d3.descending(a['name'],b['name']);
-                  });
+    return d3.descending(a['name'],b['name']);
+  });
 
   graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
@@ -606,8 +558,8 @@ var r = Math.min(height, width)/2;
 
     return d.data;
   })
-var node = svg.selectAll(".node");
-  node.transition().duration(1000)
+  var node = svg.selectAll(".node");
+    node.transition().duration(1000)
       .attr("transform", function(d) { 
         return "translate("+d.x+","+d.y+")"; 
       });
@@ -616,19 +568,19 @@ var node = svg.selectAll(".node");
 function circle_life() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
-var r = Math.min(height, width)/2;
+  var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
-          .outerRadius(r);
+    .outerRadius(r);
 
   var pie = d3.layout.pie()
           
-          .value(function(d, i) { 
-            return 1;  // We want an equal pie share/slice for each point
-          });
-json = circle_sort('life_expectancy');
+    .value(function(d, i) { 
+      return 1;  // We want an equal pie share/slice for each point
+    });
+  json = circle_sort('life_expectancy');
   graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
@@ -640,35 +592,35 @@ json = circle_sort('life_expectancy');
 
     return d.data;
   })
-var node = svg.selectAll(".node");
-  node.transition().duration(1000)
-      .attr("transform", function(d) { 
-        return "translate("+d.x+","+d.y+")"; 
-      });
+  var node = svg.selectAll(".node");
+    node.transition().duration(1000)
+     .attr("transform", function(d) { 
+       return "translate("+d.x+","+d.y+")"; 
+     });
 }
 
 function circle_dist() {
-var link = svg.selectAll(".link")
+  var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
-var r = Math.min(height, width)/2;
+  var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
-          .outerRadius(r);
+    .outerRadius(r);
 
   var pie = d3.layout.pie()
           
-          .value(function(d, i) { 
-            return 1;  // We want an equal pie share/slice for each point
-          });
+    .value(function(d, i) { 
+      return 1;  // We want an equal pie share/slice for each point
+    });
 
-var json = jsonPop.sort(function(a, b) {
-  if (Math.abs(a['latitude']) == Math.abs(b['latitude'])) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(Math.abs(a['latitude']),Math.abs(b['latitude']));
-          }});
+  var json = jsonPop.sort(function(a, b) {
+    if (Math.abs(a['latitude']) == Math.abs(b['latitude'])) {
+      return d3.ascending(a['name'],b['name']);
+    } else {
+      return d3.descending(Math.abs(a['latitude']),Math.abs(b['latitude']));
+    }});
   graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
@@ -680,35 +632,35 @@ var json = jsonPop.sort(function(a, b) {
 
     return d.data;
   })
-var node = svg.selectAll(".node");
+  var node = svg.selectAll(".node");
   node.transition().duration(1000)
-      .attr("transform", function(d) { 
-        return "translate("+d.x+","+d.y+")"; 
-      });
+    .attr("transform", function(d) { 
+      return "translate("+d.x+","+d.y+")"; 
+    });
 }
 
 function circle_pop() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
   force.stop();
-var r = Math.min(height, width)/2;
+  var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
-          .outerRadius(r);
+    .outerRadius(r);
 
   var pie = d3.layout.pie()
           
-          .value(function(d, i) { 
-            return 1;  // We want an equal pie share/slice for each point
-          });
+    .value(function(d, i) { 
+      return 1;  // We want an equal pie share/slice for each point
+    });
 
-var json = jsonPop.sort(function(a, b) {
-  if (a['population'] == b['population']) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['population'],b['population']);
-          }});
+  var json = jsonPop.sort(function(a, b) {
+    if (a['population'] == b['population']) {
+      return d3.ascending(a['name'],b['name']);
+    } else {
+      return d3.descending(a['population'],b['population']);
+    }});
 
   graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
@@ -721,36 +673,36 @@ var json = jsonPop.sort(function(a, b) {
 
     return d.data;
   })
-var node = svg.selectAll(".node");
+  var node = svg.selectAll(".node");
 
   node.transition().duration(1000)
-      .attr("transform", function(d) { 
-        return "translate("+d.x+","+d.y+")"; 
-      });
+    .attr("transform", function(d) { 
+      return "translate("+d.x+","+d.y+")"; 
+    });
 }
 
 //var foci = [593.8959292684508, 73.52660320433347, 709.8289493994789, 663.9329812909405]
-var foci_gen = [0,1,2,3];
+//var foci_gen = [0,1,2,3];
 function circle_gdp() {
 
   force.stop();
-var r = Math.min(height, width)/2;
+  var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
-          .outerRadius(r);
+    .outerRadius(r);
 
   var pie = d3.layout.pie()
           
-          .value(function(d, i) { 
-            return 1;  // We want an equal pie share/slice for each point
-          });
+    .value(function(d, i) { 
+      return 1;  // We want an equal pie share/slice for each point
+    });
 
-var json = jsonPop.sort(function(a, b) {
-  if (a['gdp'] == b['gdp']) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['gdp'],b['gdp']);
-          }});
+  var json = jsonPop.sort(function(a, b) {
+    if (a['gdp'] == b['gdp']) {
+      return d3.ascending(a['name'],b['name']);
+    } else {
+      return d3.descending(a['gdp'],b['gdp']);
+    }});
 
   graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
@@ -772,23 +724,22 @@ var json = jsonPop.sort(function(a, b) {
     return d.data;
   })
 
-var node = svg.selectAll(".node");
+  var node = svg.selectAll(".node");
   node.transition().duration(1000)
       
-      .attr("transform", function(d) { 
-        return "translate("+d.x+","+d.y+")"; 
-      });
+    .attr("transform", function(d) { 
+      return "translate("+d.x+","+d.y+")"; 
+    });
 }
 
 var force = d3.layout.force()
-    .size([750,750])
-    .charge(-50)
-    //.friction()
-    //.gravity()
-    .on("tick", tick
-        ) 
-    .on("start", function(d) {})
-    .on("end", function(d) {});
+  .size([750,750])
+  .charge(-50)
+  //.friction()
+  //.gravity()
+  .on("tick", tick) 
+  .on("start", function(d) {})
+  .on("end", function(d) {});
 
 
 
@@ -825,7 +776,7 @@ function tick(d) {
     });
 
   } else if (document.getElementById('wedges').checked) {
-var c = .04;
+    var c = .04;
     node.transition().duration(0)
       .attr("transform", function(d) {      
         if (d.continent == 'Americas') {  
@@ -844,8 +795,8 @@ var c = .04;
         }
     });
   } else if (document.getElementById('circles').checked) {
-  var n = 2;
-}
+    var n = 2;
+  }
 }
 
 
@@ -861,22 +812,22 @@ function tick(d) {
     */
 
 
-//combine these
+
 function strips() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
-force.nodes(jsonPop)
-      .start();
+  tradeFlows = false;
+  force.nodes(jsonPop)
+    .start();
 }
 
 
 function wedges() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
-force.nodes(jsonPop)
-      .start();
+  tradeFlows = false;
+  force.nodes(jsonPop)
+    .start();
 }
 
 function circles() {
@@ -886,59 +837,59 @@ function circles() {
   //need five separate continent arrays
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
+  tradeFlows = false;
 
   force.stop();
 
 
-var r = 200;
+  var r = 200;
 
   var arc = d3.svg.arc()
-          .outerRadius(r);
+    .outerRadius(r);
 
   var pie = d3.layout.pie()
           
-          .value(function(d, i) { 
-            return 1;  // We want an equal pie share/slice for each point
-          });
+    .value(function(d, i) { 
+      return 1;  // We want an equal pie share/slice for each point
+    });
 
   var europe =[];
 
   jsonPop.forEach(function(d) {
-      if (d.continent == "Europe") europe.push(d);
+    if (d.continent == "Europe") europe.push(d);
   })
 
-var asia =[];
+  var asia =[];
 
   jsonPop.forEach(function(d) {
-      if (d.continent == "Asia") asia.push(d);
+    if (d.continent == "Asia") asia.push(d);
   })
 
   var africa =[];
 
   jsonPop.forEach(function(d) {
-      if (d.continent == "Africa") africa.push(d);
+    if (d.continent == "Africa") africa.push(d);
   })
 
   var americas =[];
 
   jsonPop.forEach(function(d) {
-      if (d.continent == "Americas") americas.push(d);
+    if (d.continent == "Americas") americas.push(d);
   })
 
   var oceania =[];
 
   jsonPop.forEach(function(d) {
-      if (d.continent == "Oceania") oceania.push(d);
+    if (d.continent == "Oceania") oceania.push(d);
   })
 
-var c = .8;
+  var c = .8;
 
   graph.europe = pie(europe).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
-//var c = 30;
+    //var c = 30;
 
     // Building the data object we are going to return
   
@@ -948,7 +899,7 @@ var c = .8;
  
   })
 
-graph.asia = pie(asia).map(function(d, i) {
+  graph.asia = pie(asia).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
@@ -961,7 +912,7 @@ graph.asia = pie(asia).map(function(d, i) {
  
   })
 
-graph.americas = pie(americas).map(function(d, i) {
+  graph.americas = pie(americas).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
@@ -974,7 +925,7 @@ graph.americas = pie(americas).map(function(d, i) {
  
   })
 
-graph.africa = pie(africa).map(function(d, i) {
+  graph.africa = pie(africa).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
@@ -987,7 +938,7 @@ graph.africa = pie(africa).map(function(d, i) {
  
   })
 
-graph.oceania = pie(oceania).map(function(d, i) {
+  graph.oceania = pie(oceania).map(function(d, i) {
     // Needed to caclulate the centroid
     d.innerRadius = 0;
     d.outerRadius = r;
@@ -1006,11 +957,11 @@ graph.oceania = pie(oceania).map(function(d, i) {
 
 var node = svg.selectAll(".node");
 
-  node.transition().duration(1000)
+node.transition().duration(1000)
       
-      .attr("transform", function(d) { 
-           return "translate("+d.x+","+d.y+")"; 
-      });
+  .attr("transform", function(d) { 
+    return "translate("+d.x+","+d.y+")"; 
+  });
 }
 
 
@@ -1022,9 +973,9 @@ var foci = [193.8959292684508, 263.93298129094046, 309.82894939947886, 326.47339
 function all() {
   var link = svg.selectAll(".link")
     .remove();
-    tradeFlows = false;
-force.nodes(jsonPop)
-      .start();
+  tradeFlows = false;
+  force.nodes(jsonPop)
+    .start();
 }
 
 var jsonLinks = [];
@@ -1034,8 +985,8 @@ jsonNodes.forEach(function(d, i) {
     if(e.year == 2012) {
       e.top_partners.forEach(function(f, k) {
         jsonLinks.push({"source": d, "target": f})
-})
-}
+      })
+    }
   })
 });
 
@@ -1049,40 +1000,40 @@ jsonNodes.forEach(function(d, i) {
 function id_of_d(d) {
   var ret;
        
-          jsonNodes.forEach(function(e, j) {
+  jsonNodes.forEach(function(e, j) {
             
-            if (e.name == d.name) {
+    if (e.name == d.name) {
               
-              ret = e.country_id;
+      ret = e.country_id;
 
 
-            }}); 
-          return ret;
+    }}); 
+    return ret;
 }
 
 
 function mouseovered(d) {
   if (tradeFlows == true) {
-  var node = svg.selectAll(".node");
-  node
+    var node = svg.selectAll(".node");
+    node
       .each(function(n) { n.target = n.source = false; });
-var link = svg.selectAll(".link");
+    var link = svg.selectAll(".link");
 
-  link
+    link
       .classed("link--target", function(l) {
-            var ret;
-          if (id_of_d(d) == id_of_d(l.source)) {
-            ret = true;
-            }
-            return ret;
-       })
+        var ret;
+        if (id_of_d(d) == id_of_d(l.source)) {
+          ret = true;
+        }
+        return ret;
+     })
       .classed("link--source", function(l) { if (l.source == d) return true; })
 
-    .filter(function(l) { return l.target.country_id == id_of_d(d) || l.source.country_id == id_of_d(d); })
+      .filter(function(l) { return l.target.country_id == id_of_d(d) || l.source.country_id == id_of_d(d); })
       .each(function() { this.parentNode.appendChild(this); });
 
-  node
-  //return true if n is one of d's targets
+    node
+      //return true if n is one of d's targets
       .classed("node--target", function(n) {
         var id_source = id_of_d(d);
         var id_target = id_of_d(n);
@@ -1095,11 +1046,11 @@ var link = svg.selectAll(".link");
                 if (y.country_id == id_target) {
                   ret = true;
                 }})
-            }
-          });
+          }
+        });
         if (n.x !== d.x) {
-            return ret;}
-        })
+          return ret;}
+      })
       .classed("node--source", function(n) { if (n.x == d.x) {return true;} else {return false;} })
       .classed("node--target--false", function(n) {
         var id_source = id_of_d(d);
@@ -1113,11 +1064,11 @@ var link = svg.selectAll(".link");
                 if (y.country_id == id_target) {
                   ret = false;
                 }})
-            }
-          });
+          }
+        });
         if (n.x !== d.x) {
-            return ret;}
-        })
+          return ret;}
+      })
       .classed("node--source--false", function(n) { if (n.x == d.x) {return false;}  });
 }
 }
@@ -1126,38 +1077,38 @@ function mouseouted(d) {
 
   var link = svg.selectAll(".link");
   link
-      .classed("link--target", false)
-      .classed("link--source", false);
-var node = svg.selectAll(".node");
+    .classed("link--target", false)
+    .classed("link--source", false);
+  var node = svg.selectAll(".node");
   node
-      .classed("node--target", false)
-      .classed("node--source", false)
-      .classed("node--target--false", false)
-      .classed("node--source--false", false);
+    .classed("node--target", false)
+    .classed("node--source", false)
+    .classed("node--target--false", false)
+    .classed("node--source--false", false);
 }
 
 function g_links() {
   tradeFlows = true;
- circle_gdp();
+  circle_gdp();
   //force.stop();
   setTimeout(function() {
-  var r = Math.min(height, width)/2;
+    var r = Math.min(height, width)/2;
 
-  var arc = d3.svg.arc()
-          .outerRadius(r);
+    var arc = d3.svg.arc()
+      .outerRadius(r);
 
-  var pie = d3.layout.pie()
+    var pie = d3.layout.pie()
           
-          .value(function(d, i) { 
-            return 1;  // We want an equal pie share/slice for each point
-          });
+      .value(function(d, i) { 
+        return 1;  // We want an equal pie share/slice for each point
+      });
 
-json = jsonPop.sort(function(a, b) {
-  if (a['gdp'] == b['gdp']) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['gdp'],b['gdp']);
-          }});
+  json = jsonPop.sort(function(a, b) {
+    if (a['gdp'] == b['gdp']) {
+      return d3.ascending(a['name'],b['name']);
+    } else {
+      return d3.descending(a['gdp'],b['gdp']);
+    }});
 
   graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
@@ -1171,59 +1122,59 @@ json = jsonPop.sort(function(a, b) {
     return d.data;
   })
 
-var node = svg.selectAll(".node");
-  node.transition().duration(1000)
+  var node = svg.selectAll(".node");
+    node.transition().duration(1000)
       .attr("transform", function(d) { 
         return "translate("+d.x+","+d.y+")"; 
       });
 
 
   var link = svg.selectAll(".link")
-              .data(jsonLinks);
+    .data(jsonLinks);
 
-link.enter().append("line")
+  link.enter().append("line")
     .attr("class", "link");
 
 
 
-link.transition()
-      .attr("x1", function(d) { 
-        var ret;
-          json.forEach(function(e, j) {
-            if (e.name == d.source.name) {
-              ret = e.x;
-            }}); 
-          return ret;})
-      .attr("y1", function(d, i) { 
-        var ret;
-          json.forEach(function(e, j) {
-            if (e.name == d.source.name) {
-              ret = e.y;
-            }}); 
-          return ret;})
-      .attr("x2", function(d, i) { 
-        var ret;
-          jsonNodes.forEach(function(e, j) {
-            json.forEach(function(f, k) {
-            if (e.country_id == d.target.country_id) {
-              if (e.name == f.name) {
-              ret = f.x;
+  link.transition()
+    .attr("x1", function(d) { 
+      var ret;
+      json.forEach(function(e, j) {
+        if (e.name == d.source.name) {
+          ret = e.x;
+        }}); 
+      return ret;})
+    .attr("y1", function(d, i) { 
+      var ret;
+      json.forEach(function(e, j) {
+        if (e.name == d.source.name) {
+          ret = e.y;
+        }}); 
+      return ret;})
+    .attr("x2", function(d, i) { 
+      var ret;
+        jsonNodes.forEach(function(e, j) {
+          json.forEach(function(f, k) {
+          if (e.country_id == d.target.country_id) {
+            if (e.name == f.name) {
+            ret = f.x;
 
 
-            }}})}); 
-          return ret;})
-      .attr("y2", function(d, i) { 
-        var ret;
+          }}})}); 
+      return ret;})
+    .attr("y2", function(d, i) { 
+      var ret;
        
-          jsonNodes.forEach(function(e, j) {
-            json.forEach(function(f, k) {
-            if (e.country_id == d.target.country_id) {
-              if (e.name == f.name) {
+      jsonNodes.forEach(function(e, j) {
+        json.forEach(function(f, k) {
+          if (e.country_id == d.target.country_id) {
+            if (e.name == f.name) {
               ret = f.y;
 
 
             }}})}); 
-          return ret;});
+      return ret;});
 
 /*node
   //return true if n is one of d's targets
@@ -1254,26 +1205,26 @@ link.transition()
 
 
 
-var node = svg.selectAll(".node")
+  var node = svg.selectAll(".node")
     .remove();
 
-var r = Math.min(height, width)/2;
+  var r = Math.min(height, width)/2;
 
   var arc = d3.svg.arc()
-          .outerRadius(r);
+    .outerRadius(r);
 
   var pie = d3.layout.pie()
           
-          .value(function(d, i) { 
-            return 1;  // We want an equal pie share/slice for each point
-          });
+    .value(function(d, i) { 
+      return 1;  // We want an equal pie share/slice for each point
+    });
 
-var json = jsonPop.sort(function(a, b) {
-  if (a['gdp'] == b['gdp']) {
-                    return d3.ascending(a['name'],b['name']);
-                  } else {
-            return d3.descending(a['gdp'],b['gdp']);
-          }});
+  var json = jsonPop.sort(function(a, b) {
+    if (a['gdp'] == b['gdp']) {
+      return d3.ascending(a['name'],b['name']);
+    } else {
+      return d3.descending(a['gdp'],b['gdp']);
+    }});
 
   graph.nodes = pie(json).map(function(d, i) {
     // Needed to caclulate the centroid
@@ -1286,10 +1237,11 @@ var json = jsonPop.sort(function(a, b) {
 
     return d.data;
   })
-var node = svg.selectAll(".node")
-.data(jsonPop)
-            .enter()
-              .append("g").attr("class", "node")
+  
+  var node = svg.selectAll(".node")
+    .data(jsonPop)
+      .enter()
+      .append("g").attr("class", "node")
       .attr("transform", function(d) { 
         return "translate("+d.x+","+d.y+")"; 
       });
@@ -1298,180 +1250,163 @@ var node = svg.selectAll(".node")
 
 
   
-                    var groups = svg.selectAll("g")
+  var groups = svg.selectAll("g")
                     
     .append("text")
     .attr("dx", 6)
     .attr("dy", 4.5)
     .on("mouseover", mouseovered)
-      .on("mouseout", mouseouted)
+    .on("mouseout", mouseouted)
     .text(function(d, i) {return d.name}); 
 
 
   node.append("circle")
     .attr("class", "circle")
-    .attr("r", /*function(d) {
-                              if (d.gdp > 500000000000) {
-                                  return 9;
-                              } else if (d.gdp > 195000000000) {
-                                  return 8;
-                                } else if (d.gdp > 45000000000) {
-                                return 7;
-                                } else if (d.gdp > 15700000000) {
-                                return 6;
-                                } else {
-                                  return */5/*;
-                                }
-                          }*/)
-   
+    .attr("r", 5)
     .on("mouseover", mouseovered)
-      .on("mouseout", mouseouted);
+    .on("mouseout", mouseouted);
 
-if(document.getElementById('color_gdp').checked) {
-var circ = svg.selectAll(".circle")
+  if(document.getElementById('color_gdp').checked) {
+    var circ = svg.selectAll(".circle")
 
-   .attr("fill", function(d) {
-                              if (d.gdp > 500000000000) {
-                                  return 'red';
-                              } else if (d.gdp > 195000000000) {
-                                  return 'orange';
-                                } else if (d.gdp > 45000000000) {
-                                return 'yellow';
-                                } else if (d.gdp > 15700000000) {
-                                return 'green';
-                                } else {
-                                  return 'blue';
-                                }
-                          });
-} else if(document.getElementById('color_life').checked) {
-var circ = svg.selectAll(".circle")
+      .attr("fill", function(d) {
+        if (d.gdp > 500000000000) {
+          return 'red';
+        } else if (d.gdp > 195000000000) {
+          return 'orange';
+        } else if (d.gdp > 45000000000) {
+          return 'yellow';
+        } else if (d.gdp > 15700000000) {
+          return 'green';
+        } else {
+          return 'blue';
+        }
+     });
 
-   .attr("fill", function(d) {
-                              if (d.life_expectancy > 80) {
-                                  return 'red';
-                              } else if (d.life_expectancy > 75.04) {
-                                  return 'orange';
-                                } else if (d.life_expectancy > 72) {
-                                return 'yellow';
-                                } else if (d.life_expectancy > 64) {
-                                return 'green';
-                                } else {
-                                  return 'blue';
-                                }
-                          });
+  } else if(document.getElementById('color_life').checked) {
+    var circ = svg.selectAll(".circle")
+
+      .attr("fill", function(d) {
+        if (d.life_expectancy > 80) {
+          return 'red';
+        } else if (d.life_expectancy > 75.04) {
+          return 'orange';
+        } else if (d.life_expectancy > 72) {
+          return 'yellow';
+        } else if (d.life_expectancy > 64) {
+          return 'green';
+        } else {
+          return 'blue';
+        }
+    });
   } else if(document.getElementById('color_pop').checked) {
-var circ = svg.selectAll(".circle")
+    var circ = svg.selectAll(".circle")
 
-   .attr("fill", function(d) {
-                              if (d.population > 45000000) {
-                                  return 'red';
-                              } else if (d.population > 14400000) {
-                                  return 'orange';
-                                } else if (d.population > 7950000) {
-                                return 'yellow';
-                                } else if (d.population > 3674000) {
-                                return 'green';
-                                } else {
-                                  return 'blue';
-                                }
-                          });
-  }else {
-var circ = svg.selectAll(".circle")
+      .attr("fill", function(d) {
+        if (d.population > 45000000) {
+          return 'red';
+        } else if (d.population > 14400000) {
+          return 'orange';
+        } else if (d.population > 7950000) {
+          return 'yellow';
+        } else if (d.population > 3674000) {
+          return 'green';
+        } else {
+          return 'blue';
+        }
+  });
 
-   .attr("fill", function(d) {
-                              if (d.continent == "Africa") {
-                                  return 'orange';
-                              } else if (d.continent == "Asia") {
-                                  return 'blue';
-                                } else if (d.continent == "Americas") {
-                                return 'yellow';
-                                } else if (d.continent == "Oceania") {
-                                return 'green';
-                                } else {
-                                  return 'red';
-                                }
-                          });
+  } else {
+    var circ = svg.selectAll(".circle")
+
+      .attr("fill", function(d) {
+        if (d.continent == "Africa") {
+          return 'orange';
+        } else if (d.continent == "Asia") {
+          return 'blue';
+        } else if (d.continent == "Americas") {
+          return 'yellow';
+        } else if (d.continent == "Oceania") {
+          return 'green';
+        } else {
+          return 'red';
+        }
+    });
   }
-
-
 }, 1000);
 }
 
 function color_gdp() {
-var circ = svg.selectAll(".circle")
-.transition(1000)
-   .attr("fill", function(d) {
-                              if (d.gdp > 500000000000) {
-                                  return 'red';
-                              } else if (d.gdp > 195000000000) {
-                                  return 'orange';
-                                } else if (d.gdp > 45000000000) {
-                                return 'yellow';
-                                } else if (d.gdp > 15700000000) {
-                                return 'green';
-                                } else {
-                                  return 'blue';
-                                }
-                          });
+  var circ = svg.selectAll(".circle")
+    .transition(1000)
+    .attr("fill", function(d) {
+      if (d.gdp > 500000000000) {
+        return 'red';
+      } else if (d.gdp > 195000000000) {
+        return 'orange';
+      } else if (d.gdp > 45000000000) {
+        return 'yellow';
+      } else if (d.gdp > 15700000000) {
+        return 'green';
+      } else {
+        return 'blue';
+        }
+    });
 }
 
 function color_cont() {
-var circ = svg.selectAll(".circle")
-.transition(1000)
-   .attr("fill", function(d) {
-                              if (d.continent == "Africa") {
-                                  return 'orange';
-                              } else if (d.continent == "Asia") {
-                                  return 'blue';
-                                } else if (d.continent == "Americas") {
-                                return 'yellow';
-                                } else if (d.continent == "Oceania") {
-                                return 'green';
-                                } else {
-                                  return 'red';
-                                }
-                          });
+  var circ = svg.selectAll(".circle")
+    .transition(1000)
+    .attr("fill", function(d) {
+      if (d.continent == "Africa") {
+        return 'orange';
+      } else if (d.continent == "Asia") {
+        return 'blue';
+      } else if (d.continent == "Americas") {
+        return 'yellow';
+      } else if (d.continent == "Oceania") {
+        return 'green';
+      } else {
+        return 'red';
+      }
+  });
   }
 
 function color_life() {
-var circ = svg.selectAll(".circle")
-.transition(1000)
-   .attr("fill", function(d) {
-                              if (d.life_expectancy > 80) {
-                                  return 'red';
-                              } else if (d.life_expectancy > 75.04) {
-                                  return 'orange';
-                                } else if (d.life_expectancy > 72) {
-                                return 'yellow';
-                                } else if (d.life_expectancy > 64) {
-                                return 'green';
-                                } else {
-                                  return 'blue';
-                                }
-                          });
+  var circ = svg.selectAll(".circle")
+    .transition(1000)
+    .attr("fill", function(d) {
+      if (d.life_expectancy > 80) {
+        return 'red';
+      } else if (d.life_expectancy > 75.04) {
+        return 'orange';
+      } else if (d.life_expectancy > 72) {
+        return 'yellow';
+      } else if (d.life_expectancy > 64) {
+        return 'green';
+      } else {
+        return 'blue';
+      }
+    });
 }
 
 function color_pop() {
-var circ = svg.selectAll(".circle")
-.transition(1000)
-   .attr("fill", function(d) {
-                              if (d.population > 45000000) {
-                                  return 'red';
-                              } else if (d.population > 14400000) {
-                                  return 'orange';
-                                } else if (d.population > 7950000) {
-                                return 'yellow';
-                                } else if (d.population > 3674000) {
-                                return 'green';
-                                } else {
-                                  return 'blue';
-                                }
-                          });
+  var circ = svg.selectAll(".circle")
+    .transition(1000)
+    .attr("fill", function(d) {
+      if (d.population > 45000000) {
+        return 'red';
+      } else if (d.population > 14400000) {
+        return 'orange';
+      } else if (d.population > 7950000) {
+        return 'yellow';
+      } else if (d.population > 3674000) {
+        return 'green';
+      } else {
+        return 'blue';
+      }
+  });
 }
-
-// update function - sorts data and calls appropriate layout function
-
-// graph-update function - transforms svg groups to update actual visual
 
 // listeners - tell us to update data appropriately
 d3.select("input[value=\"linScale\"]").on("click", linScale_layout);
@@ -1508,23 +1443,23 @@ d3.select("input[value=\"color_pop\"]").on("click", color_pop);
 d3.select("input[value=\"color_life\"]").on("click", color_life);
 
 d3.selectAll("#whichSort")
-.on("change", function() {
-  d3.selectAll("option").each(function(d) {
-    if(d3.select(this).property('selected')) {
-     which = this.value;
-    if(which == 'gdp') {
-  gdp_sort()
-} else if(which == 'name') {
-  name_sort()
-} else if(which == 'life_expectancy') {
-  life_sort()
-} else if(which == 'latitude') {
-  lat_sort()      
-} else if(which == 'population') {
-  pop_sort()
-}
+  .on("change", function() {
+    d3.selectAll("option").each(function(d) {
+     if(d3.select(this).property('selected')) {
+       which = this.value;
+       if(which == 'gdp') {
+         gdp_sort()
+       } else if(which == 'name') {
+         name_sort()
+       } else if(which == 'life_expectancy') {
+         life_sort()
+       } else if(which == 'latitude') {
+         lat_sort()      
+       } else if(which == 'population') {
+         pop_sort()
+      }
   }
-  })})
+})})
 
 </script>
 </body>
