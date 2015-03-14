@@ -129,7 +129,7 @@
   </form>
   <form>
   Cluster:
-  <label><input type="radio" name="group" id="all" value="all" > All</label>
+  <label><input type="radio" name="group" id="all" value="all" > Crowd</label>
     <label><input type="radio" name="group" id="strips" value="strips" > Strips</label>
     <label><input type="radio" name="group" id="wedges" value="wedges" > Wedges</label>
     <label><input type="radio" name="group" id="circles" value="circles" > Circles</label>
@@ -797,15 +797,15 @@ function tick(d) {
     node.transition().duration(0)
       .attr("transform", function(d) { 
         if (d.continent == 'Americas') {
-          return "translate("+(d.x-=5*k)+","+(d.y)+")" ;
+          return "translate("+(d.x-=15*k)+","+(d.y)+")" ;
         } else if (d.continent == 'Africa') {
-          return "translate("+(d.x+=10*k)+","+(d.y)+")"; 
+          return "translate("+(d.x+=2.5*k)+","+(d.y)+")"; 
 
         } else if (d.continent == 'Europe') {
-          return "translate("+(d.x+=25*k)+","+(d.y)+")";
+          return "translate("+(d.x+=20*k)+","+(d.y)+")";
 
         } else if (d.continent == 'Asia') {
-          return "translate("+(d.x+=40*k)+","+(d.y)+")";
+          return "translate("+(d.x+=37.5*k)+","+(d.y)+")";
 
         } else if (d.continent == 'Oceania') {
           return "translate("+(d.x+=55*k)+","+(d.y)+")"; 
