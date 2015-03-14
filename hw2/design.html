@@ -459,13 +459,13 @@ function paint(state) {
       }
   })
 
-  var rect = svg.selectAll("rect")
-    .remove();
+  var rect = svg.selectAll("rect");
+//console.log(rect);
+    rect.remove();
 
-    var text = svg.selectAll("text")
-    .remove();
-
-
+    var text = svg.selectAll("text");
+//console.log(text);
+text.remove();
 
   var max = d3.max(partners );
         var min = 0;
@@ -512,6 +512,7 @@ color_cont();
   } else {
 color_first();
   }
+
 
 
 
