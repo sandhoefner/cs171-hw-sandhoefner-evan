@@ -118,6 +118,10 @@ TypeVis.prototype.updateVis = function(){
     bar_enter.append("rect");
     bar_enter.append("text");
 
+    bar_enter.on("click", function(d) {
+        volume_vis.onSelectionChange(d.type);
+    })
+
     // Add attributes (position) to all bars
     bar
       .attr("class", "bar")

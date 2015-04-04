@@ -44,6 +44,8 @@ TypeVis.prototype.initVis = function(){
     this.y = d3.scale.ordinal()
       .rangeRoundBands([0, this.height], .1);
 
+    this.color = d3.scale.category20();
+
     this.xAxis = d3.svg.axis()
       .scale(this.x)
       .ticks(6)
@@ -93,13 +95,17 @@ TypeVis.prototype.updateVis = function(){
     // But it's not needed to solve the task.
     // var options = _options || {};
 
+    // ''that'' is a convention
     var that = this;
 
     // updates scales
     this.x.domain(d3.extent(this.displayData, function(d) { return d.count; }));
     this.y.domain(this.displayData.map(function(d) { return d.type; }));
 
-    // updates axis
+    // map creates an array containing type of each element in data
+    this.color.domain(this.displayData.map(function(d) { return d.type }));
+
+    // updates xAxis
     this.svg.select(".x.axis")
         .call(this.xAxis);
 
@@ -135,7 +141,13 @@ TypeVis.prototype.updateVis = function(){
       })
       .attr("height", this.y.rangeBand())
       .attr("x", 0)
-      .attr("y", 0);
+      .attr("y", 0)
+      // very common problem: using this in wrong scope
+      // console.log using commas
+      // use .data() to extract data
+      .style("fill", function(d,i) {
+        return that.color(d.type);
+      });
 
     bar.selectAll("text")
       .transition()

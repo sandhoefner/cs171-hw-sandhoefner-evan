@@ -6,7 +6,9 @@
   <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <!--volume of calls-->
   <script src="js/volumevis.js"></script>
+  <!--type of calls-->
   <script src="js/typevis.js"></script>
 
   <style type="text/css">
@@ -71,9 +73,12 @@ var dateFormatter = d3.time.format("%Y-%m-%d");
 var initVis = function(){
 
   // instantiates all Vis Objects here
+  // in javascript, functions and objects are the same
   volume_vis = new VolumeVis(d3.select("#volumeVis"), allData);
 
   // TODO: also initialize TypeVis
+  volume_vis = new VolumeVis(d3.select("#volumeVis"), allData);
+  type_vis = new TypeVis(d3.select("#typeVis"), allData);
 
 }
 
@@ -86,6 +91,7 @@ var startHere = function() {
         d.date = dateFormatter.parse(d.date);
       });
 
+      // make it global
       allData = data;
       initVis();
     }

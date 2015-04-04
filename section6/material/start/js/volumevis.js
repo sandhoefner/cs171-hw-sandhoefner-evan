@@ -26,7 +26,7 @@ VolumeVis = function(_parentElement, _data){
 
 
 /**
- * Method that sets up the SVG and the variables
+ * Method that sets up the SVG and the variables (without position; doesn't draw)
  */
 VolumeVis.prototype.initVis = function(){
 
