@@ -63,7 +63,7 @@ AgeVis.prototype.initVis = function(){
       .range([0, this.width]);
 
     this.y = d3.scale.linear()
-      .range([this.height, 0]);
+      .range([0, this.height]);
 
     this.xAxis = d3.svg.axis()
       .scale(this.x)
@@ -76,7 +76,7 @@ AgeVis.prototype.initVis = function(){
     this.area = d3.svg.area()
       .interpolate("monotone")
       .x0(this.width-292)
-      .x1(function(d, i) { console.log(newRes[i]); return Math.abs(newRes[i]-120); })
+      .x1(function(d, i) { return that.x(newRes[i])-69})
       .y(function(d, i) { return i*3.54-20.5;});
 
 
@@ -97,12 +97,12 @@ AgeVis.prototype.initVis = function(){
 
     this.svg.append("g")
         .attr("class", "y axis")
-      // .append("text")
-      //   .attr("transform", "rotate(-90)")
-      //   .attr("y", 6)
-      //   .attr("dy", ".71em")
-      //   .style("text-anchor", "end")
-      //   .text("Count, daily");
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        // .text("Count, daily");
 
     // filter, aggregate, modify data
     // this.wrangleData(null);
@@ -149,12 +149,14 @@ AgeVis.prototype.updateVis = function(){
     // TODO: ...update scales
     // TODO: ...update graphs
     // updates scales
-    this.x.domain(d3.extent(this.displayData, function(d) { return d.count; }));
-    this.y.domain(d3.extent(this.displayData, function(d) { return d.age; }));
+    var ran = d3.range(101); console.log(ran);
+    ran.reverse();
+    this.x.domain(d3.extent(mainData, function(d) { return d["count(*)"]; }));
+    this.y.domain(d3.extent(d3.range(101), function(d, i) { return ran[i]; }));
 
     // updates axis
-    this.svg.select(".x.axis")
-        .call(this.xAxis);
+    // this.svg.select(".x.axis")
+    //     .call(this.xAxis);
 
     this.svg.select(".y.axis")
         .call(this.yAxis)
@@ -275,7 +277,9 @@ AgeVis.prototype.filterAndAggregate = function(_filter){
         
     });
 });
+
     newRes = res;
+    console.log(newRes);
     return res;
 
 }
