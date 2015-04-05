@@ -95,6 +95,8 @@ CountVis.prototype.initVis = function(){
       .on("brush", function(){
         // Trigger selectionChanged event. You'd need to account for filtering by time AND type
         console.log(that.brush.extent());
+        console.log(that);
+        // $(that.brushed).trigger("selectionChanged",brush.extent());
       });
 
     // Add axes visual elements

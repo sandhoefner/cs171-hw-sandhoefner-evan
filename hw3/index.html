@@ -124,12 +124,16 @@
 
                 //TODO: Instantiate all Vis Objects here
                 
-                var count_vis = new CountVis(d3.select("#countVis"), allData, MyEventHandler);
+                var count_vis = new countVis(d3.select("#countVis"), allData, MyEventHandler);
+                // var prio_vis = new prioVis(d3.select("#prioVis"), allData, MyEventHandler);
+                // var age_vis = new ageVis(d3.select("#ageVis"), allData, MyEventHandler);
 
                 // TODO: bind the eventHandler to the Vis Objects
                 // events will be created from the CountVis object (nothing to do here)
                 // events will be consumed by the PrioVis and AgeVis object (binding should happen here)
-
+                // $(MyEventHandler).bind("selectionChanged", function(event, selectionStart, selectionEnd){
+                //     age_vis.onSelectionChange(selectionStart, selectionEnd);
+                // });
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
