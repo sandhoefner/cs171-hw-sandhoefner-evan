@@ -104,7 +104,7 @@ AgeVis.prototype.updateVis = function(){
 AgeVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
 
     // TODO: call wrangle function
-
+    console.log('selection change!');
     this.updateVis();
 
 

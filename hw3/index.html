@@ -119,19 +119,20 @@
             var initVis = function(){
 
                 //TODO: Create an eventHandler  --> DONE :)
-                var MyEventHandler = new Object();
+                MyEventHandler = new Object();
 
 
                 //TODO: Instantiate all Vis Objects here
                 
                 var count_vis = new CountVis(d3.select("#countVis"), allData, MyEventHandler);
                 // var prio_vis = new PrioVis(d3.select("#prioVis"), allData, MyEventHandler);
-                var age_vis = new AgeVis(d3.select("#ageVis"), allData, MyEventHandler);
+                var age_vis = new AgeVis(d3.select("#ageVis"), allData, metaData, MyEventHandler);
 
                 // TODO: bind the eventHandler to the Vis Objects
                 // events will be created from the CountVis object (nothing to do here)
                 // events will be consumed by the PrioVis and AgeVis object (binding should happen here)
                 $(MyEventHandler).bind("selectionChanged", function(event, selectionStart, selectionEnd){
+                    console.log('bind');
                     age_vis.onSelectionChange(selectionStart, selectionEnd);
                 });
             }

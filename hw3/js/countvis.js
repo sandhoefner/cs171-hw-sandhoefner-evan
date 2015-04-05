@@ -49,7 +49,7 @@ CountVis = function(_parentElement, _data, _metaData, _eventHandler){
 CountVis.prototype.initVis = function(){
 
     var that = this; // read about the this
-
+    that.eventHandler = MyEventHandler;
 
 
     //TODO: implement here all things that don't change
@@ -96,7 +96,8 @@ CountVis.prototype.initVis = function(){
         // Trigger selectionChanged event. You'd need to account for filtering by time AND type
         console.log(that.brush.extent());
         console.log(that);
-        $( ".brush" ).trigger("selectionChanged",brushed());
+
+        $(that.eventHandler).trigger("selectionChanged",that.brush.extent());
       });
 
     // Add axes visual elements
