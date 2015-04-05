@@ -83,21 +83,19 @@ CountVis.prototype.initVis = function(){
     this.yAxis = d3.svg.axis()
       .scale(this.y)
       .orient("left");
-/*
+
     this.area = d3.svg.area()
       .interpolate("monotone")
-      // .x(function(d) { console.log('fish'); console.log(that.x(d.date));return that.x(d.date); })
-      .x(function(d) {console.log('going');return 500})
+      .x(function(d) { return that.x(d.time); })
       .y0(this.height)
-      // .y1(function(d) { return that.y(d.calls.length); });
-      .y1(function(d) {return 500});
+      .y1(function(d) { return that.y(d.count); });
 
     this.brush = d3.svg.brush()
       .on("brush", function(){
         // Trigger selectionChanged event. You'd need to account for filtering by time AND type
         console.log(that.brush.extent());
       });
-*/
+
     // Add axes visual elements
    
     this.svg.append("g")
@@ -154,7 +152,7 @@ CountVis.prototype.updateVis = function(){
     // TODO: implement update graphs (D3: update, enter, exit)
     // updates scales
         this.x.domain(d3.extent(this.displayData, function(d) { return d.time; }));
-        this.y.domain(d3.extent(this.displayData, function(d) { return d.count.length; }));
+        this.y.domain(d3.extent(this.displayData, function(d) { return d.count; }));
 
         // updates axis
         this.svg.select(".x.axis")
