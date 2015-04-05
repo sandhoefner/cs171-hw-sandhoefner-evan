@@ -75,9 +75,9 @@ AgeVis.prototype.initVis = function(){
 
     this.area = d3.svg.area()
       .interpolate("monotone")
-      .x0(this.width)
-      .x1(function(d) { return that.x(d.count); })
-      .y(function(d) { return that.y(d.age); });
+      .x0(this.width-292)
+      .x1(function(d, i) { console.log(i); return 5; /*return res[i];*/ })
+      .y(function(d, i) { return i;});
 
 
     // this.brush = d3.svg.brush()
@@ -234,7 +234,7 @@ AgeVis.prototype.filterAndAggregate = function(_filter){
     var that = this;
 
     // create an array of values for age 0-100
-    var res = d3.range(100).map(function () {
+    res = d3.range(100).map(function () {
         return 0;
     });
 
@@ -255,8 +255,7 @@ AgeVis.prototype.filterAndAggregate = function(_filter){
         else if (limitDate > currentDate) {return false}
         else {return true}
     }
-console.log(res);
-console.log(mainData);
+
     // for each age on y-axis
     res.forEach(function(c, h) {
     // we look at each day of votes
@@ -267,7 +266,7 @@ console.log(mainData);
             // for each age that voted that day, check if we're currently concerned about that age and the add if applicable
             d.age.forEach(function(e,j) {
                 if (e.age == h) {
-                   console.log(res[h]);
+                 
                     res[h] += e["count(*)"];
 
                 }
@@ -276,7 +275,7 @@ console.log(mainData);
         
     });
 });
-    console.log(res);
+   
     return res;
 
 }
