@@ -28,13 +28,12 @@ CountVis = function(_parentElement, _data, _metaData, _eventHandler){
 
 
     // TODO: define all "constants" here
-
+   
 
 
 
     this.initVis();
 }
-
 
 /**
  * Method that sets up the SVG and the variables
@@ -46,7 +45,7 @@ CountVis.prototype.initVis = function(){
 
 
     //TODO: implement here all things that don't change
-    //TODO: implement here all things that need an initial status
+    //TODO: implements here all things that need an initial status
     // Examples are:
     // - construct SVG layout
     // - create axis
@@ -90,8 +89,11 @@ CountVis.prototype.updateVis = function(){
 
     // TODO: implement update graphs (D3: update, enter, exit)
 
+    
 
 }
+
+
 
 /**
  * Gets called by event handler and should create new aggregated data
@@ -177,9 +179,3 @@ CountVis.prototype.addSlider = function(svg){
 
 
 }
-
-
-
-
-
-
