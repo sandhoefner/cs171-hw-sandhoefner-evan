@@ -20,7 +20,6 @@
 </head>
 <body>
 
-
 <div class="container">
     <h1>Test Data Asynchronous Loading (2a) and  Aggregation (2b)</h1>
 
@@ -34,20 +33,16 @@
         </div>
     </div>
 
-
     <div class="panel panel-warning" id="t2b">
         <div class="panel-heading">Task 2 b</div>
         <div class="panel-body">
 
             Call <code>aggregateCountsForRange(from, to)</code> for the the range of January 1, 2013 to January 31, 2013.
 
-
         </div>
     </div>
 
-
 </div>
-
 
 <script>
 
@@ -57,7 +52,6 @@
 
         var dateFormatter = d3.time.format("%Y-%m-%d");
 
-
         var aggregateCountsForRange = function(from, to){
 
             var count = 0;
@@ -66,25 +60,22 @@
             // you might make use of the map and filter functions
             // HINT: javascript Date objects are comparable !!
             // see: http://www.w3schools.com/js/js_date_methods.asp
-
-
-
-
-
-
+            
+            allData.forEach(function(d) {
+                if (from <= d.time && d.time <= to) {
+                    count += d.count;
+                }
+            });
 
             // after you assigned a value to the count variable
             // this function checks if your count is correct
             // you need an active internet connection for this to work
             cs171Test.checkCount(count);
 
-
         }
 
-
-
         function allLoaded(perDay,meta){
-            console.log(perDay);console.log(meta);
+           
             metaData = meta;
 
             // this will transform your data in a nicer form
@@ -98,8 +89,6 @@
                     }
             )
 
-            console.log(allData);
-
             // this function is the test function if your code works correct
             // you need an active internet connection for it to work
             cs171Test.allLoaded(allData,metaData);
@@ -108,28 +97,15 @@
             aggregateCountsForRange(dateFormatter.parse("2013-01-01"), dateFormatter.parse("2013-01-31"))
         }
 
-
         // TODO: TASK 2 A -- implement your data loading here and then call "allLoaded(perDayData, metaData)"
         queue()
             .defer(d3.json, 'data/perDayData.json')
             .defer(d3.json, 'data/MYWorld_fields.json')
-            .await(function(error, perDay, meta) {allLoaded(perDay, meta)});
-
-
-
-
-
+            .await(function(error, perDay, meta) {allLoaded(perDay, meta);});
 
     })
 
-
-
-
-
 </script>
-
-
-
 
 </body>
 </html>
