@@ -17,6 +17,9 @@
     .lightblue {
         background-color: lightblue;
     }
+    .lightcoral {
+        background-color: lightcoral;
+    }
     </style>
 
     <!-- Get some nice font-->
@@ -71,9 +74,9 @@
             </div>
             <div class="col-md-3" id="ageVis">
                 <!-- TODO: delete placeholder svg element -->
-                <svg width="230" height="330" style="background-color: lightcoral">
+                <!-- <svg width="230" height="330" style="background-color: lightcoral">
                     <text x="50" y="50">HERE should be AgeVis</text>
-                </svg>
+                </svg> -->
             </div>
         </div>
 
@@ -132,7 +135,7 @@
                 // events will be created from the CountVis object (nothing to do here)
                 // events will be consumed by the PrioVis and AgeVis object (binding should happen here)
                 $(MyEventHandler).bind("selectionChanged", function(event, selectionStart, selectionEnd){
-                    console.log('bind');
+                    
                     age_vis.onSelectionChange(selectionStart, selectionEnd);
                 });
             }
@@ -159,7 +162,7 @@
                                     time: dateFormatter.parse(d.day),
                                     count: parseInt(d["count(*)"])
                                 };
-
+                    mainData = _allData;
                                 // TODO: implement that  !!
                                 res.prios = []
                                 // should be an array of 16 numbers with the total count MAPping the prio values,

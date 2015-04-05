@@ -155,37 +155,37 @@ CountVis.prototype.updateVis = function(){
 
     // TODO: implement update graphs (D3: update, enter, exit)
     // updates scales
-        this.x.domain(d3.extent(this.displayData, function(d) { return d.time; }));
-        this.y.domain(d3.extent(this.displayData, function(d) { return d.count; }));
+    this.x.domain(d3.extent(this.displayData, function(d) { return d.time; }));
+    this.y.domain(d3.extent(this.displayData, function(d) { return d.count; }));
 
-        // updates axis
-        this.svg.select(".x.axis")
-            .call(this.xAxis);
+    // updates axis
+    this.svg.select(".x.axis")
+        .call(this.xAxis);
 
-        this.svg.select(".y.axis")
-            .call(this.yAxis)
+    this.svg.select(".y.axis")
+        .call(this.yAxis)
 
-        // updates graph
-        var path = this.svg.selectAll(".area")
-          .data([this.displayData])
+    // updates graph
+    var path = this.svg.selectAll(".area")
+      .data([this.displayData])
 
-        path.enter()
-          .append("path")
-          .attr("class", "area");
+    path.enter()
+      .append("path")
+      .attr("class", "area");
 
-        path
-          .transition()
-          .attr("d", this.area)
-          .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+    path
+      .transition()
+      .attr("d", this.area)
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-        path.exit()
-          .remove();
+    path.exit()
+      .remove();
 
-        this.brush.x(this.x);
-        this.svg.select(".brush")
-            .call(this.brush)
-          .selectAll("rect")
-            .attr("height", this.height);
+    this.brush.x(this.x);
+    this.svg.select(".brush")
+        .call(this.brush)
+      .selectAll("rect")
+        .attr("height", this.height);
     
 
 }
