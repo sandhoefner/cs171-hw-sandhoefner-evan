@@ -59,7 +59,7 @@ AgeVis.prototype.initVis = function(){
 
 // width="650" height="330" style="background-color: lightblue"
     // creates axis and scales
-    this.x = d3.time.scale()
+    this.x = d3.scale.linear()
       .range([0, this.width]);
 
     this.y = d3.scale.linear()
@@ -76,8 +76,8 @@ AgeVis.prototype.initVis = function(){
     this.area = d3.svg.area()
       .interpolate("monotone")
       .x0(this.width-292)
-      .x1(function(d, i) { console.log(newRes[i]); return newRes[i]; })
-      .y(function(d, i) { return i;});
+      .x1(function(d, i) { console.log(newRes[i]); return Math.abs(newRes[i]-120); })
+      .y(function(d, i) { return i*3.54-20.5;});
 
 
     // this.brush = d3.svg.brush()
