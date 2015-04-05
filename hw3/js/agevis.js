@@ -75,8 +75,8 @@ AgeVis.prototype.initVis = function(){
 
     this.area = d3.svg.area()
       .interpolate("monotone")
-      .x0(this.width-292)
-      .x1(function(d, i) { return that.x(newRes[i])-69})
+      .x0(-70)
+      .x1(function(d, i) { return that.x(d)-70 })
       .y(function(d, i) { return i*3.54-20.5;});
 
 
@@ -149,9 +149,9 @@ AgeVis.prototype.updateVis = function(){
     // TODO: ...update scales
     // TODO: ...update graphs
     // updates scales
-    var ran = d3.range(101); console.log(ran);
+    var ran = d3.range(101); 
     ran.reverse();
-    this.x.domain(d3.extent(mainData, function(d) { return d["count(*)"]; }));
+    this.x.domain(d3.extent(this.displayData, function(d) { return d; }));
     this.y.domain(d3.extent(d3.range(101), function(d, i) { return ran[i]; }));
 
     // updates axis
@@ -260,30 +260,26 @@ AgeVis.prototype.filterAndAggregate = function(_filter){
 
     // for each age on y-axis
     res.forEach(function(c, h) {
-    // we look at each day of votes
-    mainData.forEach(function(d, i) {
-      
-        // see that the day is in range
-        if (compareDates(newSelectionStart,d.day) && !compareDates(newSelectionEnd,d.day)) {
-            // for each age that voted that day, check if we're currently concerned about that age and the add if applicable
-            d.age.forEach(function(e,j) {
-                if (e.age == h) {
-                 
-                    res[h] += e["count(*)"];
+        // we look at each day of votes
+        mainData.forEach(function(d, i) {
+          
+            // see that the day is in range
+            if (compareDates(newSelectionStart,d.day) && !compareDates(newSelectionEnd,d.day)) {
+                // for each age that voted that day, check if we're currently concerned about that age and the add if applicable
+                d.age.forEach(function(e,j) {
+                    if (e.age == h) {
+                     
+                        res[h] += e["count(*)"];
 
-                }
-            })
-        }
-        
-    });
+                    }
+                })
+            }
+            
+        });
 });
 
     newRes = res;
-    console.log(newRes);
+    
     return res;
 
 }
-
-
-
-

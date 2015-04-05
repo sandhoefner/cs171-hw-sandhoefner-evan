@@ -83,9 +83,9 @@
         <div class="row">
             <div class="col-md-12" id="prioVis">
                 <!-- TODO: delete placeholder svg element -->
-                <svg width="650" height="440" style="background-color: lightgreen">
+                <!-- <svg width="650" height="440" style="background-color: lightgreen">
                     <text x="50" y="50">HERE should be PrioVis</text>
-                </svg>
+                </svg> -->
             </div>
 
         </div>
@@ -128,7 +128,7 @@
                 //TODO: Instantiate all Vis Objects here
                 
                 var count_vis = new CountVis(d3.select("#countVis"), allData, MyEventHandler);
-                // var prio_vis = new PrioVis(d3.select("#prioVis"), allData, MyEventHandler);
+                var prio_vis = new PrioVis(d3.select("#prioVis"), allData, MyEventHandler);
                 var age_vis = new AgeVis(d3.select("#ageVis"), allData, metaData, MyEventHandler);
 
                 // TODO: bind the eventHandler to the Vis Objects

@@ -94,8 +94,8 @@ CountVis.prototype.initVis = function(){
     this.brush = d3.svg.brush()
       .on("brush", function(){
         // Trigger selectionChanged event. You'd need to account for filtering by time AND type
-        console.log(that.brush.extent());
-        console.log(that);
+        // console.log(that.brush.extent());
+        // console.log(that);
 
         $(that.eventHandler).trigger("selectionChanged",that.brush.extent());
       });
@@ -236,7 +236,7 @@ CountVis.prototype.addSlider = function(svg){
         var sliderValue = sliderScale.invert(value);
 
         // TODO: do something here to deform the y scale
-        console.log("Y Axis Slider value: ", sliderValue);
+        // console.log("Y Axis Slider value: ", sliderValue);
 
 
         d3.select(this)
