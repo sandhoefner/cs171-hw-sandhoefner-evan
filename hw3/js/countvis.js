@@ -34,7 +34,7 @@ CountVis = function(_parentElement, _data, _metaData, _eventHandler){
 
 
     // TODO: define all "constants" here
-    this.margin = {top: 20, right: 0, bottom: 30, left: 30},
+    this.margin = {top: 20, right: 0, bottom: 30, left: 70},
     this.width = getInnerWidth(this.parentElement) - this.margin.left - this.margin.right,
     this.height = 400 - this.margin.top - this.margin.bottom;
 
@@ -89,6 +89,7 @@ CountVis.prototype.initVis = function(){
       .x(function(d) { return that.x(d.time); })
       .y0(this.height)
       .y1(function(d) { return that.y(d.count); });
+
 
     this.brush = d3.svg.brush()
       .on("brush", function(){
@@ -171,7 +172,8 @@ CountVis.prototype.updateVis = function(){
 
         path
           .transition()
-          .attr("d", this.area);
+          .attr("d", this.area)
+          .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
         path.exit()
           .remove();
