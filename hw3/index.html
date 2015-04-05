@@ -6,6 +6,7 @@
 
     <!-- ADD Libraries-->
     <script src="libs/d3/d3.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
 
@@ -117,7 +118,8 @@
 
 
                 //TODO: Instantiate all Vis Objects here
-
+                
+                var count_vis = new CountVis(d3.select("#countVis"), allData, MyEventHandler);
 
                 // TODO: bind the eventHandler to the Vis Objects
                 // events will be created from the CountVis object (nothing to do here)
@@ -172,6 +174,7 @@
                     )
 
                     metaData = _metaData;
+                    
                     initVis();
                 }
             }
@@ -180,7 +183,11 @@
 
                 //TODO: load data here and call "dataLoaded" afterwards
                 // Hint: http://giscollective.org/d3-queue-js/
-
+                
+                queue()
+                    .defer(d3.json, 'data/perDayData.json')
+                    .defer(d3.json, 'data/MYWorld_fields.json')
+                    .await(function(error, perDay, meta) {dataLoaded(error, perDay, meta);});
                 // bind reset zoom button to a function (-- ONLY FOR BONUS --)
                 d3.select("#fitInBtn").on("click", function() {
                     // TODO: -- ONLY FOR BONUS --
