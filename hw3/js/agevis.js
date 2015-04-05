@@ -76,7 +76,7 @@ AgeVis.prototype.initVis = function(){
     this.area = d3.svg.area()
       .interpolate("monotone")
       .x0(this.width-292)
-      .x1(function(d, i) { console.log(i); return 5; /*return res[i];*/ })
+      .x1(function(d, i) { console.log(newRes[i]); return newRes[i]; })
       .y(function(d, i) { return i;});
 
 
@@ -275,7 +275,7 @@ AgeVis.prototype.filterAndAggregate = function(_filter){
         
     });
 });
-   
+    newRes = res;
     return res;
 
 }
