@@ -6,6 +6,7 @@
 
     <!-- ADD Libraries-->
     <script src="libs/d3/d3.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
 
@@ -83,7 +84,7 @@
 
 
         function allLoaded(perDay,meta){
-
+            console.log(perDay);console.log(meta);
             metaData = meta;
 
             // this will transform your data in a nicer form
@@ -99,7 +100,7 @@
 
             console.log(allData);
 
-           // this function is the test function if your code works correct
+            // this function is the test function if your code works correct
             // you need an active internet connection for it to work
             cs171Test.allLoaded(allData,metaData);
 
@@ -109,7 +110,10 @@
 
 
         // TODO: TASK 2 A -- implement your data loading here and then call "allLoaded(perDayData, metaData)"
-
+        queue()
+            .defer(d3.json, 'data/perDayData.json')
+            .defer(d3.json, 'data/MYWorld_fields.json')
+            .await(function(error, perDay, meta) {allLoaded(perDay, meta)});
 
 
 
