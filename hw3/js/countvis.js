@@ -83,7 +83,7 @@ CountVis.prototype.initVis = function(){
     this.yAxis = d3.svg.axis()
       .scale(this.y)
       .orient("left");
-
+/*
     this.area = d3.svg.area()
       .interpolate("monotone")
       // .x(function(d) { console.log('fish'); console.log(that.x(d.date));return that.x(d.date); })
@@ -97,8 +97,9 @@ CountVis.prototype.initVis = function(){
         // Trigger selectionChanged event. You'd need to account for filtering by time AND type
         console.log(that.brush.extent());
       });
-
+*/
     // Add axes visual elements
+   
     this.svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + this.height + ")")
@@ -110,7 +111,7 @@ CountVis.prototype.initVis = function(){
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Call volume, daily");
+        .text("Count, daily");
 
     this.svg.append("g")
       .attr("class", "brush");
@@ -151,7 +152,37 @@ CountVis.prototype.wrangleData= function(){
 CountVis.prototype.updateVis = function(){
 
     // TODO: implement update graphs (D3: update, enter, exit)
+    // updates scales
+        this.x.domain(d3.extent(this.displayData, function(d) { return d.time; }));
+        this.y.domain(d3.extent(this.displayData, function(d) { return d.count.length; }));
 
+        // updates axis
+        this.svg.select(".x.axis")
+            .call(this.xAxis);
+
+        this.svg.select(".y.axis")
+            .call(this.yAxis)
+
+        // updates graph
+        var path = this.svg.selectAll(".area")
+          .data([this.displayData])
+
+        path.enter()
+          .append("path")
+          .attr("class", "area");
+
+        path
+          .transition()
+          .attr("d", this.area);
+
+        path.exit()
+          .remove();
+
+        this.brush.x(this.x);
+        this.svg.select(".brush")
+            .call(this.brush)
+          .selectAll("rect")
+            .attr("height", this.height);
     
 
 }
