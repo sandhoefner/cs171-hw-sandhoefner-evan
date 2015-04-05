@@ -19,6 +19,12 @@
  * @param _eventHandler -- the Eventhandling Object to emit data to (see Task 4)
  * @constructor
  */
+
+var getInnerWidth = function(element) {
+    var style = window.getComputedStyle(element.node(), null);
+    return parseInt(style.getPropertyValue('width'));
+}
+
 CountVis = function(_parentElement, _data, _metaData, _eventHandler){
     this.parentElement = _parentElement;
     this.data = _data;
@@ -28,7 +34,9 @@ CountVis = function(_parentElement, _data, _metaData, _eventHandler){
 
 
     // TODO: define all "constants" here
-   
+    this.margin = {top: 20, right: 0, bottom: 30, left: 30},
+    this.width = getInnerWidth(this.parentElement) - this.margin.left - this.margin.right,
+    this.height = 400 - this.margin.top - this.margin.bottom;
 
 
 
@@ -51,6 +59,61 @@ CountVis.prototype.initVis = function(){
     // - create axis
     // -  implement brushing !!
     // --- ONLY FOR BONUS ---  implement zooming
+
+    // constructs SVG layout
+    this.svg = this.parentElement.append("svg")
+        .attr("width", this.width + this.margin.left + this.margin.right)
+        .attr("height", this.height + this.margin.top + this.margin.bottom)
+        .attr("class", "lightblue")
+      .append("g")
+        .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+
+// width="650" height="330" style="background-color: lightblue"
+    // creates axis and scales
+    this.x = d3.time.scale()
+      .range([0, this.width]);
+
+    this.y = d3.scale.linear()
+      .range([this.height, 0]);
+
+    this.xAxis = d3.svg.axis()
+      .scale(this.x)
+      .orient("bottom");
+
+    this.yAxis = d3.svg.axis()
+      .scale(this.y)
+      .orient("left");
+
+    this.area = d3.svg.area()
+      .interpolate("monotone")
+      // .x(function(d) { console.log('fish'); console.log(that.x(d.date));return that.x(d.date); })
+      .x(function(d) {console.log('going');return 500})
+      .y0(this.height)
+      // .y1(function(d) { return that.y(d.calls.length); });
+      .y1(function(d) {return 500});
+
+    this.brush = d3.svg.brush()
+      .on("brush", function(){
+        // Trigger selectionChanged event. You'd need to account for filtering by time AND type
+        console.log(that.brush.extent());
+      });
+
+    // Add axes visual elements
+    this.svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + this.height + ")")
+
+    this.svg.append("g")
+        .attr("class", "y axis")
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Call volume, daily");
+
+    this.svg.append("g")
+      .attr("class", "brush");
 
     // TODO: modify this to append an svg element, not modify the current placeholder SVG element
     this.svg = this.parentElement.select("svg");
