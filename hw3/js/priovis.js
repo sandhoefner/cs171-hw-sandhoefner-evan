@@ -172,7 +172,7 @@ PrioVis.prototype.updateVis = function(){
     // Update all inner rects and texts (both update and enter sets)
 
     bar.select("rect")
-      .attr("x", function(d,i) {console.log(d);return 4+i*24})
+      .attr("x", function(d,i) {return 4+i*24})
       .attr("y", function(d) {return that.y(d)+51})
       .attr("height", /*this.y.rangeBand()*/function(d,i){return that.height-that.y(d)})
       .style("fill", function(d,i) {
@@ -271,6 +271,7 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
         prioSelectionStart = new Date(Date.parse("December 1, 2012"));
         prioSelectionEnd = new Date(Date.parse("December 31, 2013"));
     }
+
     //for each day of votes
     mainData.forEach(function(d, i) {
       // for each bin (priority)
@@ -282,8 +283,8 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
 
         // if date is in range
         if (compareDates(prioSelectionStart,d.day) && !compareDates(prioSelectionEnd,d.day)) {
-            
-               if(typeof(d["sum(p" + i + ")"]) !== 'undefined') {bins[h] += d["sum(p" + h + ")"];}
+          
+        bins[h] += d["sum(p" + h + ")"];
 
                 }
             })
@@ -294,5 +295,6 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
 
     newBins = bins;
     bins.forEach(function(d, i) {bins[i] = bins[i] * 1000});
+    console.log(bins);
     return bins;
 }
