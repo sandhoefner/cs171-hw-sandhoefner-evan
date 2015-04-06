@@ -135,7 +135,7 @@ PrioVis.prototype.updateVis = function(){
     // updates scales
     this.y.domain(d3.extent(this.displayData, function(d) {return d; }));
     this.x.domain(this.displayData.map(function(d) { return d; }));
-    this.color.domain(this.displayData.map(function(d) { return d.type }));
+    this.color.domain(this.displayData.map(function(d,i) { return i; }));
    
     // updates axis
     this.svg.select(".y.axis")
@@ -176,7 +176,7 @@ PrioVis.prototype.updateVis = function(){
       .attr("y", function(d) {return that.y(d)+51})
       .attr("height", /*this.y.rangeBand()*/function(d,i){return that.height-that.y(d)})
       .style("fill", function(d,i) {
-        return /*that.color(d.type);*/"red";
+        return that.color(d);
       })
       .transition()
       .attr("width", function(d, i) {
@@ -293,8 +293,6 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     );
 
 
-    newBins = bins;
-    bins.forEach(function(d, i) {bins[i] = bins[i] * 1000});
-    console.log(bins);
+    
     return bins;
 }
