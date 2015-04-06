@@ -100,9 +100,10 @@ AgeVis.prototype.initVis = function(){
       .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
+        .attr("x",-20)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        // .text("Count, daily");
+        // .text("Age distribution");
 
     // filter, aggregate, modify data
     this.wrangleData(null);
