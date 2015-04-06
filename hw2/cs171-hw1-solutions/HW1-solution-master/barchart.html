@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>2015 CS171 Homework 1 - SVG Table</title>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <style type="text/css">
+    rect {
+        fill: teal;
+        fill-opacity: .8;
+    }
+    text {
+        font: 10px sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+Time:
+  <span id="min-time"></span> 
+    <input type="range" name="points" min="1995" max="2012" step="1" value="1995" id="slider-time" oninput="time_update_table(this.value);" style="width:300px"> 
+  <span id="max-time"></span>
+  <br>
+
+Encode bars by:
+ <label>
+    <input type="radio" name="bars" value="low" onclick="vars.encoding='population'; update_table();"> Population </label>
+ <label><input type="radio" name="bars" value="hi" onclick="vars.encoding='gdp'; update_table();" checked> GDP </label>
+<br>
+Filter by:
+  <label><input type="checkbox" name="Africa" value="Africa" title="Africa" onchange="update_filters(this.value, this.checked); update_table()"></input>Africa</label>
+  <label><input type="checkbox" name="Americas" value="Americas" title="Americas" onchange="update_filters(this.value, this.checked); update_table()"></input>Americas</label>
+  <label><input type="checkbox" name="Asia" value="Asia" title="Asia" onchange="update_filters(this.value, this.checked); update_table()"></input>Asia</label>
+  <label><input type="checkbox" name="Europe" value="Europe" title="Europe" onchange="update_filters(this.value, this.checked); update_table()"></input>Europe</label>
+  <label><input type="checkbox" name="Oceania" value="Oceania" title="Oceania" onchange="update_filters(this.value, this.checked); update_table()"></input>Oceania</label>
+<br>
+Aggregate by: 
+ <label>
+    <input type="radio" name="details" value="low" onclick="vars.aggregate='continent'; update_table(); remove_table(); create_table(); update_table();">Continent </label>
+ <label><input type="radio" name="details" value="hi" onclick="vars.aggregate='country'; update_table(); remove_table(); create_table(); update_table();" checked>Country</label><br>
+  </form>
+Sort by:
+  <label><input type="radio" name="order" value="name" onclick="vars.sort_by.column='name'; vars.sort_by.asc = !vars.sort_by.asc; update_table()" checked> Name <span class="stateInput"></span></label>
+  <label><input type="radio" name="order" value="name" onclick="vars.sort_by.column='population'; vars.sort_by.asc = !vars.sort_by.asc; update_table()"> Population <span class="stateInput"></span></label>
+  <label><input type="radio" name="order" value="gdp" onclick="vars.sort_by.column='gdp'; vars.sort_by.asc = !vars.sort_by.asc; update_table()"> GDP <span class="rateInput"></span></label>
+<br>
+  <script type="text/javascript">
+
+  // Main parameters for the canvas and visualization
+  var margin = {top: 50, bottom: 20, left:200, right: 40};
+  var width = 900 - margin.left - margin.right;
+  var height = 1200 - margin.top - margin.bottom;
+  var bar_height = 10;
+
+  // Create scales here, but domain will be updated later
+  var xScale = d3.scale.linear().range([0, width]);
+  var yScale = d3.scale.ordinal();
+
+  // From previous HTML questions
+  var vars = {
+    'debug': false,
+    'encoding': "gdp",
+    'filter': [],
+    'aggregate': [],
+    'year': 1995,
+    'min_year': 1995,
+    'max_year': 2012,
+    'columns': [],
+    'data': null,
+    'sort_by': {'column': 'population', 'asc': true}
+  }
+
+  // From previous HTML questions
+  function update_filters(value, add) {
+
+    if(vars.debug) console.log("[update_filters]", value, add)
+
+    if(add) {
+      if(vars.filter.indexOf(value) < 0) {
+        vars.filter.push(value)
+      }
+    } else {
+      var index = vars.filter.indexOf(value)
+      if(index > -1)
+        vars.filter.splice(index, 1);
+    }
+  }
+
+  function time_update_table(v) {
+    vars.year = parseInt(v);
+    update_table();
+  }
+
+  // Various accessor to make data access simpler
+  var accessor_name = function(d) { return d.name; };
+  var accessor = function(d) { 
+    return d.years[vars.year-vars.min_year][vars.encoding]; 
+  }
+
+  var accessor_year = function(d) { return d["years"][vars.year - vars.min_year]; };
+  var accessor_year_agg = function(d) { return d.years[0]; };
+
+  vars.accessor_year = accessor_year;
+
+  var accessor_sort_by = function(d) { 
+    return vars.accessor_year(d)[vars.sort_by.column]; 
+  }
+
+  // Create SVG canvas and root groups
+  var svg = d3.select("body").append("svg")
+    .attr("width", width+margin.left+margin.right)
+    .attr("height", height+margin.top+margin.bottom);
+
+  // Loading data
+  d3.json("data/countries_1995_2012.json", function(json) {
+
+    if(vars.debug) console.log("[d3.json] Loading dataset");  
+
+    // Duplicate data
+    all_data = json;
+
+    current_data = all_data
+
+    // Create the table (vertical bar chart)
+    create_table();
+
+    // Now we have the data, update the table
+    update_table();
+  })
+
+  function aggregate_data(current_data) {
+
+    vars.accessor_year = accessor_year_agg;
+
+    // Do the nesting by continent
+    var nested_data = d3.nest()
+      .key(function(d) { 
+        return d.continent;
+      })
+      .rollup(function(leaves) {
+
+        // Generates a new dataset with aggregated data
+        return {
+          "name" : leaves[0].continent,
+          "continent": leaves[0].continent,
+          "years": [{
+            'population': d3.sum(leaves, function(d) {
+              return accessor_year(d)['population'];
+            }),
+            'life_expectancy': d3.mean(leaves, function(d) {
+              return accessor_year(d)['life_expectancy'];
+            }),
+            'gdp': d3.mean(leaves, function(d) {
+              return accessor_year(d)['gdp'];
+            }),
+          }]
+        }
+      })
+      .entries(current_data);      
+
+    // Transform key/value into values tab only
+    return nested_data.map(function(d) { return d.values});
+  
+  }
+
+  // Creates a table
+  function create_table() {
+
+    // We create it with the *complete* dataset, and then visually filter it
+    create_data = all_data
+
+    if(vars.aggregate == 'continent') {
+      create_data = aggregate_data(create_data);
+    }
+
+    if(vars.debug) console.log("[create_table]")
+
+    var height = bar_height * create_data.length;
+
+    yScale.rangeRoundBands([0, height]);
+
+    // Vertical list of countries
+    yScale.domain(create_data.map(accessor_name));
+
+    var g = svg.append("g")
+      .attr("transform", "translate("+margin.left+","+margin.top+")");
+
+    // Groups for countries
+    groups = g
+      .attr("class", "gParent")
+      .selectAll("g.group")
+      .data(create_data, accessor_name)
+
+    // Create a group for each country
+    groups_enter = groups.enter()
+      .append("g")
+      .attr("class", "group")
+      .attr("transform", function(d, i) { 
+        return "translate(0, " + yScale(accessor_name(d)) +")"; 
+      });
+
+    // Text for each bar
+    groups_enter.append("text")
+        .attr("class","state")
+        .attr("dx", -5)
+        .attr("dy", bar_height)
+        .attr("text-anchor", "end")
+        .text(function(d) { return d.name; });
+
+    // Bar details
+    bars = groups_enter
+      .append("rect")
+      .attr("class","rect");
+
+  }
+
+  function remove_table() {
+    d3.select(".gParent").remove()
+  }
+
+  // Main function that creates and updates the table
+  // It extensively relies on the global state object
+  function update_table() {
+
+    current_data = all_data;
+
+    // AGGREGATE DATA
+    if(vars.aggregate == 'continent') {
+      current_data = aggregate_data(current_data)
+    }
+
+    // FILTER DATA
+    if(vars.filter.length > 0) {
+      current_data = current_data.filter(function(d) {
+          return vars.filter.indexOf(d["continent"]) > -1;
+        })
+    }
+
+    // SORT DATA
+    if(vars.sort_by.column == "name") {
+
+      current_data.sort(function(a, b) {
+        var ascending = d3.ascending(a[vars.sort_by.column], b[vars.sort_by.column]);
+        return vars.sort_by.asc ? ascending : - ascending;
+      });
+
+    } else {
+
+      current_data.sort(function(a, b) {
+        if(!vars.sort_by.asc){
+          return d3.ascending(accessor_sort_by(a), accessor_sort_by(b)); 
+        } else {
+          return d3.descending(accessor_sort_by(a), accessor_sort_by(b)); 
+        }
+      });
+
+    }
+
+    var max = d3.max(all_data, accessor);
+
+    // Dynamically changing the height based on the current dataset
+    height = bar_height * current_data.length;
+
+    yScale.rangeRoundBands([0, height]);
+
+    xScale.domain([0, max]);
+
+    var color = d3.scale.category10();
+
+    color.domain(["Africa", "Americas", "Asia", "Europe", "Oceania"])
+
+    // Data updates
+    var groups = d3.selectAll("g.group").data(current_data, accessor_name);
+
+    // Bars updates
+    groups.selectAll("rect")
+      .style("fill", function(d,i){ return color(d.continent) })
+      .transition().duration(200)
+      .attr("width", function(d, i) { 
+        return xScale(accessor(d)); 
+      })
+      .attr("height", bar_height-2)
+
+    // Groups update
+    yScale.domain(current_data.map(accessor_name));
+
+    groups
+      .transition()
+      .attr("transform", function(d, i) { 
+        return "translate(0, " + yScale(accessor_name(d)) +")"; 
+      })
+      .style("opacity", 1)
+
+    // Bars of non-selected countries
+    groups.exit().style("opacity", 0)
+
+  }
+  </script>
+</body>
+</html>
