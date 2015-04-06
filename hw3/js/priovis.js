@@ -184,12 +184,12 @@ PrioVis.prototype.updateVis = function(){
       });
 
 
-    var qualData = [];
+    var qualData = ["CLIM","ROAD","SUPP","SANI","HEAL","EDUC","GOVT","INET","ENER","FOOD","RIVR","CRIM","FREE","PERS","EQUA","JOBS"];
 
     bar.select("text")
       .transition()
-      .attr("x", function(d, i) { return 200+i*69/*that.x(d.count) + (that.doesLabelFit(d) ? -3 : 5);*/ })
-      .attr("y", function(d,i) { return 210/*that.y.rangeBand() / 2;*/ })
+      .attr("x", function(d, i) { return 45+i*69/*that.x(d.count) + (that.doesLabelFit(d) ? -3 : 5);*/ })
+      .attr("y", function(d,i) { return 410/*that.y.rangeBand() / 2;*/ })
       .text(function(d, i) { return qualData[i]})
       .attr("class", "type-label")
       .attr("dy", ".35em")
