@@ -75,7 +75,7 @@ PrioVis.prototype.initVis = function(){
     this.yAxis = d3.svg.axis()
       .scale(this.y)
       .ticks(12)
-      .orient("bottom");
+      .orient("left");
 
     this.xAxis = d3.svg.axis()
       .scale(this.x)
@@ -85,6 +85,7 @@ PrioVis.prototype.initVis = function(){
     this.svg.append("g")
       .attr("class", "y axis")
       .attr("transform", "translate(0," + /*this.height*/50 + ")");
+     
 
 
     // filter, aggregate, modify data
