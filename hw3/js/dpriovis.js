@@ -146,7 +146,7 @@ PrioVis.prototype.updateVis = function(){
 
     // Data join
     var bar = this.svg.selectAll(".bar")
-      .data(this.displayData, function(d) { return d; });
+      .data(this.displayData, function(d) {return d; });
 
     // Append new bar groups, if required
     var bar_enter = bar.enter().append("g");
@@ -173,7 +173,7 @@ PrioVis.prototype.updateVis = function(){
     // Update all inner rects and texts (both update and enter sets)
 
     bar.select("rect")
-      .attr("x", function(d,i) {return 4+i*69})
+      .attr("x", function(d,i) {return 7+i*34})
       .attr("y", function(d) {return that.y(d)+51})
       .attr("height", /*this.y.rangeBand()*/function(d,i){return that.height-that.y(d)})
       .style("fill", function(d,i) {
@@ -181,7 +181,7 @@ PrioVis.prototype.updateVis = function(){
       })
       .transition()
       .attr("width", function(d, i) {
-          return /*that.x(d.count);*/50
+          return /*that.x(d.count);*/34
       });
 
 
@@ -191,7 +191,7 @@ PrioVis.prototype.updateVis = function(){
       .transition()
       .attr("x", function(d, i) { return 45+i*69/*that.x(d.count) + (that.doesLabelFit(d) ? -3 : 5);*/ })
       .attr("y", function(d,i) { return 410/*that.y.rangeBand() / 2;*/ })
-      .text(function(d, i) { return qualData[i]})
+      .text(function(d, i) { if (i<15) {return qualData[i]}else {return qualData[i-15]}})
       .attr("class", "type-label")
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return /*that.doesLabelFit(d) ? "end" : "start";*/ "end" })
@@ -310,7 +310,7 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     })
     firstTime = false;
   } else {
-    console.log('latter');
+    
     tempBins.forEach(function(d, i) {
       if (i % 2 ==0) {
         tempBins[i] = bins[i/2]
@@ -321,6 +321,6 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     })
   }
     bins = tempBins;
-    console.log(bins);
+   
     return bins;
 }
