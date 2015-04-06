@@ -26,6 +26,7 @@
  * @param _metaData -- the meta-data / data description object
  * @constructor
  */
+ var firstTime = true;
 PrioVis = function(_parentElement, _data, _metaData){
     this.parentElement = _parentElement;
     this.data = _data;
@@ -251,13 +252,13 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     var that = this;
 
     // create an array of values for age 0-100
-    bins = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    bins = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 
     // accumulate all values that fulfill the filter criterion
 
     // TODO: implement the function that filters the data and sums the values
-
+    
     compareDates = function(limit, current) {
         limitYear = limit.getFullYear();
         limitMonth = limit.getMonth();
@@ -297,6 +298,29 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     );
 
 
-    
+   if (firstTime) {
+    tempBins = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    tempBins.forEach(function(d, i) {
+      if (i % 2 ==0) {
+        tempBins[i] = bins[i/2]
+      } 
+      else {
+        tempBins[i] = tempBins[i-1]
+      }
+    })
+    firstTime = false;
+  } else {
+    console.log('latter');
+    tempBins.forEach(function(d, i) {
+      if (i % 2 ==0) {
+        tempBins[i] = bins[i/2]
+      } 
+      // else {
+      //   tempBins[i] = tempBins[i-1]
+      // }
+    })
+  }
+    bins = tempBins;
+    console.log(bins);
     return bins;
 }
