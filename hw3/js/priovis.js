@@ -161,9 +161,9 @@ PrioVis.prototype.updateVis = function(){
    
     // Add attributes (position) to all bars
     bar
-      .attr("class", "bar")
-      .transition()
-      .attr("transform", function(d, i) { return "translate(0," + i/*that.y(d.type)*/ + ")"; })
+      .attr("class", "bar");
+      // .transition()
+      // .attr("transform", function(d, i) { return "translate(0," + 0/*that.y(d.type)*/ + ")"; })
 
     // Remove the extra bars
     bar.exit()
@@ -171,16 +171,16 @@ PrioVis.prototype.updateVis = function(){
 
     // Update all inner rects and texts (both update and enter sets)
 
-    bar.selectAll("rect")
-      .attr("x", 50)
-      .attr("y", 300)
-      .attr("height", /*this.y.rangeBand()*/500)
+    bar.select("rect")
+      .attr("x", function(d,i) {console.log(d);return 4+i*24})
+      .attr("y", function(d) {return that.y(d)+51})
+      .attr("height", /*this.y.rangeBand()*/function(d,i){return that.height-that.y(d)})
       .style("fill", function(d,i) {
         return /*that.color(d.type);*/"red";
       })
       .transition()
       .attr("width", function(d, i) {
-          return /*that.x(d.count);*/500
+          return /*that.x(d.count);*/20
       });
 
 
