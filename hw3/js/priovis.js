@@ -145,7 +145,7 @@ PrioVis.prototype.updateVis = function(){
 
     // Data join
     var bar = this.svg.selectAll(".bar")
-      .data(this.displayData, function(d) { return d.type; });
+      .data(this.displayData, function(d) { return d; });
 
     // Append new bar groups, if required
     var bar_enter = bar.enter().append("g");
@@ -172,28 +172,28 @@ PrioVis.prototype.updateVis = function(){
     // Update all inner rects and texts (both update and enter sets)
 
     bar.selectAll("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      // .attr("height", this.y.rangeBand())
+      .attr("x", 50)
+      .attr("y", 300)
+      .attr("height", /*this.y.rangeBand()*/500)
       .style("fill", function(d,i) {
-        return that.color(d.type);
+        return /*that.color(d.type);*/"red";
       })
       .transition()
       .attr("width", function(d, i) {
-          return that.x(d.count);
+          return /*that.x(d.count);*/500
       });
 
 
 
     bar.selectAll("text")
       .transition()
-      .attr("x", function(d) { return that.x(d.count) + (that.doesLabelFit(d) ? -3 : 5); })
-      // .attr("y", function(d,i) { return that.y.rangeBand() / 2; })
-      .text(function(d) { return d.type; })
+      .attr("x", function(d, i) { return i*20/*that.x(d.count) + (that.doesLabelFit(d) ? -3 : 5);*/ })
+      .attr("y", function(d,i) { return 600/*that.y.rangeBand() / 2;*/ })
+      .text(function(d, i) { if (i <= 15) {return auxData.choices[100+i]} else {return "placeholder"} })
       .attr("class", "type-label")
       .attr("dy", ".35em")
-      .attr("text-anchor", function(d) { return that.doesLabelFit(d) ? "end" : "start"; })
-      .attr("fill", function(d) { return that.doesLabelFit(d) ? "white" : "black"; });
+      .attr("text-anchor", function(d) { return /*that.doesLabelFit(d) ? "end" : "start";*/ "end" })
+      .attr("fill", function(d) { return /*that.doesLabelFit(d) ? "white" : "black";*/ "black" });
 }
 
 

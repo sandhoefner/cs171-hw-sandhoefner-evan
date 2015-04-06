@@ -163,6 +163,7 @@
                                     count: parseInt(d["count(*)"])
                                 };
                     mainData = _allData; //console.log(mainData);
+                    auxData = _metaData;
                                 // TODO: implement that  !!
                                 res.prios = []
                                 // should be an array of 16 numbers with the total count MAPping the prio values,
@@ -187,7 +188,9 @@
                     )
 
                     metaData = _metaData;
-                    
+                   
+               
+
                     initVis();
                 }
             }
