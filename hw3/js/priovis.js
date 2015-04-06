@@ -172,7 +172,7 @@ PrioVis.prototype.updateVis = function(){
     // Update all inner rects and texts (both update and enter sets)
 
     bar.select("rect")
-      .attr("x", function(d,i) {return 4+i*24})
+      .attr("x", function(d,i) {return 4+i*69})
       .attr("y", function(d) {return that.y(d)+51})
       .attr("height", /*this.y.rangeBand()*/function(d,i){return that.height-that.y(d)})
       .style("fill", function(d,i) {
@@ -180,20 +180,24 @@ PrioVis.prototype.updateVis = function(){
       })
       .transition()
       .attr("width", function(d, i) {
-          return /*that.x(d.count);*/20
+          return /*that.x(d.count);*/50
       });
 
 
+    var qualData = [];
 
-    bar.selectAll("text")
+    bar.select("text")
       .transition()
-      .attr("x", function(d, i) { return i*20/*that.x(d.count) + (that.doesLabelFit(d) ? -3 : 5);*/ })
-      .attr("y", function(d,i) { return 600/*that.y.rangeBand() / 2;*/ })
-      .text(function(d, i) { if (i <= 15) {return auxData.choices[100+i]} else {return "placeholder"} })
+      .attr("x", function(d, i) { return 200+i*69/*that.x(d.count) + (that.doesLabelFit(d) ? -3 : 5);*/ })
+      .attr("y", function(d,i) { return 210/*that.y.rangeBand() / 2;*/ })
+      .text(function(d, i) { return qualData[i]})
       .attr("class", "type-label")
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return /*that.doesLabelFit(d) ? "end" : "start";*/ "end" })
       .attr("fill", function(d) { return /*that.doesLabelFit(d) ? "white" : "black";*/ "black" });
+     //  .attr("transform", function(d, i) {
+     //     return "rotate(-65)"; 
+     // });
 }
 
 
