@@ -62,10 +62,10 @@ PrioVis.prototype.initVis = function(){
         .attr("height", this.height + this.margin.top + this.margin.bottom)
         .attr("class", "lightcoral")
       .append("g")
-        .attr("transform", "translate(" + this.margin.left + "," + "450)");
+        .attr("transform", "translate(" + this.margin.left + "," + "-45)");
 
     this.y = d3.scale.linear()
-      .range([0, this.height]);
+      .range([this.height, 0]);
 
     this.x = d3.scale.ordinal()
       .rangeRoundBands([0, this.width], .1);
@@ -74,7 +74,7 @@ PrioVis.prototype.initVis = function(){
 
     this.yAxis = d3.svg.axis()
       .scale(this.y)
-      .ticks(6)
+      .ticks(12)
       .orient("bottom");
 
     this.xAxis = d3.svg.axis()
@@ -83,7 +83,7 @@ PrioVis.prototype.initVis = function(){
 
     // Add axes visual elements
     this.svg.append("g")
-      .attr("class", "x axis")
+      .attr("class", "y axis")
       .attr("transform", "translate(0," + /*this.height*/50 + ")");
 
 
@@ -132,13 +132,13 @@ PrioVis.prototype.updateVis = function(){
 
 
     // updates scales
-    this.y.domain(d3.extent(this.displayData, function(d) { return d.count; }));
-    this.x.domain(this.displayData.map(function(d) { return d.type; }));
+    this.y.domain(d3.extent(this.displayData, function(d) {return d; }));
+    this.x.domain(this.displayData.map(function(d) { return d; }));
     this.color.domain(this.displayData.map(function(d) { return d.type }));
    
     // updates axis
-    this.svg.select(".x.axis")
-        .call(this.xAxis);
+    this.svg.select(".y.axis")
+        .call(this.yAxis);
 
     // updates graph
 
@@ -266,7 +266,6 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
         else {return true}
     }
 
-    // for each age on y-axis
     if (typeof prioSelectionStart == 'undefined') {
         prioSelectionStart = new Date(Date.parse("December 1, 2012"));
         prioSelectionEnd = new Date(Date.parse("December 31, 2013"));
@@ -283,7 +282,7 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
         // if date is in range
         if (compareDates(prioSelectionStart,d.day) && !compareDates(prioSelectionEnd,d.day)) {
             
-               if(typeof(d["sum(p" + i + ")"]) !== 'undefined') { console.log(d);bins[h] += d["sum(p" + h + ")"];}
+               if(typeof(d["sum(p" + i + ")"]) !== 'undefined') {bins[h] += d["sum(p" + h + ")"];}
 
                 }
             })
@@ -293,6 +292,6 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
 
 
     newBins = bins;
-    console.log(newBins);
+    bins.forEach(function(d, i) {bins[i] = bins[i] * 1000});
     return bins;
 }
