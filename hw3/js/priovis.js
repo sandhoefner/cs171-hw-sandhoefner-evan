@@ -132,10 +132,10 @@ PrioVis.prototype.updateVis = function(){
 
 
     // updates scales
-    this.y.domain(d3.extent(this.displayData, function(d) { console.log(d);return d.count; }));
-    this.x.domain(this.displayData.map(function(d) { console.log(d);return d.type; }));
+    this.y.domain(d3.extent(this.displayData, function(d) { return d.count; }));
+    this.x.domain(this.displayData.map(function(d) { return d.type; }));
     this.color.domain(this.displayData.map(function(d) { return d.type }));
-    console.log('updating');
+   
     // updates axis
     this.svg.select(".x.axis")
         .call(this.xAxis);
@@ -144,7 +144,7 @@ PrioVis.prototype.updateVis = function(){
 
     // Data join
     var bar = this.svg.selectAll(".bar")
-      .data(this.displayData, function(d) { console.log(d);return d.type; });
+      .data(this.displayData, function(d) { return d.type; });
 
     // Append new bar groups, if required
     var bar_enter = bar.enter().append("g");
@@ -157,12 +157,12 @@ PrioVis.prototype.updateVis = function(){
     bar_enter.on("click", function(d) {
        $(that.eventHandler).trigger("selectionChanged", d.type);
     })
-    console.log('hi');
+   
     // Add attributes (position) to all bars
     bar
       .attr("class", "bar")
       .transition()
-      .attr("transform", function(d, i) { console.log(d);return "translate(0," + i/*that.y(d.type)*/ + ")"; })
+      .attr("transform", function(d, i) { return "translate(0," + i/*that.y(d.type)*/ + ")"; })
 
     // Remove the extra bars
     bar.exit()
@@ -206,7 +206,6 @@ PrioVis.prototype.updateVis = function(){
 PrioVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
 
     // TODO: call wrangle function
-    console.log(selectionStart);
     prioSelectionStart = selectionStart;
     prioSelectionEnd = selectionEnd;
     this.wrangleData(null); 
@@ -247,7 +246,7 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     var that = this;
 
     // create an array of values for age 0-100
-    bins = d3.range(16);
+    bins = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 
     // accumulate all values that fulfill the filter criterion
@@ -268,20 +267,23 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     }
 
     // for each age on y-axis
-    bins.forEach(function(c, h) {
-    // we look at each day of votes
-    console.log(mainData);
-    mainData.forEach(function(d, i) {
-      
     if (typeof prioSelectionStart == 'undefined') {
         prioSelectionStart = new Date(Date.parse("December 1, 2012"));
         prioSelectionEnd = new Date(Date.parse("December 31, 2013"));
     }
+    //for each day of votes
+    mainData.forEach(function(d, i) {
+      // for each bin (priority)
+      bins.forEach(function(c, h) {
 
-        // see that the day is in range
+    
+      
+    
+
+        // if date is in range
         if (compareDates(prioSelectionStart,d.day) && !compareDates(prioSelectionEnd,d.day)) {
             
-                 console.log(d)   //bins[h] += d[i]["sum(p0)"]
+               if(typeof(d["sum(p" + i + ")"]) !== 'undefined') { console.log(d);bins[h] += d["sum(p" + h + ")"];}
 
                 }
             })
