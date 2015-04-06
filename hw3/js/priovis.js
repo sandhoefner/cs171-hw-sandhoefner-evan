@@ -88,7 +88,7 @@ PrioVis.prototype.initVis = function(){
 
 
     // filter, aggregate, modify data
-    // this.wrangleData(null);
+    this.wrangleData(null);
 
     // call the update method
     this.updateVis();
@@ -109,7 +109,8 @@ PrioVis.prototype.wrangleData = function(_filterFunction){
     //// the default is: var options = {filter: function(){return true;} }
     //var options = _options || {filter: function(){return true;}};
 
-
+    
+    
 
 
 
@@ -120,6 +121,12 @@ PrioVis.prototype.wrangleData = function(_filterFunction){
 /**
  * the drawing function - should use the D3 selection, enter, exit
  */
+PrioVis.prototype.doesLabelFit = function(datum, label) {
+      var pixel_per_character = 6;  // obviously a (rough) approximation
+
+      return true;//return datum.type.length * pixel_per_character < this.x(datum.count);
+    }
+
 PrioVis.prototype.updateVis = function(){
     var that = this;
 
@@ -175,10 +182,12 @@ PrioVis.prototype.updateVis = function(){
           return that.x(d.count);
       });
 
+
+
     bar.selectAll("text")
       .transition()
       .attr("x", function(d) { return that.x(d.count) + (that.doesLabelFit(d) ? -3 : 5); })
-      .attr("y", function(d,i) { return that.y.rangeBand() / 2; })
+      // .attr("y", function(d,i) { return that.y.rangeBand() / 2; })
       .text(function(d) { return d.type; })
       .attr("class", "type-label")
       .attr("dy", ".35em")
@@ -197,9 +206,9 @@ PrioVis.prototype.updateVis = function(){
 PrioVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
 
     // TODO: call wrangle function
-    
-    newSelectionStart = selectionStart;
-    newSelectionEnd = selectionEnd;
+    console.log(selectionStart);
+    prioSelectionStart = selectionStart;
+    prioSelectionEnd = selectionEnd;
     this.wrangleData(null); 
     this.updateVis();
 
@@ -238,9 +247,7 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     var that = this;
 
     // create an array of values for age 0-100
-    res = d3.range(100).map(function () {
-        return 0;
-    });
+    bins = d3.range(16);
 
 
     // accumulate all values that fulfill the filter criterion
@@ -261,12 +268,12 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
     }
 
     // for each age on y-axis
-    res.forEach(function(c, h) {
+    bins.forEach(function(c, h) {
     // we look at each day of votes
     mainData.forEach(function(d, i) {
-      
+      /*
         // see that the day is in range
-        if (compareDates(newSelectionStart,d.day) && !compareDates(newSelectionEnd,d.day)) {
+        if (compareDates(prioSelectionStart,d.day) && !compareDates(prioSelectionEnd,d.day)) {
             // for each age that voted that day, check if we're currently concerned about that age and the add if applicable
             d.age.forEach(function(e,j) {
                 if (e.age == h) {
@@ -276,12 +283,12 @@ PrioVis.prototype.filterAndAggregate = function(_filter){
                 }
             })
         }
-        
+        */ return d;
     });
 });
 
-    newRes = res;
-    console.log(newRes);
-    return res;
+    newBins = bins;
+    console.log(newBins);
+    return bins;
 
 }

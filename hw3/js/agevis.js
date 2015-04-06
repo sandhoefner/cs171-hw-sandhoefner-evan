@@ -105,7 +105,7 @@ AgeVis.prototype.initVis = function(){
         // .text("Count, daily");
 
     // filter, aggregate, modify data
-    // this.wrangleData(null);
+    this.wrangleData(null);
 
     // call the update method
     this.updateVis();
@@ -192,6 +192,7 @@ AgeVis.prototype.updateVis = function(){
  * be defined here.
  * @param selection
  */
+var newSelectionStart;
 AgeVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
 
     // TODO: call wrangle function
@@ -256,6 +257,11 @@ AgeVis.prototype.filterAndAggregate = function(_filter){
         else if (limitMonth > currentMonth) {return false}
         else if (limitDate > currentDate) {return false}
         else {return true}
+    }
+
+    if (typeof newSelectionStart == 'undefined') {
+        newSelectionStart = new Date(Date.parse("December 1, 2012"));
+        newSelectionEnd = new Date(Date.parse("December 31, 2013"));
     }
 
     // for each age on y-axis
