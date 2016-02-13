@@ -184,7 +184,7 @@ var year = 2012;
 function color_gdp() {
   if (first == false) {
     var rect = svg.selectAll("rect")
-      .transition(1000)
+      .transition(10)
       .attr("fill", function(e) {
         var name = labels[partners.indexOf(e)];
     
@@ -237,7 +237,7 @@ function color_gdp() {
 function color_cont() {
   if (first == false) {
     var rect = svg.selectAll("rect")
-      .transition(1000)
+      .transition(10)
       .attr("fill", function(e) {
         var name = labels[partners.indexOf(e)];
    
@@ -288,7 +288,7 @@ function color_cont() {
 function color_life() {
   if (first == false) {
     var rect = svg.selectAll("rect")
-      .transition(1000)
+      .transition(10)
       .attr("fill", function(e) {
         var name = labels[partners.indexOf(e)];
     
@@ -341,7 +341,7 @@ function color_life() {
 function color_pop() {
   if (first == false) {
     var rect = svg.selectAll("rect")
-      .transition(1000)
+      .transition(10)
       .attr("fill", function(e) {
         var name = labels[partners.indexOf(e)];
    
@@ -394,7 +394,7 @@ colors = ["#003D99", "#0047B2", "#0052CC", "#005CE6", "#0066FF", "#1975FF", "#33
 function color_pretty() {
   if (first == false) {
     var rect = svg.selectAll("rect")
-      .transition(1000)
+      .transition(10)
       .attr("fill", function(e) {
         return colors[partners.indexOf(e)];
       });
@@ -488,7 +488,7 @@ function paint(state) {
     .append("rect")
     .attr("width", function(d) {return xScale(d);})
     .attr("height", 30)
-    //.transition(1000)
+    //.transition(10)
     .attr("x", xScale(min))
     .attr("y", function(d, i) { return yScale(d) ; });
   var text = groups
@@ -549,7 +549,7 @@ function paint(state) {
                     .append("rect")
                     .attr("width", function(d) {return xScale(d);})
                     .attr("height", 30)
-                    //.transition(1000)
+                    //.transition(10)
                     .attr("x", xScale(min))
                     .attr("y", function(d, i) { if (d.name == "United States") {return yScale(d)} else {return 800} });
         var text = groups
@@ -616,7 +616,7 @@ console.log(rect);
                     .append("rect")
                     .attr("width", function(d) {return xScale(d);})
                     .attr("height", 30)
-                    //.transition(1000)
+                    //.transition(10)
                     .attr("x", xScale(min))
                     .attr("y", function(d, i) { return yScale(d) ; });
         var text = groups
